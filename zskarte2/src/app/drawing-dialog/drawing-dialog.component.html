@@ -19,13 +19,26 @@
   -->
 
 <form class="signSelect">
-  <mat-form-field *ngIf="signs!==null">
-    <input matInput placeholder="Signatur auswählen" aria-label="Signatur" [matAutocomplete]="auto" [formControl]="signCtrl">
-    <mat-autocomplete #auto="matAutocomplete" >
-      <mat-option *ngFor="let sign of filteredSigns" [value]="sign.src" (click)="selectSign(sign)">
-        <span class="imgwrapper"><img [src]="getImageUrl(sign.src)"/></span>
-        <span>{{sign.de}}</span>
-      </mat-option>
-    </mat-autocomplete>
+  <mat-form-field>
+    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
   </mat-form-field>
+
+  <table mat-table [dataSource]="dataSource" class="selectionTable">
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="symbol">
+      <th mat-header-cell *matHeaderCellDef class="symbolCol"> Symbol </th>
+      <td mat-cell *matCellDef="let element">  <span class="imgwrapper"><img [src]="getImageUrl(element.src)"/></span></td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let element"> {{element.de}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="select(row)" class="selectRow"></tr>
+  </table>
+
 </form>

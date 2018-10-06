@@ -24,6 +24,7 @@ import {DrawingData, DrawingDialogComponent} from '../drawing-dialog/drawing-dia
 import {SharedStateService} from "../shared-state.service";
 import {HttpClient} from "@angular/common/http";
 import {Sign} from "../entity/sign";
+import {TextDialogComponent} from "../text-dialog/text-dialog.component";
 
 export interface Filter {
     value: string;
@@ -39,10 +40,11 @@ export interface Filter {
 })
 export class DrawingtoolsComponent implements OnInit {
 
+    text: string = null;
     draw: DrawingData = null;
     sourceUrl = './assets/img/signs/signaturen.json';
 
-    constructor(public dialog: MatDialog, private sharedState: SharedStateService, private http: HttpClient) {
+    constructor(public drawDialog: MatDialog, public textDialog: MatDialog, private sharedState: SharedStateService, private http: HttpClient) {
     }
 
     ngOnInit() {
@@ -52,7 +54,7 @@ export class DrawingtoolsComponent implements OnInit {
     }
 
     openDrawDialog(): void {
-        const dialogRef = this.dialog.open(DrawingDialogComponent, {
+        const dialogRef = this.drawDialog.open(DrawingDialogComponent, {
             width: '600px',
             maxWidth: '600px',
             height: '90%',
@@ -64,4 +66,17 @@ export class DrawingtoolsComponent implements OnInit {
         });
     }
 
+
+    openTextDialog(): void {
+        const dialogRef = this.textDialog.open(TextDialogComponent, {
+            width: '600px',
+            maxWidth: '600px',
+            height: '90%',
+            maxHeight: '400px'
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            this.text = result;
+        });
+    }
 }

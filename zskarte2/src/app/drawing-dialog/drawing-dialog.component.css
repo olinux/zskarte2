@@ -36,7 +36,20 @@
     width: 100%;
 }
 
-.signSelect mat-form-field{
+.selectionTable{
     width: 100%;
 }
+
+.symbolCol{
+    width: 7em;
+}
+
+.selectRow {
+    cursor:pointer;
+}
+
+.selectRow:hover{
+    background-color: lightgray;
+}
+
 

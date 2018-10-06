@@ -23,4 +23,5 @@ export interface Sign {
     kat: string;
     src: string;
     de: string;
+    text:string;
 }

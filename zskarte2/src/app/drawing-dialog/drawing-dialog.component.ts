@@ -20,7 +20,9 @@
 
 import {Component, OnInit, Inject, Output, EventEmitter} from '@angular/core';
 
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import {
+    MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatTableDataSource
+} from '@angular/material';
 import {HttpClient} from '@angular/common/http';
 import {FormControl} from '@angular/forms';
 import {Observable} from 'rxjs';
@@ -39,6 +41,15 @@ export interface DrawingData {
 })
 export class DrawingDialogComponent implements OnInit {
 
+
+    displayedColumns: string[] = ['symbol', 'name'];
+    dataSource = null;
+
+    applyFilter(filterValue: string) {
+        this.dataSource.filter = filterValue.trim().toLowerCase();
+    }
+
+
     signs: Sign[] = [];
     signCtrl = new FormControl();
     filteredSigns: Observable<Sign[]>;
@@ -52,7 +63,9 @@ export class DrawingDialogComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.sharedState.signatures.subscribe(values => this.signs = values);
+        this.sharedState.signatures.subscribe(values => {
+            this.dataSource = new MatTableDataSource(values)
+        });
         this.filteredSigns = this.signCtrl.valueChanges.pipe(map(value => this._filterSigns(value)));
     }
 
@@ -60,7 +73,7 @@ export class DrawingDialogComponent implements OnInit {
         this.dialogRef.close();
     }
 
-    selectSign(sign: Sign) {
+    select(sign: Sign) {
         this.sharedState.selectSign(sign);
         this.dialogRef.close();
     }

@@ -47,6 +47,7 @@ import {MatTableModule} from '@angular/material/table';
 import { ClockComponent } from './clock/clock.component';
 import { ImportDialogComponent } from './import-dialog/import-dialog.component';
 import { GeocoderComponent } from './geocoder/geocoder.component';
+import { TextDialogComponent } from './text-dialog/text-dialog.component';
 
 @NgModule({
     declarations: [
@@ -63,7 +64,8 @@ import { GeocoderComponent } from './geocoder/geocoder.component';
         FilterComponent,
         ClockComponent,
         ImportDialogComponent,
-        GeocoderComponent
+        GeocoderComponent,
+        TextDialogComponent
     ],
     imports: [
         BrowserModule,
@@ -83,7 +85,8 @@ import { GeocoderComponent } from './geocoder/geocoder.component';
     ],
     entryComponents: [
         DrawingDialogComponent,
-        ImportDialogComponent
+        ImportDialogComponent,
+        TextDialogComponent
     ],
     providers: [{ provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig }],
     bootstrap: [AppComponent]
