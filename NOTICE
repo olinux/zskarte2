@@ -1,0 +1,36 @@
+==========================================================================
+== Zivilschutzkarte 2                                                   ==
+==========================================================================
+
+-----------------------------------------------------------------------------------------------------------
+Zivilschutzkarte 2 makes use of different third party libraries. The corresponding credits go to the authors:
+-----------------------------------------------------------------------------------------------------------
+
+Openlayers - The original software is available from http://openlayers.org/, License: 2-Clause BSD
+
+Angular - The original software is available from https://angular.io/, License: MIT
+
+GeoAdmin API - The original software is available from http://www.geo.admin.ch/, License: BSD
+
+Core-js - The original software is available from https://github.com/zloirock/core-js, License: MIT
+
+HammerJS - The original software is available from https://hammerjs.github.io/, License: MIT
+
+RxJS - The original software is available from https://rxjs-dev.firebaseapp.com/, License: Apache 2.0
+
+ZoneJS - The original software is available from  https://github.com/angular/zone.js, License: MIT
+
+---------------------------------------------------------------------------------------------------------------------------------------
+Symbols are either taken from the angular materiel library ( https://material.angular.io/ ) or are taken from the collection of
+"Zivile Signaturen" available at https://www.babs.admin.ch/de/publikservice/grundlagen/zivileabk.html
+---------------------------------------------------------------------------------------------------------------------------------------
+
+PLEASE NOTE:
+
+Zivilschutzkarte makes use of several services providing maps / tiles:
+
+- OpenStreetMap: http://www.openstreetmap.org/
+- GeoAdmin: http://www.geo.admin.ch/
+
+Although their API licenses and/or data are open source / creative commons, the terms of use for the services might be restricted.
+Please make sure, that you're obeying the corresponding terms of use if you make use of this program!

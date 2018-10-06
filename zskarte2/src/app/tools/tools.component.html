@@ -1,0 +1,46 @@
+<!--
+  ~ Copyright © 2018 ZSO Bern Plus
+  ~
+  ~ This file is part of Zivilschutzkarte 2.
+  ~
+  ~ Zivilschutzkarte 2 is free software: you can redistribute it and/or modify it
+  ~ under the terms of the GNU General Public License as published by the
+  ~ Free Software Foundation, either version 3 of the License, or (at your option)
+  ~ any later version.
+  ~
+  ~ Zivilschutzkarte 2 is distributed in the hope that it will be useful, but WITHOUT
+  ~ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+  ~ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License along with
+  ~ Zivilschutzkarte 2.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  ~
+  -->
+
+<span class="tools">
+<button mat-stroked-button [matMenuTriggerFor]="mapMenu"><i class="material-icons">folder</i> Tools</button>
+<mat-menu #mapMenu="matMenu">
+  <button mat-menu-item (click)="importData()"><i class="material-icons">open_in_browser</i> Importieren</button>
+  <a mat-menu-item download="features.json" id="export" (click)="download()" [href]="downloadData"><i class="material-icons">save_alt</i> Herunterladen</a>
+  <button mat-menu-item (click)="toggleHistory()"><i class="material-icons">history</i> History</button>
+  <button mat-menu-item (click)="clear()"><i class="material-icons" >delete</i> Löschen</button>
+</mat-menu>
+
+<mat-form-field>
+
+    <mat-select placeholder="Karte" [(value)]="selectedMap" (ngModelChange)="changeMap($event)">
+        <mat-option *ngFor="let map of maps" [value]="map.value">
+            {{map.viewValue}}
+        </mat-option>
+    </mat-select>
+</mat-form-field>
+
+<mat-form-field>
+    <mat-select placeholder="Ebene(n)" [(value)]="selectedLayers" multiple>
+        <mat-option *ngFor="let layer of getSelectedMap().layers" [value]="layer.value">
+            {{layer.viewValue}}
+        </mat-option>
+    </mat-select>
+</mat-form-field>
+</span>

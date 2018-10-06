@@ -1,0 +1,33 @@
+<!--
+  ~ Copyright © 2018 ZSO Bern Plus
+  ~
+  ~ This file is part of Zivilschutzkarte 2.
+  ~
+  ~ Zivilschutzkarte 2 is free software: you can redistribute it and/or modify it
+  ~ under the terms of the GNU General Public License as published by the
+  ~ Free Software Foundation, either version 3 of the License, or (at your option)
+  ~ any later version.
+  ~
+  ~ Zivilschutzkarte 2 is distributed in the hope that it will be useful, but WITHOUT
+  ~ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+  ~ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License along with
+  ~ Zivilschutzkarte 2.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  ~
+  -->
+
+<mat-card id="history" *ngIf="historyDate">
+  <mat-card-content>
+    <div class="dateDisplay">{{historyDate | date:'dd.MM.yyyy HH:mm'}}</div>
+    <mat-slider
+            [max]="100"
+            [min]="0"
+            [step]="1"
+            [ngModel]="historyPerc"
+            (ngModelChange)="setHistoryDateByPercentage($event)">
+    </mat-slider>
+    <button mat-raised-button color="primary" (click)="toggleHistoryMode()">History-Modus beenden</button>
+  </mat-card-content>
+</mat-card>
