@@ -1,7 +1,8 @@
 <mat-card class="selection" *ngIf="selectedSignature!=null">
     <mat-card-content>
-        <div class="imgwrapper"><img [src]="getImageUrl(selectedSignature.src)"/></div>
-        <div>{{selectedSignature.de}}</div>
+        <div class="imgwrapper" *ngIf="selectedSignature.src!=null"><img [src]="getImageUrl(selectedSignature.src)"/></div>
+        <div *ngIf="selectedSignature.de!=null">{{selectedSignature.de}}</div>
+        <div *ngIf="selectedSignature.text!=null">{{selectedSignature.text}}</div>
         <div class="buttonPanel">
             <button mat-raised-button color="primary" (click)="delete()">Löschen</button>
         </div>
