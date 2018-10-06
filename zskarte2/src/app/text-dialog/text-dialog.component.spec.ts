@@ -18,15 +18,28 @@
  *
  */
 
-import { TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SharedStateService } from './shared-state.service';
+import { TextDialogComponent } from './text-dialog.component';
 
-describe('SharedStateService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+describe('TextDialogComponent', () => {
+  let component: TextDialogComponent;
+  let fixture: ComponentFixture<TextDialogComponent>;
 
-  it('should be created', () => {
-    const service: SharedStateService = TestBed.get(SharedStateService);
-    expect(service).toBeTruthy();
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [ TextDialogComponent ]
+    })
+    .compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(TextDialogComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
   });
 });

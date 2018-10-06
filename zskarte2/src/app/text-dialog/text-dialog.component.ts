@@ -19,31 +19,40 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {MatDialogRef} from "@angular/material";
+import {DrawingDialogComponent} from "../drawing-dialog/drawing-dialog.component";
 import {SharedStateService} from "../shared-state.service";
+import {Sign} from "../entity/sign";
 
 @Component({
-    selector: 'app-geocoder',
-    templateUrl: './geocoder.component.html',
-    styleUrls: ['./geocoder.component.css']
+    selector: 'app-text-dialog',
+    templateUrl: './text-dialog.component.html',
+    styleUrls: ['./text-dialog.component.css']
 })
-export class GeocoderComponent implements OnInit {
+export class TextDialogComponent implements OnInit {
 
-    geocoderUrl = 'https://nominatim.openstreetmap.org/search?format=json&q=';
-
-    constructor(private http: HttpClient, private sharedState: SharedStateService) {
+    constructor(public dialogRef: MatDialogRef<DrawingDialogComponent>, private sharedState: SharedStateService) {
     }
+
+    text: string = null;
 
     ngOnInit() {
     }
 
-    geocodeChange(newValue: string) {
-        this.http.get(this.geocoderUrl + newValue).subscribe(result => {
-            const results = <any[]>result;
-            if (results.length > 0) {
-                this.sharedState.gotoCoordinate({lat: parseFloat(results[0].lat), lon: parseFloat(results[0].lon)});
-            }
-        });
+
+    cancel(): void {
+        this.dialogRef.close(null);
     }
 
+    submit(): void{
+        const textSign:Sign = {
+            'type': 'Point',
+            'text': this.text,
+            'kat': null,
+            'de': null,
+            'src':null
+        };
+        this.sharedState.selectSign(textSign);
+        this.dialogRef.close(this.text);
+    }
 }
