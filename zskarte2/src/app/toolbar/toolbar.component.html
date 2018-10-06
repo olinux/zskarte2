@@ -21,9 +21,9 @@
 <mat-card class="toolbar">
     <mat-card-content>
         <app-credits></app-credits>
-        <app-drawingtools *ngIf="!history.historyDate"></app-drawingtools>
-        <a class="mat-stroked-button" download="map.jpg"><span class="mat-button-wrapper"><i class="material-icons">photo_camera</i> Screenshot</span></a>
-        <app-tools [drawLayer]="drawLayer" [history]="history" *ngIf="!history.historyDate"></app-tools>
         <app-geocoder></app-geocoder>
+        <app-drawingtools *ngIf="!history.historyDate"></app-drawingtools>
+        <!--<a class="mat-stroked-button" download="map.jpg"><span class="mat-button-wrapper"><i class="material-icons">photo_camera</i> Screenshot</span></a>-->
+        <app-tools [drawLayer]="drawLayer" [history]="history" *ngIf="!history.historyDate"></app-tools>
     </mat-card-content>
 </mat-card>

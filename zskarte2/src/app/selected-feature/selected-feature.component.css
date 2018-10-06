@@ -1,0 +1,22 @@
+.selection{
+    position:absolute;
+    bottom:1em;
+    left:1em;
+    background-color: white;
+
+}
+
+.imgwrapper{
+    height:4em;
+    text-align:center;
+}
+
+.imgwrapper img{
+    max-height: 3em;
+    max-width: 3em;
+}
+
+.buttonPanel{
+    margin-top:0.5em;
+    text-align: center;
+}

@@ -29,6 +29,7 @@ import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {SharedStateService} from '../shared-state.service';
 import {Sign} from '../entity/sign';
+import {DrawStyle} from "../drawlayer/draw-style";
 
 export interface DrawingData {
     name: string;
@@ -58,8 +59,8 @@ export class DrawingDialogComponent implements OnInit {
                 @Inject(MAT_DIALOG_DATA) public data: DrawingData, private sharedState: SharedStateService) {
     }
 
-    getImageUrl(file): string {
-        return 'assets/img/signs/' + file;
+    getImageUrl(file:string){
+        return DrawStyle.getImageUrl(file);
     }
 
     ngOnInit(): void {

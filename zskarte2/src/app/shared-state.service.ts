@@ -67,6 +67,7 @@ export class SharedStateService {
     deleteFeature(feature: any) {
         if (feature != null) {
             this.deleteFeatureSource.next(feature);
+            this.featureSource.next(null);
         }
     }
 

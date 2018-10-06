@@ -48,6 +48,7 @@ import { ClockComponent } from './clock/clock.component';
 import { ImportDialogComponent } from './import-dialog/import-dialog.component';
 import { GeocoderComponent } from './geocoder/geocoder.component';
 import { TextDialogComponent } from './text-dialog/text-dialog.component';
+import { SelectedFeatureComponent } from './selected-feature/selected-feature.component';
 
 @NgModule({
     declarations: [
@@ -65,7 +66,8 @@ import { TextDialogComponent } from './text-dialog/text-dialog.component';
         ClockComponent,
         ImportDialogComponent,
         GeocoderComponent,
-        TextDialogComponent
+        TextDialogComponent,
+        SelectedFeatureComponent
     ],
     imports: [
         BrowserModule,

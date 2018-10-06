@@ -20,6 +20,7 @@
 
 import {Component, Input, Output, OnInit, EventEmitter} from '@angular/core';
 import Point from 'ol/geom/Point';
+import Feature from 'ol/Feature';
 import Select from 'ol/interaction/Select';
 import Modify from 'ol/interaction/Modify';
 import Vector from 'ol/source/Vector';
@@ -33,6 +34,7 @@ import {never} from 'ol/events/condition';
 import {SharedStateService} from '../shared-state.service';
 import {DrawStyle} from './draw-style';
 import {getMercatorProjection} from '../projections';
+import {Sign} from "../entity/sign";
 
 @Component({
     selector: 'app-drawlayer',
@@ -78,6 +80,7 @@ export class DrawlayerComponent implements OnInit {
         this.map.addInteraction(this.select);
         this.map.addInteraction(this.modify);
         this.map.addLayer(this.layer);
+        this.sharedState.deletedFeature.subscribe(feature => this.removeFeature(feature))
         this.sharedState.currentSign.subscribe(sign => this.startDrawing(sign));
         this.sharedState.historyDate.subscribe(historyDate => this.toggleHistory(historyDate));
         // Because of the closure, we end up inside the map -> let's just add an
@@ -289,8 +292,10 @@ export class DrawlayerComponent implements OnInit {
     }
 
     removeFeature(feature) {
-        this.source.removeFeature(feature);
-        this.select.getFeatures().clear();
+        if(feature!=null) {
+            this.source.removeFeature(feature);
+            this.select.getFeatures().clear();
+        }
     }
 
     clearSelection() {

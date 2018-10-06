@@ -54,6 +54,10 @@ export class DrawStyle {
 
     filter = null;
 
+    public static getImageUrl(file): string {
+        return 'assets/img/signs/' + file;
+    }
+
     static scaleFunction(resolution, scaleFactor): any {
         return scaleFactor * Math.sqrt(0.5 * resolution) / resolution;
     }
@@ -132,7 +136,7 @@ export class DrawStyle {
                 scale: DrawStyle.scaleFunction(resolution, DrawStyle.defaultScaleFactor),
                 opacity: 1,
                 rotation: feature.get('rotation') !== undefined ? feature.get('rotation') * Math.PI / 180 : 0,
-                src: isCustomSignature ? undefined : 'assets/img/signs/' + signature.src,
+                src: isCustomSignature ? undefined : this.getImageUrl(signature.src),
                 img: isCustomSignature ? symbol : undefined,
                 imgSize: isCustomSignature ? [300, 300] : undefined
             }))
@@ -224,7 +228,7 @@ export class DrawStyle {
                         anchorYUnits: 'fraction',
                         scale: DrawStyle.scaleFunction(resolution, 0.5),
                         opacity: 1,
-                        src: 'assets/img/signs/' + feature.get('sig').src
+                        src: this.getImageUrl(feature.get('sig').src)
                     }))
                 })
             ]
