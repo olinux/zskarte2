@@ -82,7 +82,7 @@ export class DrawStyle {
         // if (this.isFeatureFiltered(feature) || signature === undefined) {
         //    return [];
         // } else {
-            if (signature.text !== undefined) {
+            if (signature.text !== undefined && signature.text !== null) {
                 // It's a text-entry...
                 return DrawStyle.textStyleFunction(feature, resolution, signature);
             } else {
@@ -99,7 +99,7 @@ export class DrawStyle {
         // if (this.isFeatureFiltered(feature) || signature === undefined) {
         //     return [];
         // } else {
-            if (signature.text !== undefined) {
+            if (signature.text !== undefined && signature.text !== null) {
                 // It's a text-entry...
                 return DrawStyle.textStyleFunction(feature, resolution, signature);
             } else {

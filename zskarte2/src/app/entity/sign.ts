@@ -24,4 +24,6 @@ export interface Sign {
     src: string;
     de: string;
     text:string;
+    style:string;
+    example:string;
 }

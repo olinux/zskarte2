@@ -28,9 +28,6 @@ import {Coordinate} from "./entity/coordinate";
 })
 export class SharedStateService {
 
-    private signatureSource = new BehaviorSubject<Sign[]>(null);
-    signatures = this.signatureSource.asObservable();
-
     private coordinateSource = new BehaviorSubject<Coordinate>(null);
     currentCoordinate = this.coordinateSource.asObservable();
 
@@ -77,10 +74,6 @@ export class SharedStateService {
 
     gotoCoordinate(coordinate: Coordinate) {
         this.coordinateSource.next(coordinate);
-    }
-
-    setSignatures(signatures: Sign[]) {
-        this.signatureSource.next(signatures);
     }
 
 }

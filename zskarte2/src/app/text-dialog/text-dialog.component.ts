@@ -46,11 +46,13 @@ export class TextDialogComponent implements OnInit {
 
     submit(): void{
         const textSign:Sign = {
-            'type': 'Point',
-            'text': this.text,
-            'kat': null,
-            'de': null,
-            'src':null
+            type: 'Point',
+            text: this.text,
+            kat: null,
+            de: null,
+            src: null,
+            style: null,
+            example: null
         };
         this.sharedState.selectSign(textSign);
         this.dialogRef.close(this.text);

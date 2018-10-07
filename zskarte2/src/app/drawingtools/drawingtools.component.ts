@@ -44,13 +44,10 @@ export class DrawingtoolsComponent implements OnInit {
     draw: DrawingData = null;
     sourceUrl = './assets/img/signs/signaturen.json';
 
-    constructor(public drawDialog: MatDialog, public textDialog: MatDialog, private sharedState: SharedStateService, private http: HttpClient) {
+    constructor(public drawDialog: MatDialog, public textDialog: MatDialog) {
     }
 
     ngOnInit() {
-        this.http.get(this.sourceUrl).subscribe(data => {
-            this.sharedState.setSignatures(<Sign[]>data);
-        });
     }
 
     openDrawDialog(): void {

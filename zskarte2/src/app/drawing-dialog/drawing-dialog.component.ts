@@ -30,6 +30,7 @@ import {map, startWith} from 'rxjs/operators';
 import {SharedStateService} from '../shared-state.service';
 import {Sign} from '../entity/sign';
 import {DrawStyle} from "../drawlayer/draw-style";
+import {Signs} from "../signs/signs";
 
 export interface DrawingData {
     name: string;
@@ -44,16 +45,11 @@ export class DrawingDialogComponent implements OnInit {
 
 
     displayedColumns: string[] = ['symbol', 'name'];
-    dataSource = null;
+    dataSource = new MatTableDataSource(Signs.SIGNS);
 
     applyFilter(filterValue: string) {
         this.dataSource.filter = filterValue.trim().toLowerCase();
     }
-
-
-    signs: Sign[] = [];
-    signCtrl = new FormControl();
-    filteredSigns: Observable<Sign[]>;
 
     constructor(public dialogRef: MatDialogRef<DrawingDialogComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: DrawingData, private sharedState: SharedStateService) {
@@ -64,10 +60,6 @@ export class DrawingDialogComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.sharedState.signatures.subscribe(values => {
-            this.dataSource = new MatTableDataSource(values)
-        });
-        this.filteredSigns = this.signCtrl.valueChanges.pipe(map(value => this._filterSigns(value)));
     }
 
     onNoClick(): void {
@@ -79,8 +71,4 @@ export class DrawingDialogComponent implements OnInit {
         this.dialogRef.close();
     }
 
-    private _filterSigns(value: string): Sign[] {
-        const filterValue = value.toLowerCase();
-        return this.signs.filter(sign => filterValue === '' || sign.de.toLowerCase().indexOf(filterValue) > -1);
-    }
 }
