@@ -10,11 +10,30 @@ Zivilschutzkarte 2 is optimized and tested for use with Google Chrome - neverthe
 
 If you don't have a Google Chrome installation and do not have the permissions to install software, please see http://portableapps.com/apps/internet/google_chrome_portable
 
-First, download the latest release from the projects' [release section](https://github.com/olinux/zskarte2/releases) and unzip the folder to any place you like.
 
-## Configuration
+### Run (in online mode)
+You can run Zivilschutzkarte 2 without installation from https://zskarte2.olinux.ch . Please note: Your drawings are stored on your browser - so you can't break anything, but also don't expect your drawings to be available when accessing it with another computer / browser. :)
+To transfer your drawings, make use of the download and import functionality of the application.
 
-You can add offline maps to the folder "offlinemap" and register them in the file "offlinemap/offlinemap.jsonp". Please see the provided example. All you need for configuration is the coordinates of the upper left and lower right corner of your map defined in [Mercator projection](http://en.wikipedia.org/wiki/Mercator_projection) as well as the image size in pixels. You can also define for which zoom levels a specific image shall be used and therefore define different levels of detailedness according to the zoom.
+### Run from local (in online mode)
+Download the latest release from the projects' [release section](https://github.com/olinux/zskarte2/releases) and unzip the folder to any place you like. Open the index.html in your browser.
+
+### Run from local (in offline mode)
+To run the application in offline mode, a little preparation (with internet connection) is needed, since you need the according maps to be locally available on your machine. We suggest, you follow the instructions of https://openmaptiles.com/server/#install for your operating system. 
+ 
+Follow the installation wizard at http://localhost:8080 
+
+#### Region
+Choose the region you're interested in. The smaller the region, the less requirements on the executing machine.
+ 
+#### Style 
+You only need the "OSM Bright" style, so you can disable the others. Please also choose the language of labels to your preferences. 
+
+#### Settings
+You only need the "Serve raster map tiles" option.  
+
+#### Run
+Save the server and execute it. You'll need now to download the map data - please make sure you choose the appropriate licensing option. As soon, as everything is up and running, you should be able to follow the "Run from local (in online mode)" section and choose the "Offline" map (please be aware: the application expects the map server to be running at http://localhost:8080 - which is the default setting).
 
 ## Terms of use
 

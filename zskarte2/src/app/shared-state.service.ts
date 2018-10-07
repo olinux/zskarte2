@@ -22,11 +22,18 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs/index';
 import {Sign} from './entity/sign';
 import {Coordinate} from "./entity/coordinate";
+import {Layer} from "./layers/layer";
 
 @Injectable({
     providedIn: 'root'
 })
 export class SharedStateService {
+
+    private layerSource = new BehaviorSubject<Layer>(null);
+    currentLayer = this.layerSource.asObservable();
+
+    private layerChangedSource = new BehaviorSubject<boolean>(false);
+    layerChanged = this.layerChangedSource.asObservable();
 
     private coordinateSource = new BehaviorSubject<Coordinate>(null);
     currentCoordinate = this.coordinateSource.asObservable();
@@ -76,4 +83,11 @@ export class SharedStateService {
         this.coordinateSource.next(coordinate);
     }
 
+    switchToLayer(layer:Layer){
+        this.layerSource.next(layer);
+    }
+
+    didChangeLayer(){
+        this.layerChangedSource.next(true)
+    }
 }

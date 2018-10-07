@@ -68,6 +68,7 @@ export class DrawlayerComponent implements OnInit {
     });
     drawer = null;
     historyMode = false;
+    firstLoad = true;
 
     constructor(private sharedState: SharedStateService) {
     }
@@ -79,27 +80,54 @@ export class DrawlayerComponent implements OnInit {
         this.map.drawLayer = this;
         this.map.addInteraction(this.select);
         this.map.addInteraction(this.modify);
-        this.map.addLayer(this.layer);
         this.sharedState.deletedFeature.subscribe(feature => this.removeFeature(feature))
         this.sharedState.currentSign.subscribe(sign => this.startDrawing(sign));
         this.sharedState.historyDate.subscribe(historyDate => this.toggleHistory(historyDate));
         // Because of the closure, we end up inside the map -> let's just add an
         // indirection and go back to the drawlayer level again.
-        this.map.on('click', function (event) {
-            this.drawLayer.selectHandler(event);
-        });
-        this.source.on('addfeature', function (event) {
-            this.drawLayer.selectionChanged();
-        });
-        this.load();
-        this.startAutoSave();
+        this.sharedState.layerChanged.subscribe(changed => {
+                if (changed) {
+                    if (!this.firstLoad) {
+                        this.map.removeLayer(this.layer);
+                    }
+                    this.map.addLayer(this.layer);
+                    if (this.firstLoad) {
+                        this.load();
+                        this.startAutoSave();
+                        this.firstLoad = false;
+                    }
+                }
+            }
+        );
+
+
+        this
+            .map
+            .on(
+                'click'
+                ,
+
+                function (event) {
+                    this.drawLayer.selectHandler(event);
+                }
+            );
+        this
+            .source
+            .on(
+                'addfeature'
+                ,
+
+                function (event) {
+                    this.drawLayer.selectionChanged();
+                }
+            );
     }
 
     toggleHistory(date: Date) {
-        if (date === null) {
+        if (date === null && this.historyMode) {
             this.historyMode = false;
             this.endHistoryMode();
-        } else {
+        } else if (date !== null) {
             this.historyMode = true;
             this.loadFromHistory(date);
         }
@@ -128,7 +156,9 @@ export class DrawlayerComponent implements OnInit {
     }
 
     selectHandler(event): void {
-        if (!this.historyMode) {
+        if (!
+                this.historyMode
+        ) {
             this.select.getFeatures().clear();
             const f = this.source.getClosestFeatureToCoordinate(event.coordinate);
             let select = false;
@@ -292,7 +322,7 @@ export class DrawlayerComponent implements OnInit {
     }
 
     removeFeature(feature) {
-        if(feature!=null) {
+        if (feature != null) {
             this.source.removeFeature(feature);
             this.select.getFeatures().clear();
         }

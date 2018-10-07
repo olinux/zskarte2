@@ -18,18 +18,52 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {Layer} from "./layer";
+import {getMercatorProjection} from "../projections";
+import OlTileLayer from 'ol/layer/Tile';
+import OSM from 'ol/source/OSM';
+import {SharedStateService} from "../shared-state.service";
 
 @Component({
-  selector: 'app-layers',
-  templateUrl: './layers.component.html',
-  styleUrls: ['./layers.component.css']
+    selector: 'app-layers',
+    templateUrl: './layers.component.html',
+    styleUrls: ['./layers.component.css']
 })
 export class LayersComponent implements OnInit {
 
-  constructor() { }
+    constructor(private sharedState: SharedStateService) {
+    }
 
-  ngOnInit() {
-  }
+    currentLayer:Layer = null;
+
+    layers: Layer[] = [
+        {
+            name: "Open Street Map",
+            projectionFunction: getMercatorProjection,
+            olLayer: new OlTileLayer({
+                source: new OSM()
+            })
+        },
+        {
+            name: "Offline",
+            projectionFunction: getMercatorProjection,
+            olLayer: new OlTileLayer({
+                source: new OSM({name: "Offline", url: "http://localhost:8080/styles/osm-bright/{z}/{x}/{y}.png"})
+            })
+        }
+    ];
+
+    ngOnInit() {
+        //By default, we're launching the first layer registered.
+        this.currentLayer = this.layers[0];
+        this.sharedState.switchToLayer(this.layers[0]);
+    }
+
+
+    changeToLayer(layer: Layer) {
+        this.currentLayer = layer;
+        this.sharedState.switchToLayer(layer);
+    }
 
 }

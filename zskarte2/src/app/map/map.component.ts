@@ -20,7 +20,6 @@
 
 import {Component, OnInit} from '@angular/core';
 import OlMap from 'ol/Map';
-import OlXYZ from 'ol/source/XYZ';
 import OlTileLayer from 'ol/layer/Tile';
 import OlView from 'ol/View';
 import OSM from 'ol/source/OSM';
@@ -30,8 +29,9 @@ import {fromLonLat} from 'ol/proj';
 import {condition} from 'ol/events';
 import {transform} from 'ol/proj';
 import {proj} from 'ol';
-import {getCoordinatesProjection, getMercatorProjection} from '../projections';
+import {getCoordinatesProjection} from '../projections';
 import {SharedStateService} from '../shared-state.service';
+import {Layer} from "../layers/layer";
 
 @Component({
     selector: 'app-map',
@@ -42,13 +42,10 @@ export class MapComponent implements OnInit {
 
     initialCoordinates = [829038.2228723184, 5933590.521128002];
     map: OlMap = null;
-    layer: OlTileLayer;
+    layer: Layer;
     view: OlView;
 
     constructor(private sharedState: SharedStateService) {
-        this.layer = new OlTileLayer({
-            source: new OSM()
-        });
     }
 
     ngOnInit() {
@@ -59,23 +56,24 @@ export class MapComponent implements OnInit {
                 zoom: 16
             })
         });
-        this.createOpenLayers();
         this.sharedState.currentCoordinate.subscribe(coordinate => {
             if (coordinate != null) {
                 const c = transform([coordinate.lon, coordinate.lat], getCoordinatesProjection(), this.map.projectionFunction());
                 this.map.getView().setCenter(c);
             }
         });
+        this.sharedState.currentLayer.subscribe(layer => {
+            if(layer!=null) {
+                if (this.layer != null) {
+                    this.map.removeLayer(this.layer.olLayer);
+                }
+                this.map.addLayer(layer.olLayer);
+                this.layer = layer;
+                this.map.projectionFunction = layer.projectionFunction;
+                this.sharedState.didChangeLayer();
+            }
+        })
     }
-
-    createOpenLayers() {
-        const layer = new OlTileLayer({
-            source: new OSM()
-        });
-        this.map.addLayer(layer);
-        this.map.projectionFunction = getMercatorProjection;
-    }
-
 }
 
 

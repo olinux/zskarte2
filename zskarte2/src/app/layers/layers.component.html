@@ -17,7 +17,10 @@
   ~
   ~
   -->
+<span class="layers">
+<button mat-stroked-button [matMenuTriggerFor]="layersMenu"><i class="material-icons">layers</i> Karten</button>
+<mat-menu #layersMenu="matMenu">
+  <button *ngFor="let layer of layers" mat-menu-item (click)="changeToLayer(layer)"><i *ngIf="currentLayer===layer"  class="material-icons">check_circle</i> {{layer.name}}</button>
+</mat-menu>
+</span>
 
-<p>
-  layers works!
-</p>

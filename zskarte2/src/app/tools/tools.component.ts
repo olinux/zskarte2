@@ -26,18 +26,6 @@ import {MatDialog} from "@angular/material";
 import {DrawingDialogComponent} from "../drawing-dialog/drawing-dialog.component";
 import {ImportDialogComponent} from "../import-dialog/import-dialog.component";
 
-export interface Layer {
-    value: string;
-    viewValue: string;
-}
-
-
-export interface Map {
-    value: string;
-    viewValue: string;
-    layers: Layer[];
-}
-
 
 @Component({
     selector: 'app-tools',
@@ -49,30 +37,30 @@ export class ToolsComponent implements OnInit {
     @Input() drawLayer: DrawlayerComponent;
     @Input() history: HistoryComponent;
 
-    maps: Map[] = [
-        {value: 'osm', viewValue: 'Open Street Map', layers: null},
-        {
-            value: 'geoadmin', viewValue: 'GeoAdmin', layers: [
-                {value: 'pixelkarte', viewValue: 'Pixelkarte'},
-                {value: 'swissimage', viewValue: 'SwissImage'}
-            ]
-        }
-    ];
-    selectedMap = this.maps[0].value;
-    selectedLayers = null;
+    // maps: Map[] = [
+    //     {value: 'osm', viewValue: 'Open Street Map', layers: null},
+    //     {
+    //         value: 'geoadmin', viewValue: 'GeoAdmin', layers: [
+    //             {value: 'pixelkarte', viewValue: 'Pixelkarte'},
+    //             {value: 'swissimage', viewValue: 'SwissImage'}
+    //         ]
+    //     }
+    // ];
+    // selectedMap = this.maps[0].value;
+    // selectedLayers = null;
     downloadData = null;
 
     constructor(private sanitizer: DomSanitizer, public dialog: MatDialog) {
     }
 
-    getSelectedMap(): Map {
-        for (const m of this.maps) {
-            if (m.value === this.selectedMap) {
-                return m;
-            }
-        }
-        return null;
-    }
+    // getSelectedMap(): Map {
+    //     for (const m of this.maps) {
+    //         if (m.value === this.selectedMap) {
+    //             return m;
+    //         }
+    //     }
+    //     return null;
+    // }
 
     importData(): void {
         const dialogRef = this.dialog.open(ImportDialogComponent, {
@@ -90,14 +78,14 @@ export class ToolsComponent implements OnInit {
         this.downloadData = this.sanitizer.bypassSecurityTrustUrl(this.drawLayer.toDataUrl());
     }
 
-    changeMap(event): void {
-        console.log('Model has changed');
-        if (this.getSelectedMap().layers === null) {
-            this.selectedLayers = null;
-        } else {
-            this.selectedLayers = [this.getSelectedMap().layers[0].value];
-        }
-    }
+    // changeMap(event): void {
+    //     console.log('Model has changed');
+    //     if (this.getSelectedMap().layers === null) {
+    //         this.selectedLayers = null;
+    //     } else {
+    //         this.selectedLayers = [this.getSelectedMap().layers[0].value];
+    //     }
+    // }
 
     toggleHistory(): void {
         this.drawLayer.save();
