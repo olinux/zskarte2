@@ -135,7 +135,7 @@ export class DrawStyle {
                 anchorYUnits: 'fraction',
                 scale: DrawStyle.scaleFunction(resolution, DrawStyle.defaultScaleFactor),
                 opacity: 1,
-                rotation: feature.get('rotation') !== undefined ? feature.get('rotation') * Math.PI / 180 : 0,
+                rotation: feature.rotation !== undefined ? feature.rotation * Math.PI / 180 : 0,
                 src: isCustomSignature ? undefined : this.getImageUrl(signature.src),
                 img: isCustomSignature ? symbol : undefined,
                 imgSize: isCustomSignature ? [300, 300] : undefined
@@ -169,7 +169,7 @@ export class DrawStyle {
             text: new Text({
                 text: feature.get('sig').text,
                 font: '30px sans-serif',
-                rotation: feature.get('rotation') !== undefined ? feature.get('rotation') * Math.PI / 180 : 0,
+                rotation: feature.rotation !== undefined ? feature.rotation * Math.PI / 180 : 0,
                 scale: DrawStyle.scaleFunction(resolution, DrawStyle.textScaleFactor),
                 stroke: new Stroke({
                     color: '#FFFF66',

@@ -4,6 +4,16 @@
         <div *ngIf="selectedSignature.de!=null">{{selectedSignature.de}}</div>
         <div *ngIf="selectedSignature.text!=null">{{selectedSignature.text}}</div>
         <div class="buttonPanel">
+            Rotieren:
+        <mat-slider
+                [max]="180"
+                [min]="-180"
+                [step]="1"
+                [ngModel]="rotationPercent"
+                (ngModelChange)="setRotation($event)">
+        </mat-slider>
+        </div>
+        <div class="buttonPanel">
             <button mat-raised-button color="primary" (click)="delete()">Löschen</button>
         </div>
     </mat-card-content>

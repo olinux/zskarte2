@@ -19,11 +19,11 @@ Here's the current feature migration overview:
 | Open Street Map support|✔|✔||
 | Indicate selected sign / text|✔|✔||
 | Delete sign / text|✔|✔||
-| Filter by category|✔|✕||
-| Rotate sign / text|✔|✕||
-| Toggling between map providers & layers|✔|✕||
+| Offline support|✔|✔||
+| Toggling between map providers & layers|✔|✔||
+| Rotate sign / text|✔|✔||
 | GeoAdmin support|✔|✕|with registered clients and quota available only|
 | GeoAdmin extra layers (e.g. satellite)|✔|✕| with registered clients and quota available only|
-| Offline support|✔|✕||
+| Filter by category|✔|✕||
 | Take screenshot|✔|✕||
-| Layout "beautification"|✔|✕||
+| Layout "beautification"|✔|✕|Improvements in style - alignment of symbols, etc.|
