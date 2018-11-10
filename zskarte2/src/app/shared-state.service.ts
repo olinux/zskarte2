@@ -32,6 +32,12 @@ export class SharedStateService {
     private layerSource = new BehaviorSubject<Layer>(null);
     currentLayer = this.layerSource.asObservable();
 
+    private addAdditionalLayerSource = new BehaviorSubject<Layer>(null);
+    addAdditionalLayer = this.addAdditionalLayerSource.asObservable();
+
+    private removeAdditionalLayerSource = new BehaviorSubject<Layer>(null);
+    removeAdditionalLayer = this.removeAdditionalLayerSource.asObservable();
+
     private layerChangedSource = new BehaviorSubject<boolean>(false);
     layerChanged = this.layerChangedSource.asObservable();
 
@@ -85,6 +91,14 @@ export class SharedStateService {
 
     switchToLayer(layer:Layer){
         this.layerSource.next(layer);
+    }
+
+    addFeatureLayer(layer:Layer){
+        this.addAdditionalLayerSource.next(layer);
+    }
+
+    removeFeatureLayer(layer:Layer){
+        this.removeAdditionalLayerSource.next(layer);
     }
 
     didChangeLayer(){

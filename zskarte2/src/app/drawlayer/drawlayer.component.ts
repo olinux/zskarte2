@@ -18,9 +18,8 @@
  *
  */
 
-import {Component, Input, Output, OnInit, EventEmitter} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import Point from 'ol/geom/Point';
-import Feature from 'ol/Feature';
 import Select from 'ol/interaction/Select';
 import Modify from 'ol/interaction/Modify';
 import Vector from 'ol/source/Vector';
@@ -33,8 +32,6 @@ import {fromLonLat} from 'ol/proj';
 import {never} from 'ol/events/condition';
 import {SharedStateService} from '../shared-state.service';
 import {DrawStyle} from './draw-style';
-import {getMercatorProjection} from '../projections';
-import {Sign} from "../entity/sign";
 
 @Component({
     selector: 'app-drawlayer',
@@ -212,22 +209,7 @@ export class DrawlayerComponent implements OnInit {
 
 
     writeFeatures() {
-        const features = this.source.getFeatures();
-        let feature;
-        let geometry;
-        let i;
-        for (i = 0; i < features.length; i++) {
-            feature = features[i];
-            geometry = feature.getGeometry().transform(this.map.projectionFunction(), getMercatorProjection());
-            feature.setGeometry(geometry);
-        }
-        const json = JSON.stringify(new GeoJSON({defaultDataProjection: 'EPSG:3857'}).writeFeatures(features));
-        for (i = 0; i < features.length; i++) {
-            feature = features[i];
-            geometry = feature.getGeometry().transform(getMercatorProjection(), this.map.projectionFunction());
-            feature.setGeometry(geometry);
-        }
-        return json;
+        return JSON.stringify(new GeoJSON({defaultDataProjection: 'EPSG:3857'}).writeFeatures(this.source.getFeatures()));
     }
 
     toDataUrl() {
@@ -265,13 +247,7 @@ export class DrawlayerComponent implements OnInit {
         this.source.clear();
         this.select.getFeatures().clear();
         if (elements !== null) {
-            const features = new GeoJSON().readFeatures(elements);
-            for (let i = 0; i < features.length; i++) {
-                const feature = features[i];
-                const geometry = feature.getGeometry().transform(getMercatorProjection(), this.map.projectionFunction());
-                feature.setGeometry(geometry);
-            }
-            this.source.addFeatures(features);
+            this.source.addFeatures(new GeoJSON().readFeatures(elements));
         }
     }
 

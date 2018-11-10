@@ -20,10 +20,33 @@
 
 import {Component, OnInit} from '@angular/core';
 import {Layer} from "./layer";
-import {getMercatorProjection} from "../projections";
+import {swissProjection} from "../projections";
 import OlTileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
+import OlTileGridWMTS from 'ol/tilegrid/WMTS';
+import OlTileWMTS from 'ol/source/WMTS';
+import OlTileXYZ from 'ol/source/XYZ';
 import {SharedStateService} from "../shared-state.service";
+import {GeoadminService} from "../geoadmin.service";
+
+
+export function createGeoAdminLayer(layerId: string, timestamp:string, extension:string) {
+    return new OlTileLayer({
+        source: new OlTileWMTS({
+            projection: swissProjection,
+            url: "https://wmts10.geo.admin.ch/1.0.0/{Layer}/default/"+timestamp+"/2056/{TileMatrix}/{TileCol}/{TileRow}."+extension,
+            tileGrid: new OlTileGridWMTS({
+                origin: [swissProjection.getExtent()[0], swissProjection.getExtent()[3]],
+                resolutions: swissProjection.resolutions,
+                matrixIds: swissProjection.matrixIds,
+                projection: swissProjection,
+                resolution: 250
+            }),
+            layer: layerId,
+            requestEncoding: "REST"
+        })
+    })
+}
 
 @Component({
     selector: 'app-layers',
@@ -32,32 +55,96 @@ import {SharedStateService} from "../shared-state.service";
 })
 export class LayersComponent implements OnInit {
 
-    constructor(private sharedState: SharedStateService) {
+    constructor(private sharedState: SharedStateService, private geoAdminService: GeoadminService) {
     }
 
-    currentLayer:Layer = null;
+    currentLayer: Layer = null;
+
+    features: any = null;
 
     layers: Layer[] = [
         {
             name: "Open Street Map",
-            projectionFunction: getMercatorProjection,
             olLayer: new OlTileLayer({
                 source: new OSM()
             })
         },
         {
-            name: "Offline",
-            projectionFunction: getMercatorProjection,
+            name: "SwissImage (GeoAdmin)",
             olLayer: new OlTileLayer({
-                source: new OSM({name: "Offline", url: "http://localhost:8080/styles/osm-bright/{z}/{x}/{y}.png"})
+                source: new OlTileXYZ({
+                    attributions: ['<a target="new" href="https://www.swisstopo.admin.ch/' +
+                    'internet/swisstopo/en/home.html">swisstopo</a>'],
+                    url: 'https://wmts10.geo.admin.ch/1.0.0/ch.swisstopo.swissimage/default/current/3857/{z}/{x}/{y}.jpeg'
+                })
+            })
+        },
+        {
+            name: "Pixelkarte farbig (GeoAdmin)",
+            olLayer: new OlTileLayer({
+                source: new OlTileXYZ({
+                    attributions: ['<a target="new" href="https://www.swisstopo.admin.ch/' +
+                    'internet/swisstopo/en/home.html">swisstopo</a>'],
+                    url: 'https://wmts10.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg'
+                })
+            })
+        },
+        {
+            name: "Pixelkarte grau (GeoAdmin)",
+            olLayer: new OlTileLayer({
+                source: new OlTileXYZ({
+                    attributions: ['<a target="new" href="https://www.swisstopo.admin.ch/' +
+                    'internet/swisstopo/en/home.html">swisstopo</a>'],
+                    url: 'https://wmts10.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-grau/default/current/3857/{z}/{x}/{y}.jpeg'
+                })
+            })
+        },
+        {
+            name: "Offline",
+            olLayer: new OlTileLayer({
+                source: new OSM({name: "Offline", url: this.getOfflineHost()+"/styles/osm-bright/{z}/{x}/{y}.png"})
             })
         }
     ];
+
+    getOfflineHost(){
+        const previouslyStored = localStorage.getItem('offlineHost');
+        if(previouslyStored!==undefined && previouslyStored!==null){
+            return previouslyStored;
+        }
+        return "http://localhost:8080";
+    }
+
+    filterFeatures(feature:any) {
+        return feature.value.timestamps===undefined  || feature.value.timestamps.size() === 0;
+    }
+
+    toggleFeature(feature:any){
+        if(feature.layer===undefined) {
+            feature.layer = createGeoAdminLayer(feature.serverLayerName, feature.timestamps[0], feature.format);
+            this.sharedState.addFeatureLayer(feature.layer);
+        }
+        else{
+            this.sharedState.removeFeatureLayer(feature.layer);
+            feature.layer = undefined;
+        }
+    }
 
     ngOnInit() {
         //By default, we're launching the first layer registered.
         this.currentLayer = this.layers[0];
         this.sharedState.switchToLayer(this.layers[0]);
+        this.geoAdminService.getFeatures().subscribe(data=>{
+            let newFeatures = [];
+            for(let featureName in data){
+                let feature = data[featureName];
+                if(feature.timestamps!==undefined && feature.timestamps.length>0){
+                   newFeatures.push(feature);
+                }
+            }
+            newFeatures.sort((a, b) => a.label.localeCompare(b.label));
+            this.features = newFeatures;
+        })
     }
 
 

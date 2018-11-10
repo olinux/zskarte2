@@ -18,9 +18,19 @@
  *
  */
 
-import OlTileLayer from 'ol/layer/Tile';
-export class Layer {
-    public olLayer: OlTileLayer;
-    public name:String;
+import {Injectable} from '@angular/core';
+import {HttpClient} from "@angular/common/http";
 
+@Injectable({
+    providedIn: 'root'
+})
+export class GeoadminService {
+
+    constructor(private http: HttpClient) {
+    }
+
+    getFeatures():any {
+        let objects = this.http.get('https://api3.geo.admin.ch/rest/services/api/MapServer/layersConfig?lang=de');
+        return objects;
+    }
 }

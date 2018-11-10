@@ -20,18 +20,14 @@
 
 import {Component, OnInit} from '@angular/core';
 import OlMap from 'ol/Map';
-import OlTileLayer from 'ol/layer/Tile';
 import OlView from 'ol/View';
-import OSM from 'ol/source/OSM';
-
 import {fromLonLat} from 'ol/proj';
-
 import {condition} from 'ol/events';
 import {transform} from 'ol/proj';
 import {proj} from 'ol';
-import {getCoordinatesProjection} from '../projections';
 import {SharedStateService} from '../shared-state.service';
 import {Layer} from "../layers/layer";
+import {coordinatesProjection, mercatorProjection} from "../projections";
 
 @Component({
     selector: 'app-map',
@@ -49,6 +45,7 @@ export class MapComponent implements OnInit {
     }
 
     ngOnInit() {
+
         this.map = new OlMap({
             target: 'map',
             view: new OlView({
@@ -58,10 +55,23 @@ export class MapComponent implements OnInit {
         });
         this.sharedState.currentCoordinate.subscribe(coordinate => {
             if (coordinate != null) {
-                const c = transform([coordinate.lon, coordinate.lat], getCoordinatesProjection(), this.map.projectionFunction());
+                const c = transform([coordinate.lon, coordinate.lat], coordinatesProjection, mercatorProjection);
                 this.map.getView().setCenter(c);
             }
         });
+        this.sharedState.addAdditionalLayer.subscribe(layer => {
+            if(layer!=null){
+                this.map.addLayer(layer);
+                this.sharedState.didChangeLayer();
+            }
+        });
+        this.sharedState.removeAdditionalLayer.subscribe(layer => {
+            if(layer!=null){
+                this.map.removeLayer(layer);
+                this.sharedState.didChangeLayer();
+            }
+        });
+
         this.sharedState.currentLayer.subscribe(layer => {
             if(layer!=null) {
                 if (this.layer != null) {
@@ -69,7 +79,6 @@ export class MapComponent implements OnInit {
                 }
                 this.map.addLayer(layer.olLayer);
                 this.layer = layer;
-                this.map.projectionFunction = layer.projectionFunction;
                 this.sharedState.didChangeLayer();
             }
         })
