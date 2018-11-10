@@ -22,8 +22,8 @@ Here's the current feature migration overview:
 | Offline support|✔|✔||
 | Toggling between map providers & layers|✔|✔||
 | Rotate sign / text|✔|✔||
-| GeoAdmin support|✔|✕|with registered clients and quota available only - currently not supporting openlayers 5.2.0|
-| GeoAdmin extra layers (e.g. satellite)|✔|✕| with registered clients and quota available only - currently not supporting openlayers 5.2.0|
+| GeoAdmin support|✔|✔||
+| GeoAdmin extra layers (e.g. satellite)|✔|✔||
 | Filter by category|✔|✕||
 | Take screenshot|✔|✕||
 | Layout "beautification"|✔|✕|Improvements in style - alignment of symbols, etc.|
