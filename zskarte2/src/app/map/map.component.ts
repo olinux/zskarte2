@@ -77,7 +77,7 @@ export class MapComponent implements OnInit {
                 if (this.layer != null) {
                     this.map.removeLayer(this.layer.olLayer);
                 }
-                this.map.addLayer(layer.olLayer);
+                this.map.getLayers().insertAt(0, layer.olLayer);
                 this.layer = layer;
                 this.sharedState.didChangeLayer();
             }

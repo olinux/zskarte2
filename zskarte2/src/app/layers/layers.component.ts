@@ -62,6 +62,8 @@ export class LayersComponent implements OnInit {
 
     features: any = null;
 
+    offlineHost:string = this.findOfflineHost();
+
     layers: Layer[] = [
         {
             name: "Open Street Map",
@@ -102,15 +104,19 @@ export class LayersComponent implements OnInit {
         {
             name: "Offline",
             olLayer: new OlTileLayer({
-                source: new OSM({name: "Offline", url: this.getOfflineHost()+"/styles/osm-bright/{z}/{x}/{y}.png"})
+                source: new OSM({name: "Offline", url: this.offlineHost+"/styles/osm-bright/{z}/{x}/{y}.png"})
             })
         }
     ];
 
-    getOfflineHost(){
+    findOfflineHost(){
+        const fromUrlParam = new URLSearchParams(document.location.search).get("offlineHost");
+        if(fromUrlParam!==undefined && fromUrlParam!==null){
+            localStorage.setItem('offlineHost', fromUrlParam);
+        }
         const previouslyStored = localStorage.getItem('offlineHost');
         if(previouslyStored!==undefined && previouslyStored!==null){
-            return previouslyStored;
+            return previouslyStored.startsWith("http") ? previouslyStored : "http://"+previouslyStored;
         }
         return "http://localhost:8080";
     }
