@@ -44,7 +44,8 @@ export function createGeoAdminLayer(layerId: string, timestamp:string, extension
             }),
             layer: layerId,
             requestEncoding: "REST"
-        })
+        }),
+        opacity: 0.6
     })
 }
 
