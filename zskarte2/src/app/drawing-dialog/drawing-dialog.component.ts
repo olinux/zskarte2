@@ -43,16 +43,17 @@ export class DrawingDialogComponent implements OnInit {
     displayedColumns: string[] = ['symbol', 'name'];
     dataSource = new MatTableDataSource(Signs.SIGNS);
     freeFormSign: Sign = {
-            type: "Polygon",
-            kat: null,
-            src: null,
-            de: null,
-            text: null,
-            style: null,
-            example: null,
-            fillOpacity: 0.2,
-            color: "#B7B7B7"
-        };
+        type: "Polygon",
+        kat: null,
+        src: null,
+        de: null,
+        text: null,
+        style: null,
+        example: null,
+        fillOpacity: 0.2,
+        color: "#B7B7B7",
+        dataUrl: null
+    };
 
     applyFilter(filterValue: string) {
         this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -62,7 +63,7 @@ export class DrawingDialogComponent implements OnInit {
                 @Inject(MAT_DIALOG_DATA) public data: DrawingData, private sharedState: SharedStateService) {
     }
 
-    getImageUrl(file:string){
+    getImageUrl(file: string) {
         return DrawStyle.getImageUrl(file);
     }
 
@@ -78,9 +79,46 @@ export class DrawingDialogComponent implements OnInit {
         this.dialogRef.close();
     }
 
-    freeForm(){
+    freeForm() {
         this.sharedState.selectSign(this.freeFormSign);
         this.dialogRef.close();
     }
+
+    drop(ev) {
+        ev.preventDefault();
+        let file = null;
+        if (ev.dataTransfer.items) {
+            // Use DataTransferItemList interface to access the file(s)
+            for (let i = 0; i < ev.dataTransfer.items.length; i++) {
+                // If dropped items aren't files, reject them
+                if (ev.dataTransfer.items[i].kind === 'file') {
+                    file = ev.dataTransfer.items[i].getAsFile();
+                    break;
+                }
+            }
+        } else {
+            // Use DataTransfer interface to access the file(s)
+            for (let i = 0; i < ev.dataTransfer.files.length; i++) {
+                file = ev.dataTransfer.files[i];
+                break;
+            }
+        }
+        if (file != null) {
+            let reader = new FileReader();
+            reader.onload = e => {
+                this.freeFormSign.dataUrl = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    setDataUrl(dataUrl){
+        this.freeFormSign.dataUrl = dataUrl;
+    }
+
+    allowDrop(ev) {
+        ev.preventDefault();
+    }
+
 
 }

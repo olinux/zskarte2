@@ -52,7 +52,7 @@ export class TextDialogComponent implements OnInit {
             de: null,
             src: null,
             style: null,
-            example: null, fillOpacity: null, color: null
+            example: null, fillOpacity: null, color: null, dataUrl:null
         };
         this.sharedState.selectSign(textSign);
         this.dialogRef.close(this.text);

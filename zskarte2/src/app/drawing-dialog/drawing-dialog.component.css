@@ -52,4 +52,8 @@
     background-color: lightgray;
 }
 
-
+.imgdrop{
+    height: 10em;
+    border: 1px dashed black;
+    text-align:center;
+}

@@ -28,4 +28,5 @@ export interface Sign {
     example:string;
     fillOpacity:number;
     color:string;
+    dataUrl:string;
 }

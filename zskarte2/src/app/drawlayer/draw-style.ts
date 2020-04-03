@@ -110,13 +110,13 @@ export class DrawStyle {
     }
 
     static imageStyleFunction(feature, resolution, signature, selected): any {
-        const isCustomSignature = signature.dataURL !== undefined;
+        const isCustomSignature = signature.dataUrl !== undefined;
         let scale;
         let symbol = null;
         if (isCustomSignature) {
             scale = DrawStyle.scaleFunction(resolution, DrawStyle.defaultScaleFactor);
             symbol = new Image();
-            symbol.src = signature.dataURL;
+            symbol.src = signature.dataUrl;
         }
         scale = DrawStyle.scaleFunction(resolution, DrawStyle.defaultScaleFactor);
 
@@ -138,7 +138,7 @@ export class DrawStyle {
                 rotation: feature.rotation !== undefined ? feature.rotation * Math.PI / 180 : 0,
                 src: isCustomSignature ? undefined : this.getImageUrl(signature.src),
                 img: isCustomSignature ? symbol : undefined,
-                imgSize: isCustomSignature ? [300, 300] : undefined
+                imgSize: isCustomSignature ? [400, 400] : undefined
             }))
         });
         const strokeStyle = new Style({

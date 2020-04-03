@@ -49,14 +49,22 @@
     </mat-tab>
     <mat-tab label="Freie Form">
         <form>
+            <mat-form-field appearance="outline">
+                <mat-label>Name</mat-label>
+                <input matInput name="label" placeholder="Name" [(ngModel)]="freeFormSign.de"/>
+            </mat-form-field>
+            <br/>
 
-        <mat-form-field appearance="outline">
-            <mat-label>Name</mat-label>
-            <input matInput name="label" placeholder="Name" [(ngModel)]="freeFormSign.de"/>
-        </mat-form-field>
-        <br/>
+            <div (drop)="drop($event)"
+                 (dragover)="allowDrop($event)" class="imgdrop">
+                <span *ngIf="freeFormSign.dataUrl===null"><br/>Bild hier her ziehen</span>
+                <img [src]="freeFormSign.dataUrl" *ngIf="freeFormSign.dataUrl!==null" style="height:100%; max-width: 100%;"/>
+            </div>
 
-        <button mat-raised-button color="primary" (click)="freeForm()">OK</button>
+            <br/>
+            <div style="text-align:right">
+            <button mat-raised-button color="primary"  (click)="freeForm()">OK</button>
+            </div>
         </form>
     </mat-tab>
 </mat-tab-group>

@@ -16,6 +16,13 @@
     max-width: 3em;
 }
 
+.imgcustomwrapper{
+    text-align: center;
+}
+.imgcustomwrapper img{
+    width: 6em;
+}
+
 .buttonPanel{
     margin-top:0.5em;
     text-align: center;
