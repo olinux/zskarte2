@@ -18,27 +18,45 @@
   ~
   -->
 
-<form class="signSelect">
-  <mat-form-field>
-    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
-  </mat-form-field>
+<mat-tab-group>
+    <mat-tab label="Symbol">
+        <form class="signSelect">
+            <mat-form-field>
+                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+            </mat-form-field>
 
-  <table mat-table [dataSource]="dataSource" class="selectionTable">
+            <table mat-table [dataSource]="dataSource" class="selectionTable">
 
-    <!-- Symbol Column -->
-    <ng-container matColumnDef="symbol">
-      <th mat-header-cell *matHeaderCellDef class="symbolCol"> Symbol </th>
-      <td mat-cell *matCellDef="let element">  <span class="imgwrapper"><img [src]="getImageUrl(element.src)"/></span></td>
-    </ng-container>
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="symbol">
+                    <th mat-header-cell *matHeaderCellDef class="symbolCol"> Symbol</th>
+                    <td mat-cell *matCellDef="let element"><span class="imgwrapper"><img
+                            [src]="getImageUrl(element.src)"/></span></td>
+                </ng-container>
 
-    <!-- Name Column -->
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef> Name </th>
-      <td mat-cell *matCellDef="let element"> {{element.de}} </td>
-    </ng-container>
+                <!-- Name Column -->
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef> Name</th>
+                    <td mat-cell *matCellDef="let element"> {{element.de}}</td>
+                </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="select(row)" class="selectRow"></tr>
-  </table>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="select(row)"
+                    class="selectRow"></tr>
+            </table>
 
-</form>
+        </form>
+    </mat-tab>
+    <mat-tab label="Freie Form">
+        <form>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Name</mat-label>
+            <input matInput name="label" placeholder="Name" [(ngModel)]="freeFormSign.de"/>
+        </mat-form-field>
+        <br/>
+
+        <button mat-raised-button color="primary" (click)="freeForm()">OK</button>
+        </form>
+    </mat-tab>
+</mat-tab-group>

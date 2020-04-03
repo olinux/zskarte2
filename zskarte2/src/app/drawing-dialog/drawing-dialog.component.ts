@@ -21,12 +21,8 @@
 import {Component, OnInit, Inject, Output, EventEmitter} from '@angular/core';
 
 import {
-    MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatTableDataSource
+    MatDialogRef, MAT_DIALOG_DATA, MatTableDataSource
 } from '@angular/material';
-import {HttpClient} from '@angular/common/http';
-import {FormControl} from '@angular/forms';
-import {Observable} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
 import {SharedStateService} from '../shared-state.service';
 import {Sign} from '../entity/sign';
 import {DrawStyle} from "../drawlayer/draw-style";
@@ -43,9 +39,20 @@ export interface DrawingData {
 })
 export class DrawingDialogComponent implements OnInit {
 
-
+    types = [{value: "Polygon", viewValue: "Fläche"}, {value: "Line", viewValue: "Linie"}];
     displayedColumns: string[] = ['symbol', 'name'];
     dataSource = new MatTableDataSource(Signs.SIGNS);
+    freeFormSign: Sign = {
+            type: "Polygon",
+            kat: null,
+            src: null,
+            de: null,
+            text: null,
+            style: null,
+            example: null,
+            fillOpacity: 0.2,
+            color: "#B7B7B7"
+        };
 
     applyFilter(filterValue: string) {
         this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -68,6 +75,11 @@ export class DrawingDialogComponent implements OnInit {
 
     select(sign: Sign) {
         this.sharedState.selectSign(sign);
+        this.dialogRef.close();
+    }
+
+    freeForm(){
+        this.sharedState.selectSign(this.freeFormSign);
         this.dialogRef.close();
     }
 

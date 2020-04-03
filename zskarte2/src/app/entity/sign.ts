@@ -26,4 +26,6 @@ export interface Sign {
     text:string;
     style:string;
     example:string;
+    fillOpacity:number;
+    color:string;
 }

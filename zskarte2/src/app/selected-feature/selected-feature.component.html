@@ -12,6 +12,22 @@
                 [ngModel]="rotationPercent"
                 (ngModelChange)="setRotation($event)">
         </mat-slider>
+
+        </div>
+        <div class="buttonPanel" *ngIf="selectedSignature.type==='Polygon'">
+            Transparenz:
+            <mat-slider #ctrl="ngModel"
+                        [max]="1"
+                    [min]="0"
+                    [step]="0.1"
+                    [(ngModel)]="selectedSignature.fillOpacity" (ngModelChange)="redraw()">
+            </mat-slider>
+        </div>
+
+        <div class="buttonPanel" *ngIf="selectedSignature.kat===null">
+            Farbe: <mat-form-field>
+                <input matInput type="color" name="color" #ctrl="ngModel" [(ngModel)]="selectedSignature.color" (ngModelChange)="redraw()"/>
+            </mat-form-field>
         </div>
         <div class="buttonPanel">
             <button mat-raised-button color="primary" (click)="delete()">Löschen</button>

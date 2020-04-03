@@ -26,6 +26,11 @@ export class SelectedFeatureComponent implements OnInit {
         }
     }
 
+    redraw(){
+        this.selectedFeature.changed();
+    }
+
+
     ngOnInit() {
         this.sharedState.currentFeature.subscribe(feature => {
             this.selectedFeature = feature;

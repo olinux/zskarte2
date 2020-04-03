@@ -25,7 +25,7 @@ import {AppComponent} from './app.component';
 import {MapComponent} from './map/map.component';
 import {DrawingtoolsComponent} from './drawingtools/drawingtools.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {GestureConfig, MatButtonModule, MatCheckboxModule} from '@angular/material';
+import {GestureConfig, MatButtonModule, MatCheckboxModule, MatTabsModule} from '@angular/material';
 import {MatSelectModule} from '@angular/material/select';
 import {MatCardModule} from '@angular/material/card';
 import { ToolsComponent } from './tools/tools.component';
@@ -75,6 +75,7 @@ import { SelectedFeatureComponent } from './selected-feature/selected-feature.co
         MatButtonModule,
         MatSelectModule,
         MatCardModule,
+        MatTabsModule,
         MatMenuModule,
         MatDialogModule,
         HttpClientModule,

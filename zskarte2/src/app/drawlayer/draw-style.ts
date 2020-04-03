@@ -82,13 +82,13 @@ export class DrawStyle {
         // if (this.isFeatureFiltered(feature) || signature === undefined) {
         //    return [];
         // } else {
-            if (signature.text !== undefined && signature.text !== null) {
-                // It's a text-entry...
-                return DrawStyle.textStyleFunction(feature, resolution, signature);
-            } else {
-                // It's a symbol-signature.
-                return DrawStyle.imageStyleFunction(feature, resolution, signature, true);
-            }
+        if (signature.text !== undefined && signature.text !== null) {
+            // It's a text-entry...
+            return DrawStyle.textStyleFunction(feature, resolution, signature);
+        } else {
+            // It's a symbol-signature.
+            return DrawStyle.imageStyleFunction(feature, resolution, signature, true);
+        }
         // }
     }
 
@@ -99,13 +99,13 @@ export class DrawStyle {
         // if (this.isFeatureFiltered(feature) || signature === undefined) {
         //     return [];
         // } else {
-            if (signature.text !== undefined && signature.text !== null) {
-                // It's a text-entry...
-                return DrawStyle.textStyleFunction(feature, resolution, signature);
-            } else {
-                // It's a symbol-signature.
-                return DrawStyle.imageStyleFunction(feature, resolution, signature, false);
-            }
+        if (signature.text !== undefined && signature.text !== null) {
+            // It's a text-entry...
+            return DrawStyle.textStyleFunction(feature, resolution, signature);
+        } else {
+            // It's a symbol-signature.
+            return DrawStyle.imageStyleFunction(feature, resolution, signature, false);
+        }
         // }
     }
 
@@ -122,12 +122,12 @@ export class DrawStyle {
 
         const symbolStyle = new Style({
             stroke: new Stroke({
-                color: DrawStyle.colorFunction(signature.kat, selected ? 'highlight' : 'default', 1.0),
+                color: DrawStyle.colorFunction(signature, selected ? 'highlight' : 'default', 1.0),
                 width: scale * 20,
                 lineDash: DrawStyle.getDash(feature, resolution)
             }),
             fill: new Fill({
-                color: DrawStyle.colorFunction(signature.kat, selected ? 'highlight' : 'default', selected ? 0.3 : 0.2)
+                color: DrawStyle.colorFunction(signature, selected ? 'highlight' : 'default', selected ? signature.fillOpacity == null ? 0.3 : Math.min(1, signature.fillOpacity + 0.1) : signature.fillOpacity == null ? 0.2 : Math.min(1, signature.fillOpacity))
             }),
             image: new Icon(({
                 anchor: [0.5, 0.5],
@@ -147,16 +147,16 @@ export class DrawStyle {
                 width: scale * 40,
                 lineDash: DrawStyle.getDash(feature, resolution)
             }),
-            image: new Circle({
+            image: signature.src != null ? new Circle({
                 radius: scale * 210,
                 fill: new Fill({
                     color: [255, 255, 255, selected ? 0.9 : 0.6]
                 })
-            })
+            }) : null
         });
         const highlightStyle = new Style({
             stroke: new Stroke({
-                color: DrawStyle.colorFunction(signature.kat, 'highlight', 1.0),
+                color: DrawStyle.colorFunction(signature, 'highlight', 1.0),
                 width: scale * 30
             })
         });
@@ -199,13 +199,22 @@ export class DrawStyle {
     }
 
 
-    static colorFunction = function (type, style, alpha) {
-        const color = DrawStyle.colorMap[type][style];
-        if (color !== undefined) {
-            return 'rgba(' + color + ', ' + (alpha !== undefined ? alpha : '1') + ')';
+    static colorFunction = function (signature, style, alpha) {
+        if (signature.kat == null) {
+            if (signature.color !== null) {
+                let hexAlpha=(Math.floor(255*(alpha !== undefined ? alpha : 1))).toString(16);
+                if(hexAlpha.length==1){
+                    hexAlpha="0"+hexAlpha;
+                }
+                return signature.color+hexAlpha;
+            }
         } else {
-            return 'blue';
+            const color = DrawStyle.colorMap[signature.kat][style];
+            if (color !== undefined) {
+                return 'rgba(' + color + ', ' + (alpha !== undefined ? alpha : '1') + ')';
+            }
         }
+        return 'rgba(121, 153, 242, ' + (alpha !== undefined ? alpha : '1') + ')';
     };
 
 
@@ -215,12 +224,12 @@ export class DrawStyle {
         const styles = [
                 new Style({
                     stroke: new Stroke({
-                        color: DrawStyle.colorFunction(feature.get('sig').kat, 'default', 1.0),
+                        color: DrawStyle.colorFunction(feature.get('sig'), 'default', 1.0),
                         width: scale * 10,
                         lineDash: [0, 0]
                     }),
                     fill: new Fill({
-                        color: DrawStyle.colorFunction(feature.get('sig').kat, 'default', 0.2)
+                        color: DrawStyle.colorFunction(feature.get('sig'), 'default', 0.2)
                     }),
                     image: new Icon(({
                         anchor: [0.5, 0.5],
