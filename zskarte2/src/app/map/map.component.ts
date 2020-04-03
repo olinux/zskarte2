@@ -46,11 +46,19 @@ export class MapComponent implements OnInit {
 
     ngOnInit() {
 
+        let previousPosition: any = localStorage.getItem('viewport');
+        if(previousPosition!=null){
+            previousPosition = JSON.parse(previousPosition);
+        }
+        window.addEventListener('beforeunload', (event) => {
+            //Save zoom level and position before leaving (to recover when re-entering)
+            localStorage.setItem('viewport', JSON.stringify({"center": this.map.getView().getCenter(), "zoom": this.map.getView().getZoom()}));
+        });
         this.map = new OlMap({
             target: 'map',
             view: new OlView({
-                center: this.initialCoordinates,
-                zoom: 16
+                center: previousPosition!=null && previousPosition.center != null ? previousPosition.center : this.initialCoordinates,
+                zoom: previousPosition!=null && previousPosition.zoom!=null ? previousPosition.zoom : 16
             })
         });
         this.sharedState.currentCoordinate.subscribe(coordinate => {
@@ -79,10 +87,13 @@ export class MapComponent implements OnInit {
                 }
                 this.map.getLayers().insertAt(0, layer.olLayer);
                 this.layer = layer;
+
                 this.sharedState.didChangeLayer();
             }
-        })
+        });
+
     }
+
 }
 
 

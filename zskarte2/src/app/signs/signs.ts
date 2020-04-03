@@ -31,7 +31,7 @@ export class Signs {
             de: "ABC Dekontaminationsstelle",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Polygon",
@@ -40,7 +40,7 @@ export class Signs {
             de: "Absperrung Einsatzraum",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -49,7 +49,7 @@ export class Signs {
             de: "Absperrung Verkehrswege",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "LineString",
@@ -58,7 +58,7 @@ export class Signs {
             de: "Achse fuer Ei, Rttg, Vsg",
             style: "dash",
             text: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -67,7 +67,7 @@ export class Signs {
             de: "Angehoerigensammelstelle",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -76,7 +76,7 @@ export class Signs {
             de: "Atomunfall",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -85,7 +85,7 @@ export class Signs {
             de: "Autounfall_2",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "LineString",
@@ -94,7 +94,7 @@ export class Signs {
             de: "Beabsichtigte Erkundung",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "LineString",
@@ -103,7 +103,7 @@ export class Signs {
             de: "Beabsichtigter Einsatz",
             style: "dash",
             text: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "LineString",
@@ -112,7 +112,7 @@ export class Signs {
             de: "Beabsichtigte Verschiebung",
             style: "dash",
             text: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -121,7 +121,7 @@ export class Signs {
             de: "Beobachtung",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -130,7 +130,7 @@ export class Signs {
             de: "Beschaedigung",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -139,7 +139,7 @@ export class Signs {
             de: "Betreuungsstelle",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -148,7 +148,7 @@ export class Signs {
             de: "Betriebsstoffabgabestelle",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -157,7 +157,7 @@ export class Signs {
             de: "Bezirksfuehrungsorgan",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Polygon",
@@ -166,7 +166,7 @@ export class Signs {
             de: "Biologisch verseuchtes Gebiet",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -175,7 +175,7 @@ export class Signs {
             de: "Biounfall",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -184,7 +184,7 @@ export class Signs {
             de: "B Laboratorium",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -193,7 +193,7 @@ export class Signs {
             de: "Bombenanschlag",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -202,7 +202,7 @@ export class Signs {
             de: "Bombendrohung",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -211,7 +211,7 @@ export class Signs {
             de: "Brandanschlag",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -220,7 +220,7 @@ export class Signs {
             de: "Brand einzelnes Gebaeude Flamme",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Polygon",
@@ -229,7 +229,7 @@ export class Signs {
             de: "Brand einzelnes Gebaeude - Signatur",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Polygon",
@@ -238,7 +238,7 @@ export class Signs {
             de: "Brand mehrerer Gebaeude - Signatur",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -247,7 +247,7 @@ export class Signs {
             de: "Brand",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "LineString",
@@ -256,7 +256,8 @@ export class Signs {
             de: "Branduebergriff erfolgt",
             example: "Branduebergriff erfolgt - Beispiel.png",
             text: null,
-            style: null
+            style: null,
+            fillOpacity: null, color: null
         },
         {
             type: "LineString",
@@ -265,7 +266,7 @@ export class Signs {
             de: "Branduebergriffsgefahr - Signatur",
             example: "Branduebergriffsgefahr - Beispiel.png",
             style: "dash",
-            text: null
+            text: null, fillOpacity: null, color: null
         },
         {
             type: "Polygon",
@@ -274,7 +275,7 @@ export class Signs {
             de: "Brandzone Flaechenbrand",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -283,7 +284,7 @@ export class Signs {
             de: "Chemieunfall",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Polygon",
@@ -292,7 +293,7 @@ export class Signs {
             de: "Chemievergiftetes Gebiet gasfoermig - fluechtig",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Polygon",
@@ -301,7 +302,7 @@ export class Signs {
             de: "Chemievergiftete Zone fluessig - sesshaft",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -310,7 +311,7 @@ export class Signs {
             de: "Chemikalien",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -319,7 +320,7 @@ export class Signs {
             de: "Debriefingstelle",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -328,7 +329,7 @@ export class Signs {
             de: "Demo gewaltlos",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -337,7 +338,7 @@ export class Signs {
             de: "Demo gewaltsam",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -346,7 +347,7 @@ export class Signs {
             de: "Drohung",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -355,7 +356,7 @@ export class Signs {
             de: "Duerre",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "LineString",
@@ -364,7 +365,7 @@ export class Signs {
             de: "Durchgefuehrte Erkundung",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "LineString",
@@ -373,7 +374,7 @@ export class Signs {
             de: "Durchgefuehrter Einsatz",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "LineString",
@@ -382,7 +383,7 @@ export class Signs {
             de: "Durchgefuehrte Verschiebung",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Polygon",
@@ -391,7 +392,7 @@ export class Signs {
             de: "Eingesperrte - Abgeschnittene",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -400,7 +401,7 @@ export class Signs {
             de: "Einsatzleiter",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -409,7 +410,7 @@ export class Signs {
             de: "Einsatzleitung",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -418,7 +419,7 @@ export class Signs {
             de: "Einsatzzentrale",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -427,7 +428,7 @@ export class Signs {
             de: "Eisenbahnunglueck",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -436,7 +437,7 @@ export class Signs {
             de: "Elektrizitaet",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Polygon",
@@ -445,7 +446,7 @@ export class Signs {
             de: "Energieausfall",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -454,7 +455,7 @@ export class Signs {
             de: "Epidemie",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Polygon",
@@ -463,7 +464,7 @@ export class Signs {
             de: "Erdbeben",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Polygon",
@@ -472,7 +473,7 @@ export class Signs {
             de: "Erdrutsch",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -481,7 +482,7 @@ export class Signs {
             de: "Explosion",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Polygon",
@@ -490,7 +491,7 @@ export class Signs {
             de: "Explosionsherd - Signatur",
             example: "Explosionsherd - Beispiel.png",
             text: null,
-            style: null
+            style: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -499,7 +500,7 @@ export class Signs {
             de: "Fahrzeugplatz",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -508,7 +509,7 @@ export class Signs {
             de: "Fluechtlinge",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -517,7 +518,7 @@ export class Signs {
             de: "Flugzeugabsturz",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -526,7 +527,7 @@ export class Signs {
             de: "Gas",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -535,7 +536,7 @@ export class Signs {
             de: "Gebaeudeeinsturz",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -544,7 +545,7 @@ export class Signs {
             de: "Gefahr durch Loeschen mit Wasser",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -553,7 +554,7 @@ export class Signs {
             de: "Gefahrentafel mit UN-Nummer",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -562,7 +563,7 @@ export class Signs {
             de: "Gefahr fuer Grundwasser",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -571,7 +572,7 @@ export class Signs {
             de: "Gemeindefuehrungsorgan",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -580,7 +581,7 @@ export class Signs {
             de: "Gruppenfuehrer",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -589,7 +590,7 @@ export class Signs {
             de: "Gruppe",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -598,7 +599,7 @@ export class Signs {
             de: "Helikopterlandeplatz",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -607,7 +608,7 @@ export class Signs {
             de: "Informationsstelle",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -616,7 +617,7 @@ export class Signs {
             de: "Informationszentrum",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -625,7 +626,7 @@ export class Signs {
             de: "Infrastrukturschaden",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -634,7 +635,7 @@ export class Signs {
             de: "Kadaversammelstelle",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -643,7 +644,7 @@ export class Signs {
             de: "Kanalisationsausfall",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -652,7 +653,7 @@ export class Signs {
             de: "Kantonales Fuehrungsorgan",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -661,7 +662,7 @@ export class Signs {
             de: "KGS Sammelpunkt",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -670,7 +671,7 @@ export class Signs {
             de: "Kommandoposten Front",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -679,7 +680,7 @@ export class Signs {
             de: "Kommandoposten Rueckwaertiges",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -688,7 +689,7 @@ export class Signs {
             de: "Kommunikationsstoerung",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -697,7 +698,7 @@ export class Signs {
             de: "Kompanie",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -706,7 +707,7 @@ export class Signs {
             de: "Kontrollstelle",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -715,7 +716,7 @@ export class Signs {
             de: "Kontrollzentrum",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Polygon",
@@ -724,7 +725,7 @@ export class Signs {
             de: "Lawine",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -733,7 +734,7 @@ export class Signs {
             de: "Massenpanik",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -742,7 +743,7 @@ export class Signs {
             de: "Materialdepot",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -751,7 +752,7 @@ export class Signs {
             de: "Mobile Einsatzzentrale",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -760,7 +761,7 @@ export class Signs {
             de: "Obdachlose",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Polygon",
@@ -769,7 +770,7 @@ export class Signs {
             de: "Oelverschmutzung",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -778,7 +779,7 @@ export class Signs {
             de: "Offizier - Zugfuehrer",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -787,7 +788,7 @@ export class Signs {
             de: "Patientensammelstelle",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -796,7 +797,8 @@ export class Signs {
             de: "Personenbergungsuebersicht - Leerraster",
             example: "Personenbergungsuebersicht - Beispiel.png",
             text: null,
-            style: null
+            style: null,
+            fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -805,7 +807,7 @@ export class Signs {
             de: "Pforte",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -814,7 +816,7 @@ export class Signs {
             de: "Pluenderung",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Polygon",
@@ -823,7 +825,7 @@ export class Signs {
             de: "Radioaktives Gebiet",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -832,7 +834,7 @@ export class Signs {
             de: "Radioaktive Stoffe",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -841,7 +843,7 @@ export class Signs {
             de: "Regionales Fuehrungsorgan",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Polygon",
@@ -850,7 +852,7 @@ export class Signs {
             de: "Rutschgebiet",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -859,7 +861,7 @@ export class Signs {
             de: "Sabotage",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -868,7 +870,7 @@ export class Signs {
             de: "Sammelstelle",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -877,7 +879,7 @@ export class Signs {
             de: "Sanitaetshilfsstelle",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -886,7 +888,7 @@ export class Signs {
             de: "Sanitaetsumladestelle",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Polygon",
@@ -895,7 +897,7 @@ export class Signs {
             de: "Schadengebiet - Schadenraum",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "LineString",
@@ -904,7 +906,7 @@ export class Signs {
             de: "Sperre",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -913,7 +915,7 @@ export class Signs {
             de: "Standort mobile Fuehrungsstelle",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -922,7 +924,7 @@ export class Signs {
             de: "Starkniederschlag",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Polygon",
@@ -931,7 +933,7 @@ export class Signs {
             de: "Stau",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "LineString",
@@ -940,7 +942,7 @@ export class Signs {
             de: "Str erschwert befahrbar - begehbar",
             style: "dash",
             text: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -949,7 +951,7 @@ export class Signs {
             de: "Streugutsammelstelle",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "LineString",
@@ -958,7 +960,7 @@ export class Signs {
             de: "Str nicht befahrbar - schwer begehbar",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "LineString",
@@ -967,7 +969,7 @@ export class Signs {
             de: "Str unpassierbar - gesperrt",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -976,7 +978,7 @@ export class Signs {
             de: "Stuetzpunkt",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -985,7 +987,7 @@ export class Signs {
             de: "Sturm",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -994,7 +996,7 @@ export class Signs {
             de: "Tankloeschfahrzeug",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Polygon",
@@ -1003,7 +1005,7 @@ export class Signs {
             de: "Teilzerstoerung",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -1012,7 +1014,7 @@ export class Signs {
             de: "Terroranschlag",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -1021,7 +1023,7 @@ export class Signs {
             de: "Tierseuche",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Polygon",
@@ -1030,7 +1032,7 @@ export class Signs {
             de: "Totalzerstoerung",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -1039,7 +1041,7 @@ export class Signs {
             de: "Totensammelstelle",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -1048,7 +1050,7 @@ export class Signs {
             de: "Tote",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -1057,7 +1059,7 @@ export class Signs {
             de: "Trinkwasserabgabestelle",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Polygon",
@@ -1066,7 +1068,7 @@ export class Signs {
             de: "Truemmerbereich - Signatur",
             example: "Truemmerbereich - Beispiel.png",
             text: null,
-            style: null
+            style: null,fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -1075,7 +1077,7 @@ export class Signs {
             de: "Trupp",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Polygon",
@@ -1084,7 +1086,7 @@ export class Signs {
             de: "Ueberschwemmtes Gebiet",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Polygon",
@@ -1093,7 +1095,7 @@ export class Signs {
             de: "Ueberschwemmung",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -1102,7 +1104,7 @@ export class Signs {
             de: "Ueberwachung",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "LineString",
@@ -1111,7 +1113,7 @@ export class Signs {
             de: "Umleitung",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -1120,7 +1122,7 @@ export class Signs {
             de: "Unfall",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -1129,7 +1131,7 @@ export class Signs {
             de: "Verkehrsposten",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -1138,7 +1140,7 @@ export class Signs {
             de: "Verletztennest",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -1147,7 +1149,7 @@ export class Signs {
             de: "Verletzte",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -1156,7 +1158,7 @@ export class Signs {
             de: "Vermisste",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -1165,7 +1167,7 @@ export class Signs {
             de: "Verpflegungsabgabestelle",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -1174,7 +1176,7 @@ export class Signs {
             de: "Wasserversorgungsausfall",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -1183,7 +1185,7 @@ export class Signs {
             de: "Wasserwerfer",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Polygon",
@@ -1192,7 +1194,7 @@ export class Signs {
             de: "Zerstoerte Zone einer Ortschaft",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -1201,7 +1203,7 @@ export class Signs {
             de: "Ziviles Fuehrungsorgan",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         },
         {
             type: "Point",
@@ -1210,7 +1212,7 @@ export class Signs {
             de: "Zug",
             text: null,
             style: null,
-            example: null
+            example: null, fillOpacity: null, color: null
         }
     ]
 }
