@@ -35,7 +35,7 @@ export class DrawStyle {
 
     static colorMap = ({
         'blue': {
-            'default': '0, 0, 255',
+            'default':   '0, 0, 255',
             'highlight': '121, 153, 242'
         },
         'red': {
@@ -110,7 +110,7 @@ export class DrawStyle {
     }
 
     static imageStyleFunction(feature, resolution, signature, selected): any {
-        const isCustomSignature = signature.dataUrl !== undefined;
+        const isCustomSignature = signature.dataUrl !== null    ;
         let scale;
         let symbol = null;
         if (isCustomSignature) {
