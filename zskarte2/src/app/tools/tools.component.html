@@ -23,6 +23,7 @@
 <mat-menu #mapMenu="matMenu">
   <button mat-menu-item (click)="importData()"><i class="material-icons">open_in_browser</i> Importieren</button>
   <a mat-menu-item download="features.json" id="export" (click)="download()" [href]="downloadData"><i class="material-icons">save</i> Herunterladen</a>
+<!--<button mat-menu-item (click)="openDownloadDialog()"><i class="material-icons">save</i> Herunterladen</button>-->
   <button mat-menu-item (click)="toggleHistory()"><i class="material-icons">history</i> History</button>
   <button mat-menu-item (click)="clear()"><i class="material-icons" >delete</i> Löschen</button>
 </mat-menu>

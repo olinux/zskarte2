@@ -32,6 +32,8 @@ import {fromLonLat} from 'ol/proj';
 import {never} from 'ol/events/condition';
 import {SharedStateService} from '../shared-state.service';
 import {DrawStyle} from './draw-style';
+import {NgForage} from "ngforage";
+import {Sign} from "../entity/sign";
 
 @Component({
     selector: 'app-drawlayer',
@@ -67,7 +69,7 @@ export class DrawlayerComponent implements OnInit {
     historyMode = false;
     firstLoad = true;
 
-    constructor(private sharedState: SharedStateService) {
+    constructor(private sharedState: SharedStateService, private readonly ngf: NgForage) {
     }
 
 
@@ -89,9 +91,31 @@ export class DrawlayerComponent implements OnInit {
                     }
                     this.map.addLayer(this.layer);
                     if (this.firstLoad) {
-                        this.load();
-                        this.startAutoSave();
-                        this.firstLoad = false;
+                        if(localStorage.getItem("map")!==null){
+                            this.status = "Migrating your old data to the new storage system...";
+                            //Migration from local storage to ngf
+                            this.ngf.setItem("map2", localStorage.getItem("map")).then(x => {
+                                localStorage.removeItem("map");
+                              this.ngf.setItem("mapold2", localStorage.getItem("mapold")).then(x => {
+                                  localStorage.removeItem("mapold");
+                                  this.status = "Migration done - now loading the data...";
+                                  this.load().then(x => {
+                                      this.status = "Data loaded";
+                                      this.startAutoSave();
+                                      this.firstLoad = false;
+                                  });
+                              });
+                            });
+                        }
+                        else {
+
+                            this.status = "Loading the data...";
+                            this.load().then(x => {
+                                this.status = "Data loaded";
+                                this.startAutoSave();
+                                this.firstLoad = false;
+                            });
+                        }
                     }
                 }
             }
@@ -131,21 +155,24 @@ export class DrawlayerComponent implements OnInit {
     }
 
     endHistoryMode() {
-        this.load();
-        this.map.addInteraction(this.select);
-        this.map.addInteraction(this.modify);
+        this.load().then(x => {
+            this.map.addInteraction(this.select);
+            this.map.addInteraction(this.modify);
+        });
     }
 
     loadFromHistory(date) {
-        let history: any = localStorage.getItem('mapold');
+        this.ngf.getItem("mapold2").then(history => this.processHistory(history, date));
+    }
+
+    processHistory(history, date) {
         if (history !== null) {
             this.map.removeInteraction(this.select);
             this.map.removeInteraction(this.modify);
-            history = JSON.parse(history);
             for (let i = history.elements.length; i > 0; i--) {
                 const element = history.elements[i - 1];
                 if (date > new Date(element.time)) {
-                    this.loadElements(JSON.parse(element.content));
+                    this.loadElements(element.content);
                     break;
                 }
             }
@@ -154,7 +181,7 @@ export class DrawlayerComponent implements OnInit {
 
     selectHandler(event): void {
         if (!
-                this.historyMode
+            this.historyMode
         ) {
             this.select.getFeatures().clear();
             const f = this.source.getClosestFeatureToCoordinate(event.coordinate);
@@ -209,54 +236,84 @@ export class DrawlayerComponent implements OnInit {
 
 
     writeFeatures() {
-        return JSON.stringify(new GeoJSON({defaultDataProjection: 'EPSG:3857'}).writeFeatures(this.source.getFeatures()));
+        return JSON.parse(new GeoJSON({defaultDataProjection: 'EPSG:3857'}).writeFeatures(this.source.getFeatures()));
     }
 
     toDataUrl() {
-        return 'data:text/json;charset=UTF-8,' + encodeURIComponent(this.writeFeatures());
+        return 'data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(this.writeFeatures()));
     }
+
+    handleCustomSignatures(features:object[], signatureHandler){
+        for (let f of features) {
+            // @ts-ignore
+            let properties = f.properties;
+            if(properties!==null){
+                let signature = (properties.sig as Sign);
+                if(signature!==null && signature.dataUrl!==null){
+                    signatureHandler(signature)
+                }
+            }
+        }
+    }
+
+
+    // toDataUrl():Promise<string>{
+    //     return new Promise<string>(resolve => {
+    //     this.save().then(x => {
+    //         let content = {};
+    //             this.ngf.iterate((value, key, iterationNumber) => {
+    //                 content[key] = value;
+    //             }).then(
+    //                 x => resolve(JSON.stringify(content))
+    //             );
+    //         });
+    //     });
+    // }
 
     removeAll() {
         if (!this.historyMode) {
-            localStorage.removeItem('map');
-            localStorage.removeItem('mapold');
+            this.ngf.removeItem("map2");
+            this.ngf.removeItem("mapold2");
             this.source.clear();
             this.select.getFeatures().clear();
         }
     }
 
-    save() {
+    save():Promise<{}> {
         if (!this.historyMode) {
-            const previouslyStored = localStorage.getItem('map');
-            const now = this.writeFeatures();
-            if (now !== previouslyStored) {
-                localStorage.setItem('map', now);
-                let history: any = localStorage.getItem('mapold');
-                if (history === null) {
-                    history = {'elements': []};
-                } else {
-                    history = JSON.parse(history);
+            this.ngf.getItem("map2").then(previouslyStored => {
+                const now = this.writeFeatures();
+                if (now !== previouslyStored) {
+                    this.ngf.setItem("map2", now).then(x => {
+                        this.ngf.getItem("mapold2").then(history => {
+                            if (history === null) {
+                                history = {'elements': []};
+                            }
+                            // @ts-ignore
+                            history.elements.push({'time': new Date(), 'content': now});
+                            return this.ngf.setItem("mapold2", history);
+                        });
+                    });
                 }
-                history.elements.push({'time': new Date(), 'content': now});
-                localStorage.setItem('mapold', JSON.stringify(history));
-            }
+            });
         }
+        return Promise.resolve({});
     }
 
     loadElements(elements) {
         this.source.clear();
         this.select.getFeatures().clear();
         if (elements !== null) {
-            this.source.addFeatures(new GeoJSON().readFeatures(elements));
+            this.handleCustomSignatures(elements.features, signature => {
+               //TODO load dataUrls
+            });
+            var features = new GeoJSON({defaultDataProjection: 'EPSG:3857'}).readFeatures(elements);
+            this.source.addFeatures(features);
         }
     }
 
-    load() {
-        let items = null;
-        items = localStorage.getItem('map');
-        if (items !== null) {
-            this.loadFromString(items);
-        }
+    load():Promise<void> {
+        return this.ngf.getItem('map2').then(items => {this.loadElements(items);});
     }
 
     loadFromString(text) {
@@ -271,7 +328,7 @@ export class DrawlayerComponent implements OnInit {
         if (this.currentDrawingSign != null) {
             this.drawer = new Draw({
                 source: this.source,
-                type: this.currentDrawingSign.type
+                    type: this.currentDrawingSign.type
             });
             this.drawer.drawLayer = this;
             this.drawer.once('drawend', function (event) {

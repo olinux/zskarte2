@@ -30,7 +30,6 @@ export class GeoadminService {
     }
 
     getFeatures():any {
-        let objects = this.http.get('https://api3.geo.admin.ch/rest/services/api/MapServer/layersConfig?lang=de');
-        return objects;
+        return this.http.get('https://api3.geo.admin.ch/rest/services/api/MapServer/layersConfig?lang=de');
     }
 }

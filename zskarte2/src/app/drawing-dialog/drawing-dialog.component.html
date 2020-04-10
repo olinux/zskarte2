@@ -58,7 +58,7 @@
             <div (drop)="drop($event)"
                  (dragover)="allowDrop($event)" class="imgdrop">
                 <span *ngIf="freeFormSign.dataUrl===null"><br/>Bild hier her ziehen</span>
-                <img [src]="freeFormSign.dataUrl" *ngIf="freeFormSign.dataUrl!==null" style="height:100%; max-width: 100%;"/>
+                <img id="imagePreview" [src]="freeFormSign.dataUrl.src" *ngIf="freeFormSign.dataUrl!==null" style="height:100%; max-width: 100%;"/>
             </div>
 
             <br/>

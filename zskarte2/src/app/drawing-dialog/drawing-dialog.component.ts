@@ -27,6 +27,8 @@ import {SharedStateService} from '../shared-state.service';
 import {Sign} from '../entity/sign';
 import {DrawStyle} from "../drawlayer/draw-style";
 import {Signs} from "../signs/signs";
+import {NgForage} from "ngforage";
+import {Md5} from "ts-md5";
 
 export interface DrawingData {
     name: string;
@@ -54,13 +56,14 @@ export class DrawingDialogComponent implements OnInit {
         color: "#B7B7B7",
         dataUrl: null
     };
+    imagePayload: string;
 
     applyFilter(filterValue: string) {
         this.dataSource.filter = filterValue.trim().toLowerCase();
     }
 
     constructor(public dialogRef: MatDialogRef<DrawingDialogComponent>,
-                @Inject(MAT_DIALOG_DATA) public data: DrawingData, private sharedState: SharedStateService) {
+                @Inject(MAT_DIALOG_DATA) public data: DrawingData, private sharedState: SharedStateService, private readonly ngf: NgForage) {
     }
 
     getImageUrl(file: string) {
@@ -80,8 +83,22 @@ export class DrawingDialogComponent implements OnInit {
     }
 
     freeForm() {
-        this.sharedState.selectSign(this.freeFormSign);
-        this.dialogRef.close();
+        if(this.freeFormSign.dataUrl!==null){
+            let img = document.getElementById("imagePreview") as HTMLImageElement;
+            this.freeFormSign.dataUrl.nativeHeight=img.naturalHeight;
+            this.freeFormSign.dataUrl.nativeWidth=img.naturalWidth;
+            this.freeFormSign.dataUrl.md5 = new Md5().appendStr(this.freeFormSign.dataUrl.src).end().toString();
+            this.ngf.setItem(this.freeFormSign.dataUrl.md5, this.freeFormSign.dataUrl).then(x => {
+                this.sharedState.selectSign(this.freeFormSign);
+                this.dialogRef.close();
+            });
+        }
+        else{
+            this.sharedState.selectSign(this.freeFormSign);
+            this.dialogRef.close();
+        }
+
+
     }
 
     drop(ev) {
@@ -104,11 +121,16 @@ export class DrawingDialogComponent implements OnInit {
             }
         }
         if (file != null) {
-            let reader = new FileReader();
-            reader.onload = e => {
-                this.freeFormSign.dataUrl = e.target.result;
-            };
-            reader.readAsDataURL(file);
+            if(file.size>1000000){
+                window.alert("Diese Datei ist leider zu gross - bitte reduziere das Bild (<1MB)");
+            }
+            else {
+                let reader = new FileReader();
+                reader.onload = e => {
+                    this.freeFormSign.dataUrl = {nativeHeight: null, nativeWidth: null, md5:null, src:  e.target.result};
+                };
+                reader.readAsDataURL(file);
+            }
         }
     }
 

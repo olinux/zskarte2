@@ -116,7 +116,7 @@ export class DrawStyle {
         if (isCustomSignature) {
             scale = DrawStyle.scaleFunction(resolution, DrawStyle.defaultScaleFactor);
             symbol = new Image();
-            symbol.src = signature.dataUrl;
+            symbol.src = signature.dataUrl.src;
         }
         scale = DrawStyle.scaleFunction(resolution, DrawStyle.defaultScaleFactor);
 
@@ -138,9 +138,11 @@ export class DrawStyle {
                 rotation: feature.rotation !== undefined ? feature.rotation * Math.PI / 180 : 0,
                 src: isCustomSignature ? undefined : this.getImageUrl(signature.src),
                 img: isCustomSignature ? symbol : undefined,
-                imgSize: isCustomSignature ? [400, 400] : undefined
+                imgSize: isCustomSignature ? [signature.dataUrl.nativeWidth, signature.dataUrl.nativeHeight] : undefined
             }))
         });
+
+
         const strokeStyle = new Style({
             stroke: new Stroke({
                 color: [255, 255, 255, selected ? 0.7 : 0.5],

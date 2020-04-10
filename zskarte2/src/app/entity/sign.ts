@@ -18,6 +18,8 @@
  *
  */
 
+import {CustomImage} from "./customImage";
+
 export interface Sign {
     type: string;
     kat: string;
@@ -28,5 +30,5 @@ export interface Sign {
     example:string;
     fillOpacity:number;
     color:string;
-    dataUrl:string;
+    dataUrl:CustomImage;
 }

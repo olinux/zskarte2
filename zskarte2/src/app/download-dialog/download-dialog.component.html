@@ -1,0 +1,23 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-body">
+            <p>
+                Aktuellen Stand herunterladen.
+            </p>
+            <mat-radio-group>
+                <div>
+                    <mat-radio-button value="withHistory" checked>Mit History</mat-radio-button>
+                </div>
+                <div>
+                    <mat-radio-button value="withoutHistory">Ohne History</mat-radio-button>
+                </div>
+            </mat-radio-group>
+        </div>
+        <div class="modal-footer">
+            <button mat-stroked-button (click)="cancel()">Abbrechen</button>
+            <a mat-raised-button color="primary" download="features.json" id="export" (click)="download()"
+               [href]="downloadData"
+               style="width:auto;"><i class="material-icons">save</i> Herunterladen</a>
+        </div>
+    </div>
+</div>

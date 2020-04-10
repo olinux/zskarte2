@@ -25,6 +25,8 @@ import {HistoryComponent} from "../history/history.component";
 import {MatDialog} from "@angular/material";
 import {DrawingDialogComponent} from "../drawing-dialog/drawing-dialog.component";
 import {ImportDialogComponent} from "../import-dialog/import-dialog.component";
+import {TextDialogComponent} from "../text-dialog/text-dialog.component";
+import {DownloadDialogComponent} from "../download-dialog/download-dialog.component";
 
 
 @Component({
@@ -48,10 +50,12 @@ export class ToolsComponent implements OnInit {
     // ];
     // selectedMap = this.maps[0].value;
     // selectedLayers = null;
+
     downloadData = null;
 
     constructor(private sanitizer: DomSanitizer, public dialog: MatDialog) {
     }
+
 
     // getSelectedMap(): Map {
     //     for (const m of this.maps) {
@@ -74,9 +78,7 @@ export class ToolsComponent implements OnInit {
         });
     }
 
-    download(): void {
-        this.downloadData = this.sanitizer.bypassSecurityTrustUrl(this.drawLayer.toDataUrl());
-    }
+
 
     // changeMap(event): void {
     //     console.log('Model has changed');
@@ -99,5 +101,23 @@ export class ToolsComponent implements OnInit {
 
     ngOnInit() {
     }
+
+    download(): void {
+        this.downloadData = this.sanitizer.bypassSecurityTrustUrl(this.drawLayer.toDataUrl());
+    }
+
+    // openDownloadDialog(): void {
+    //     this.drawLayer.status = "Preparing data for download...";
+    //     this.drawLayer.toDataUrl().then(payload=> {
+    //             this.drawLayer.status="";
+    //             const dialogRef = this.dialog.open(DownloadDialogComponent, {
+    //                 width: '600px',
+    //                 maxWidth: '600px',
+    //                 height: '90%',
+    //                 maxHeight: '400px',
+    //                 data: payload
+    //             })
+    //         })
+    // }
 
 }

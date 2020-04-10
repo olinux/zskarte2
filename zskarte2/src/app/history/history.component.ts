@@ -20,6 +20,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import {SharedStateService} from '../shared-state.service';
+import {NgForage} from "ngforage";
 
 @Component({
     selector: 'app-history',
@@ -31,12 +32,14 @@ export class HistoryComponent implements OnInit {
     historyDate = null;
     historyPerc = 100;
 
-    constructor(private sharedState: SharedStateService) {
+    constructor(private sharedState: SharedStateService, private readonly ngf: NgForage) {
     }
 
+    getDateByPerc(perc): Promise<Date> {
+        return this.getFirstDateInHistory().then(firstDateInHistory => this.findDateByPerc(firstDateInHistory, perc));
+    }
 
-    static getDateByPerc(perc): Date {
-        let firstDateInHistory = HistoryComponent.getFirstDateInHistory();
+    findDateByPerc(firstDateInHistory, perc): Date{
         if (firstDateInHistory === null) {
             firstDateInHistory = new Date();
         }
@@ -46,15 +49,19 @@ export class HistoryComponent implements OnInit {
         return new Date(now.getTime() - diffToNow);
     }
 
-    static getFirstDateInHistory(): Date {
-        let history: any = localStorage.getItem('mapold');
+    selectHistoryDate(history): Date {
         if (history !== null) {
             history = JSON.parse(history);
             if (history.elements.length > 0) {
                 return new Date(history.elements[0].time);
             }
         }
+
         return new Date();
+    }
+
+    getFirstDateInHistory(): Promise<Date> {
+        return this.ngf.getItem("mapold").then(history => this.selectHistoryDate(history));
     }
 
     ngOnInit(): void {
@@ -71,8 +78,10 @@ export class HistoryComponent implements OnInit {
     }
 
     setHistoryDateByPercentage(perc) {
-        this.historyDate = HistoryComponent.getDateByPerc(perc);
-        this.sharedState.gotoHistoryDate(this.historyDate);
+        this.getDateByPerc(perc).then(historyDate => {
+            this.historyDate = historyDate;
+            this.sharedState.gotoHistoryDate(this.historyDate);
+        });
     }
 
 }

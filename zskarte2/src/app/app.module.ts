@@ -49,6 +49,10 @@ import { ImportDialogComponent } from './import-dialog/import-dialog.component';
 import { GeocoderComponent } from './geocoder/geocoder.component';
 import { TextDialogComponent } from './text-dialog/text-dialog.component';
 import { SelectedFeatureComponent } from './selected-feature/selected-feature.component';
+import { NgForageConfig} from 'ngforage';
+import { DownloadDialogComponent } from './download-dialog/download-dialog.component';
+import {MatRadioModule} from "@angular/material/radio";
+import {MatListModule} from "@angular/material/list";
 
 @NgModule({
     declarations: [
@@ -67,7 +71,8 @@ import { SelectedFeatureComponent } from './selected-feature/selected-feature.co
         ImportDialogComponent,
         GeocoderComponent,
         TextDialogComponent,
-        SelectedFeatureComponent
+        SelectedFeatureComponent,
+        DownloadDialogComponent
     ],
     imports: [
         BrowserModule,
@@ -84,15 +89,23 @@ import { SelectedFeatureComponent } from './selected-feature/selected-feature.co
         ReactiveFormsModule,
         MatInputModule,
         MatSliderModule,
-        MatTableModule
+        MatTableModule,
+        MatRadioModule,
+        MatListModule
     ],
     entryComponents: [
         DrawingDialogComponent,
         ImportDialogComponent,
-        TextDialogComponent
+        TextDialogComponent,
+        DownloadDialogComponent
     ],
     providers: [{ provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig }],
     bootstrap: [AppComponent]
 })
 export class AppModule {
+    public constructor(ngfConfig: NgForageConfig) {
+        ngfConfig.configure({
+            name: 'ZS Karte 2'
+        });
+    }
 }
