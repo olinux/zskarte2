@@ -39,7 +39,7 @@ export class HistoryComponent implements OnInit {
         return this.getFirstDateInHistory().then(firstDateInHistory => this.findDateByPerc(firstDateInHistory, perc));
     }
 
-    findDateByPerc(firstDateInHistory, perc): Date{
+    findDateByPerc(firstDateInHistory, perc): Date {
         if (firstDateInHistory === null) {
             firstDateInHistory = new Date();
         }
@@ -50,13 +50,9 @@ export class HistoryComponent implements OnInit {
     }
 
     selectHistoryDate(history): Date {
-        if (history !== null) {
-            history = JSON.parse(history);
-            if (history.elements.length > 0) {
-                return new Date(history.elements[0].time);
-            }
+        if (history !== undefined && history !== null && history.elements.length > 0) {
+            return new Date(history.elements[0].time);
         }
-
         return new Date();
     }
 
