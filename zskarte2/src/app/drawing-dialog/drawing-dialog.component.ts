@@ -26,8 +26,6 @@ import {SharedStateService} from '../shared-state.service';
 import {Sign} from '../entity/sign';
 import {DrawStyle} from "../drawlayer/draw-style";
 import {Signs} from "../signs/signs";
-import {NgForage} from "ngforage";
-import {Md5} from "ts-md5";
 
 export interface DrawingData {
     name: string;
@@ -48,7 +46,7 @@ export class DrawingDialogComponent implements OnInit {
     }
 
     constructor(public dialogRef: MatDialogRef<DrawingDialogComponent>,
-                @Inject(MAT_DIALOG_DATA) public data: DrawingData, private sharedState: SharedStateService, private readonly ngf: NgForage) {
+                @Inject(MAT_DIALOG_DATA) public data: DrawingData, private sharedState: SharedStateService) {
     }
 
     getImageUrl(file: string) {

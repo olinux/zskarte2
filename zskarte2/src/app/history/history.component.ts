@@ -20,7 +20,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import {SharedStateService} from '../shared-state.service';
-import {NgForage} from "ngforage";
+import {NgxIndexedDBService} from "ngx-indexed-db";
 
 @Component({
     selector: 'app-history',
@@ -32,7 +32,7 @@ export class HistoryComponent implements OnInit {
     historyDate = null;
     historyPerc = 100;
 
-    constructor(private sharedState: SharedStateService, private readonly ngf: NgForage) {
+    constructor(private sharedState: SharedStateService, private dbService: NgxIndexedDBService) {
     }
 
     getDateByPerc(perc): Promise<Date> {
@@ -61,7 +61,7 @@ export class HistoryComponent implements OnInit {
     }
 
     getFirstDateInHistory(): Promise<Date> {
-        return this.ngf.getItem("mapold").then(history => this.selectHistoryDate(history));
+        return this.dbService.getByKey('map', "history").then(history => this.selectHistoryDate(history));
     }
 
     ngOnInit(): void {

@@ -33,8 +33,8 @@ import {fromLonLat} from 'ol/proj';
 import {never} from 'ol/events/condition';
 import {SharedStateService} from '../shared-state.service';
 import {DrawStyle} from './draw-style';
-import {NgForage} from "ngforage";
 import {Sign} from "../entity/sign";
+import {NgxIndexedDBService} from "ngx-indexed-db";
 
 @Component({
     selector: 'app-drawlayer',
@@ -72,7 +72,7 @@ export class DrawlayerComponent implements OnInit {
     firstLoad = true;
     drawHole = null;
 
-    constructor(private sharedState: SharedStateService, private readonly ngf: NgForage) {
+    constructor(private sharedState: SharedStateService, private dbService: NgxIndexedDBService) {
     }
 
 
@@ -97,9 +97,9 @@ export class DrawlayerComponent implements OnInit {
                         if(localStorage.getItem("map")!==null){
                             this.status = "Migrating your old data to the new storage system...";
                             //Migration from local storage to ngf
-                            this.ngf.setItem("map2", localStorage.getItem("map")).then(x => {
+                            this.dbService.update("map",  localStorage.getItem("map"), "map").then(x => {
                                 localStorage.removeItem("map");
-                              this.ngf.setItem("mapold2", localStorage.getItem("mapold")).then(x => {
+                                this.dbService.update("map", localStorage.getItem("mapold"), "history").then(x => {
                                   localStorage.removeItem("mapold");
                                   this.status = "Migration done - now loading the data...";
                                   this.load().then(x => {
@@ -165,7 +165,7 @@ export class DrawlayerComponent implements OnInit {
     }
 
     loadFromHistory(date) {
-        this.ngf.getItem("mapold2").then(history => this.processHistory(history, date));
+        this.dbService.getByKey("map", "history").then(history => this.processHistory(history, date));
     }
 
     processHistory(history, date) {
@@ -275,8 +275,8 @@ export class DrawlayerComponent implements OnInit {
 
     removeAll() {
         if (!this.historyMode) {
-            this.ngf.removeItem("map2");
-            this.ngf.removeItem("mapold2");
+            this.dbService.delete("map", "map");
+            this.dbService.delete("map", "history");
             this.source.clear();
             this.select.getFeatures().clear();
         }
@@ -284,17 +284,17 @@ export class DrawlayerComponent implements OnInit {
 
     save():Promise<{}> {
         if (!this.historyMode) {
-            this.ngf.getItem("map2").then(previouslyStored => {
+            this.dbService.getByKey("map", "map").then(previouslyStored => {
                 const now = this.writeFeatures();
                 if (now !== previouslyStored) {
-                    this.ngf.setItem("map2", now).then(x => {
-                        this.ngf.getItem("mapold2").then(history => {
-                            if (history === null) {
+                    this.dbService.update("map", now, "map").then(x => {
+                        this.dbService.getByKey("map", "history").then(history => {
+                            if (history === undefined || history === null) {
                                 history = {'elements': []};
                             }
                             // @ts-ignore
                             history.elements.push({'time': new Date(), 'content': now});
-                            return this.ngf.setItem("mapold2", history);
+                            return this.dbService.update("map", history,"history");
                         });
                     });
                 }
@@ -306,7 +306,7 @@ export class DrawlayerComponent implements OnInit {
     loadElements(elements) {
         this.source.clear();
         this.select.getFeatures().clear();
-        if (elements !== null) {
+        if (elements!==undefined && elements !== null) {
             // for (let f of elements.features){
             //     for (let g of f.geometry.geometries){
             //         for (let c of g.coordinates){
@@ -331,7 +331,7 @@ export class DrawlayerComponent implements OnInit {
     }
 
     load():Promise<void> {
-        return this.ngf.getItem('map2').then(items => {this.loadElements(items);});
+        return this.dbService.getByKey("map", "map").then(items => {this.loadElements(items);}, error=> {console.log(error);});
     }
 
     loadFromString(text) {

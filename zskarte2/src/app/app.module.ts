@@ -18,7 +18,7 @@
  *
  */
 
-import {BrowserModule, HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
+import { BrowserModule } from '@angular/platform-browser';
 import {LOCALE_ID, NgModule} from '@angular/core';
 
 import {AppComponent} from './app.component';
@@ -27,7 +27,6 @@ import {DrawingtoolsComponent} from './drawingtools/drawingtools.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { GestureConfig } from '@angular/material/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import {MatSelectModule} from '@angular/material/select';
 import {MatCardModule} from '@angular/material/card';
@@ -52,10 +51,20 @@ import { ImportDialogComponent } from './import-dialog/import-dialog.component';
 import { GeocoderComponent } from './geocoder/geocoder.component';
 import { TextDialogComponent } from './text-dialog/text-dialog.component';
 import { SelectedFeatureComponent } from './selected-feature/selected-feature.component';
-import { NgForageConfig} from 'ngforage';
 import { DownloadDialogComponent } from './download-dialog/download-dialog.component';
 import {MatRadioModule} from "@angular/material/radio";
 import {MatListModule} from "@angular/material/list";
+import {DBConfig, NgxIndexedDBModule} from 'ngx-indexed-db';
+
+const dbConfig: DBConfig  = {
+    name: 'ZSKarte2',
+    version: 1,
+    objectStoresMeta: [{
+        store: 'map',
+        storeConfig: { keyPath: null, autoIncrement: false },
+        storeSchema: []
+    }]
+};
 
 @NgModule({
     declarations: [
@@ -65,6 +74,7 @@ import {MatListModule} from "@angular/material/list";
         ToolsComponent,
         LayersComponent,
         CreditsComponent,
+
         ToolbarComponent,
         DrawingDialogComponent,
         DrawlayerComponent,
@@ -94,7 +104,8 @@ import {MatListModule} from "@angular/material/list";
         MatSliderModule,
         MatTableModule,
         MatRadioModule,
-        MatListModule
+        MatListModule,
+        NgxIndexedDBModule.forRoot(dbConfig)
     ],
     entryComponents: [
         DrawingDialogComponent,
@@ -102,13 +113,8 @@ import {MatListModule} from "@angular/material/list";
         TextDialogComponent,
         DownloadDialogComponent
     ],
-    providers: [{ provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig }],
+    providers: [],
     bootstrap: [AppComponent]
 })
 export class AppModule {
-    public constructor(ngfConfig: NgForageConfig) {
-        ngfConfig.configure({
-            name: 'ZS Karte 2'
-        });
-    }
 }
