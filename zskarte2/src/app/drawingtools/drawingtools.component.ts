@@ -25,6 +25,7 @@ import {SharedStateService} from "../shared-state.service";
 import {HttpClient} from "@angular/common/http";
 import {Sign} from "../entity/sign";
 import {TextDialogComponent} from "../text-dialog/text-dialog.component";
+import {Md5} from "ts-md5";
 
 export interface Filter {
     value: string;
@@ -44,7 +45,7 @@ export class DrawingtoolsComponent implements OnInit {
     draw: DrawingData = null;
     sourceUrl = './assets/img/signs/signaturen.json';
 
-    constructor(public drawDialog: MatDialog, public textDialog: MatDialog) {
+    constructor(public drawDialog: MatDialog, public textDialog: MatDialog, private sharedState: SharedStateService) {
     }
 
     ngOnInit() {
@@ -74,6 +75,37 @@ export class DrawingtoolsComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             this.text = result;
+        });
+    }
+
+    polygon(): void {
+            this.sharedState.selectSign({
+                type: "Polygon",
+                kat: null,
+                src: null,
+                fillOpacity: 0.2,
+                color: "#535353"
+            });
+    }
+
+    line(): void {
+        this.sharedState.selectSign({
+            type: "LineString",
+            kat: null,
+            src: null,
+            fillOpacity: 0.2,
+            color: "#535353"
+        });
+    }
+
+
+    circle(): void {
+        this.sharedState.selectSign({
+            type: "Circle",
+            kat: null,
+            src: null,
+            fillOpacity: 0.2,
+            color: "#535353"
         });
     }
 }

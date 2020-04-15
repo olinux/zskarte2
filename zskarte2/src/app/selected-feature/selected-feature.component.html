@@ -5,7 +5,7 @@
 
         <div *ngIf="selectedSignature.de!=null" class="label">{{selectedSignature.de}}</div>
         <div *ngIf="selectedSignature.text!=null" class="label">{{selectedSignature.text}}</div>
-        <div class="buttonPanel">
+        <div class="buttonPanel" *ngIf="selectedSignature.kat!==null">
             Rotieren:
         <mat-slider
                 [max]="180"
@@ -16,13 +16,31 @@
         </mat-slider>
 
         </div>
-        <div class="buttonPanel" *ngIf="selectedSignature.type==='Polygon'">
+        <div class="buttonPanel" *ngIf="selectedSignature.type==='Polygon' || selectedSignature.type==='Circle'">
             Transparenz:
             <mat-slider #ctrl="ngModel"
                         [max]="1"
                     [min]="0"
-                    [step]="0.1"
+                    [step]="0.05"
                     [(ngModel)]="selectedSignature.fillOpacity" (ngModelChange)="redraw()">
+            </mat-slider>
+        </div>
+
+        <div class="buttonPanel" >
+            Linie:
+            <select #ctrl="ngModel" matNativeControl [(ngModel)]="selectedSignature.style" (ngModelChange)="redraw()">
+                <option value="">Durchgezogen</option>
+                <option value="dash">Gestrichelt</option>
+            </select>
+        </div>
+
+        <div class="buttonPanel" *ngIf="selectedSignature.type==='Polygon' || selectedSignature.type==='Circle'">
+            Linien-Dicke:
+            <mat-slider #ctrl="ngModel"
+                        [max]="4"
+                        [min]="1"
+                        [step]="0.1"
+                        [(ngModel)]="selectedSignature.strokeWidth" (ngModelChange)="redraw()">
             </mat-slider>
         </div>
 
@@ -31,8 +49,10 @@
                 <input matInput type="color" name="color" #ctrl="ngModel" [(ngModel)]="selectedSignature.color" (ngModelChange)="redraw()"/>
             </mat-form-field>
         </div>
+
+
         <div class="buttonPanel">
-            <button mat-raised-button color="primary" (click)="delete()">Löschen</button>
+            <button mat-raised-button color="primary" (click)="delete()"><i class="material-icons">delete</i>Löschen</button>
         </div>
     </mat-card-content>
 </mat-card>

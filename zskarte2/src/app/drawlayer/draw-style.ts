@@ -59,15 +59,23 @@ export class DrawStyle {
     }
 
     static scaleFunction(resolution, scaleFactor): any {
-        return scaleFactor * Math.sqrt(0.5 * resolution) / resolution;
+        return Math.max(0.15, scaleFactor * Math.sqrt(0.5 * resolution) / resolution);
     }
 
     static getDash(feature, resolution): any {
         if (feature.get('sig').style === 'dash') {
-            const value = DrawStyle.scaleFunction(resolution, 20);
+            const value = Math.max(30, DrawStyle.scaleFunction(resolution, 20));
             return [value, value];
         } else {
             return [0, 0];
+        }
+    }
+
+    static getDashOffset(feature, resolution): any {
+        if (feature.get('sig').style === 'dash') {
+            return Math.max(30, DrawStyle.scaleFunction(resolution, 20));
+        } else {
+            return 0;
         }
     }
 
@@ -110,7 +118,7 @@ export class DrawStyle {
     }
 
     static imageStyleFunction(feature, resolution, signature, selected): any {
-        const isCustomSignature = signature.dataUrl !== null    ;
+        const isCustomSignature = signature.dataUrl !== undefined && signature.dataUrl !== null    ;
         let scale;
         let symbol = null;
         if (isCustomSignature) {
@@ -124,7 +132,8 @@ export class DrawStyle {
             stroke: new Stroke({
                 color: DrawStyle.colorFunction(signature, selected ? 'highlight' : 'default', 1.0),
                 width: scale * 20,
-                lineDash: DrawStyle.getDash(feature, resolution)
+                lineDash: DrawStyle.getDash(feature, resolution),
+                lineDashOffset: DrawStyle.getDashOffset(feature, resolution)
             }),
             fill: new Fill({
                 color: DrawStyle.colorFunction(signature, selected ? 'highlight' : 'default', selected ? signature.fillOpacity == null ? 0.3 : Math.min(1, signature.fillOpacity + 0.1) : signature.fillOpacity == null ? 0.2 : Math.min(1, signature.fillOpacity))
@@ -146,8 +155,9 @@ export class DrawStyle {
         const strokeStyle = new Style({
             stroke: new Stroke({
                 color: [255, 255, 255, selected ? 0.7 : 0.5],
-                width: scale * 40,
-                lineDash: DrawStyle.getDash(feature, resolution)
+                width: scale * 20 * (signature.strokeWidth !== undefined && signature.strokeWidth !== null ? signature.strokeWidth : 1),
+                lineDash: DrawStyle.getDash(feature, resolution),
+                lineDashOffset: DrawStyle.getDashOffset(feature, resolution)
             }),
             image: signature.src != null ? new Circle({
                 radius: scale * 210,
@@ -159,7 +169,9 @@ export class DrawStyle {
         const highlightStyle = new Style({
             stroke: new Stroke({
                 color: DrawStyle.colorFunction(signature, 'highlight', 1.0),
-                width: scale * 30
+                width: scale * 20 * (signature.strokeWidth !== undefined && signature.strokeWidth !== null ? signature.strokeWidth : 1),
+                lineDash: DrawStyle.getDash(feature, resolution),
+                lineDashOffset: DrawStyle.getDashOffset(feature, resolution)
             })
         });
 
@@ -203,7 +215,7 @@ export class DrawStyle {
 
     static colorFunction = function (signature, style, alpha) {
         if (signature.kat == null) {
-            if (signature.color !== null) {
+            if (signature.color !== undefined && signature.color !== null) {
                 let hexAlpha=(Math.floor(255*(alpha !== undefined ? alpha : 1))).toString(16);
                 if(hexAlpha.length==1){
                     hexAlpha="0"+hexAlpha;

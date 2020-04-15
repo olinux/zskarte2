@@ -24,11 +24,13 @@ export interface Sign {
     type: string;
     kat: string;
     src: string;
-    de: string;
-    text:string;
-    style:string;
-    example:string;
-    fillOpacity:number;
-    color:string;
-    dataUrl:CustomImage;
+    de?: string;
+    text?:string;
+    style?:string;
+    example?:string;
+    fillOpacity?:number;
+    color?:string;
+    dataUrl?:CustomImage;
+    strokeWidth?:number;
+    iconOffset?: number[];
 }

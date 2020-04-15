@@ -20,5 +20,32 @@
 
 <span class="drawingTools">
     <button mat-stroked-button (click)="openTextDialog()"><i class="material-icons">font_download</i> Text</button>
-    <button mat-stroked-button (click)="openDrawDialog()"><i class="material-icons">brush</i> Zeichnen</button>
+    <button mat-stroked-button [matMenuTriggerFor]="drawMenu"><i class="material-icons">brush</i> Zeichnen</button>
+<mat-menu #drawMenu="matMenu">
+    <button mat-menu-item (click)="openDrawDialog()"><i class="material-icons">stars</i> Symbol</button>
+    <button mat-menu-item (click)="polygon()"><i class="material-icons">widgets</i> Polygon</button>
+    <button mat-menu-item (click)="circle()"><i class="material-icons">bubble_chart</i> Kreis</button>
+    <button mat-menu-item (click)="line()"><i class="material-icons">show_chart</i> Linie</button>
+</mat-menu>
+</span>
+
+<span class="drawingTools">
+
+    <!--
+    <mat-form-field>
+
+        <mat-select placeholder="Karte" [(value)]="selectedMap" (ngModelChange)="changeMap($event)">
+            <mat-option *ngFor="let map of maps" [value]="map.value">
+                {{map.viewValue}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-select placeholder="Ebene(n)" [(value)]="selectedLayers" multiple>
+            <mat-option *ngFor="let layer of getSelectedMap().layers" [value]="layer.value">
+                {{layer.viewValue}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>-->
 </span>

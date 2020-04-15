@@ -28,6 +28,8 @@ import {proj} from 'ol';
 import {SharedStateService} from '../shared-state.service';
 import {Layer} from "../layers/layer";
 import {coordinatesProjection, mercatorProjection} from "../projections";
+import MousePosition from 'ol/control/MousePosition';
+import {createStringXY} from 'ol/coordinate';
 
 @Component({
     selector: 'app-map',
@@ -36,7 +38,7 @@ import {coordinatesProjection, mercatorProjection} from "../projections";
 })
 export class MapComponent implements OnInit {
 
-    initialCoordinates = [829038.2228723184, 5933590.521128002];
+    initialCoordinates = [776217.9563903547,  5900111.880627786];
     map: OlMap = null;
     layer: Layer;
     view: OlView;
@@ -50,6 +52,17 @@ export class MapComponent implements OnInit {
         if(previousPosition!=null){
             previousPosition = JSON.parse(previousPosition);
         }
+
+        // let mousePositionControl = new MousePosition({
+        //     coordinateFormat: createStringXY(4),
+        //     projection: 'EPSG:3857',
+        //     // comment the following two lines to have the mouse position
+        //     // be placed within the map.
+        //     className: 'custom-mouse-position',
+        //     target: document.getElementById('mouse-position'),
+        //     undefinedHTML: '&nbsp;'
+        // });
+
         window.addEventListener('beforeunload', (event) => {
             //Save zoom level and position before leaving (to recover when re-entering)
             localStorage.setItem('viewport', JSON.stringify({"center": this.map.getView().getCenter(), "zoom": this.map.getView().getZoom()}));
@@ -58,8 +71,10 @@ export class MapComponent implements OnInit {
             target: 'map',
             view: new OlView({
                 center: previousPosition!=null && previousPosition.center != null ? previousPosition.center : this.initialCoordinates,
-                zoom: previousPosition!=null && previousPosition.zoom!=null ? previousPosition.zoom : 16
-            })
+                zoom: previousPosition!=null && previousPosition.zoom!=null ? previousPosition.zoom : 12
+            }),
+            controls: []
+            //controls: [mousePositionControl]
         });
         this.sharedState.currentCoordinate.subscribe(coordinate => {
             if (coordinate != null) {

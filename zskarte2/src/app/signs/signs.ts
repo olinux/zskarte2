@@ -683,7 +683,7 @@ export class Signs {
             example: null, fillOpacity: null, color: null, dataUrl: null
         },
         {
-            type: "Point",
+            type: "Polygon",
             kat: "red",
             src: "Kommunikationsstoerung.png",
             de: "Kommunikationsstoerung",

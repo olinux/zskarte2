@@ -26,6 +26,7 @@ import Vector from 'ol/source/Vector';
 import LayerVector from 'ol/layer/Vector';
 import GeoJSON from 'ol/format/GeoJSON';
 import Draw from 'ol/interaction/Draw';
+import DrawHole from 'ol-ext/interaction/DrawHole';
 import GeometryCollection from 'ol/geom/GeometryCollection';
 import OlMap from 'ol/Map';
 import {fromLonLat} from 'ol/proj';
@@ -54,6 +55,7 @@ export class DrawlayerComponent implements OnInit {
         condition: never
     });
 
+
     modify = new Modify({
         features: this.select.getFeatures()
     });
@@ -68,6 +70,7 @@ export class DrawlayerComponent implements OnInit {
     drawer = null;
     historyMode = false;
     firstLoad = true;
+    drawHole = null;
 
     constructor(private sharedState: SharedStateService, private readonly ngf: NgForage) {
     }
@@ -304,6 +307,21 @@ export class DrawlayerComponent implements OnInit {
         this.source.clear();
         this.select.getFeatures().clear();
         if (elements !== null) {
+            // for (let f of elements.features){
+            //     for (let g of f.geometry.geometries){
+            //         for (let c of g.coordinates){
+            //             if(c.length!=2){
+            //                 for (let p of c){
+            //                    if(p.length==2){
+            //                         p[0] = p[0]+890;
+            //                         p[1] = p[1]+6606;
+            //                    }
+            //                 }
+            //             }
+            //         }
+            //     }
+            //     console.log(f);
+            // }
             this.handleCustomSignatures(elements.features, signature => {
                //TODO load dataUrls
             });
@@ -320,6 +338,16 @@ export class DrawlayerComponent implements OnInit {
         this.loadElements(JSON.parse(text));
     }
 
+
+    startDrawHole(sign){
+        this.drawHole = new DrawHole (
+            {
+                layers: [ this.layer ]
+            });
+        this.map.addInteraction(this.drawHole);
+
+    }
+
     startDrawing(sign) {
         this.currentDrawingSign = sign;
         if (this.drawer !== null) {
@@ -328,7 +356,7 @@ export class DrawlayerComponent implements OnInit {
         if (this.currentDrawingSign != null) {
             this.drawer = new Draw({
                 source: this.source,
-                    type: this.currentDrawingSign.type
+                type: this.currentDrawingSign.type
             });
             this.drawer.drawLayer = this;
             this.drawer.once('drawend', function (event) {
