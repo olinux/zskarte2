@@ -20,9 +20,8 @@
 
 import {Component, OnInit, Inject, Output, EventEmitter} from '@angular/core';
 
-import {
-    MatDialogRef, MAT_DIALOG_DATA, MatTableDataSource
-} from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 import {SharedStateService} from '../shared-state.service';
 import {Sign} from '../entity/sign';
 import {DrawStyle} from "../drawlayer/draw-style";

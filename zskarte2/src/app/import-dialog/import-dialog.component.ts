@@ -20,7 +20,7 @@
 
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {DrawingDialogComponent} from "../drawing-dialog/drawing-dialog.component";
-import {MatDialogRef} from "@angular/material";
+import { MatDialogRef } from "@angular/material/dialog";
 
 @Component({
     selector: 'app-import-dialog',
@@ -29,7 +29,7 @@ import {MatDialogRef} from "@angular/material";
 })
 export class ImportDialogComponent implements OnInit {
 
-    @ViewChild('fileInput') el: ElementRef;
+    @ViewChild('fileInput', { static: false }) el: ElementRef;
 
     constructor(public dialogRef: MatDialogRef<DrawingDialogComponent>) {
     }

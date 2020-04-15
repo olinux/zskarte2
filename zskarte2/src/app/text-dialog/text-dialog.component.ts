@@ -19,7 +19,7 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {MatDialogRef} from "@angular/material";
+import { MatDialogRef } from "@angular/material/dialog";
 import {DrawingDialogComponent} from "../drawing-dialog/drawing-dialog.component";
 import {SharedStateService} from "../shared-state.service";
 import {Sign} from "../entity/sign";

@@ -22,7 +22,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {DrawlayerComponent} from "../drawlayer/drawlayer.component";
 import {DomSanitizer} from "@angular/platform-browser";
 import {HistoryComponent} from "../history/history.component";
-import {MatDialog} from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
 import {DrawingDialogComponent} from "../drawing-dialog/drawing-dialog.component";
 import {ImportDialogComponent} from "../import-dialog/import-dialog.component";
 import {TextDialogComponent} from "../text-dialog/text-dialog.component";
