@@ -18,7 +18,7 @@
   ~
   -->
 <span class="layers">
-<button mat-stroked-button [matMenuTriggerFor]="layersMenu"><i class="material-icons">layers</i> Karten</button>
+  <button mat-stroked-button [matMenuTriggerFor]="layersMenu"><i class="material-icons">layers</i> {{i18n.get("maps")}}</button>
 <mat-menu #layersMenu="matMenu">
   <button *ngFor="let layer of layers" mat-menu-item (click)="changeToLayer(layer)"><i *ngIf="currentLayer===layer"
                                                                                        class="material-icons">check_circle</i> {{layer.name}}</button>
@@ -26,7 +26,7 @@
 </span>
 <span class="features">
   <button mat-stroked-button [matMenuTriggerFor]="featuresMenu"><i
-          class="material-icons">layers</i> Themenkarten</button>
+          class="material-icons">layers</i> {{i18n.get("thematicMaps")}}</button>
   <mat-menu #featuresMenu="matMenu">
   <button *ngFor="let item of features" mat-menu-item (click)="toggleFeature(item)" title="{{item.label}}"><i *ngIf="item.layer!==undefined"
                                                                                        class="material-icons">check_circle</i> {{item.label}}</button>

@@ -21,6 +21,7 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {SharedStateService} from "../shared-state.service";
+import {I18NService} from "../i18n.service";
 
 @Component({
     selector: 'app-geocoder',
@@ -31,7 +32,7 @@ export class GeocoderComponent implements OnInit {
 
     geocoderUrl = 'https://nominatim.openstreetmap.org/search?format=json&q=';
 
-    constructor(private http: HttpClient, private sharedState: SharedStateService) {
+    constructor(private http: HttpClient, private sharedState: SharedStateService, public i18n:I18NService) {
     }
 
     ngOnInit() {

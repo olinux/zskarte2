@@ -28,6 +28,6 @@
             [ngModel]="historyPerc"
             (ngModelChange)="setHistoryDateByPercentage($event)">
     </mat-slider>
-    <button mat-raised-button color="primary" (click)="toggleHistoryMode()">History-Modus beenden</button>
+    <button mat-raised-button color="primary" (click)="toggleHistoryMode()" >{{i18n.get("endHistoryMode")}}</button>
   </mat-card-content>
 </mat-card>

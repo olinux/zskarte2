@@ -18,9 +18,11 @@
  *
  */
 
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {DrawlayerComponent} from '../drawlayer/drawlayer.component';
 import {HistoryComponent} from "../history/history.component";
+import {SharedStateService} from "../shared-state.service";
+import {I18NService} from "../i18n.service";
 
 @Component({
     selector: 'app-toolbar',
@@ -32,10 +34,17 @@ export class ToolbarComponent implements OnInit {
     @Input() drawLayer: DrawlayerComponent;
     @Input() history: HistoryComponent;
 
-    constructor() {
+    constructor(public i18n:I18NService, private cdr: ChangeDetectorRef) {
     }
 
     ngOnInit() {
     }
+
+    setLocale(locale:string){
+        this.i18n.locale = locale;
+        this.cdr.detectChanges();
+    }
+
+
 
 }

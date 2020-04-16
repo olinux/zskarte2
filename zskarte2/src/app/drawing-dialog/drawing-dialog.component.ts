@@ -26,6 +26,7 @@ import {SharedStateService} from '../shared-state.service';
 import {Sign} from '../entity/sign';
 import {DrawStyle} from "../drawlayer/draw-style";
 import {Signs} from "../signs/signs";
+import {I18NService} from "../i18n.service";
 
 export interface DrawingData {
     name: string;
@@ -39,14 +40,14 @@ export interface DrawingData {
 export class DrawingDialogComponent implements OnInit {
 
     displayedColumns: string[] = ['symbol', 'name'];
-    dataSource = new MatTableDataSource(Signs.SIGNS);
+    dataSource = new MatTableDataSource(Signs.SIGNS.sort((a,b) => a[this.i18n.locale]> b[this.i18n.locale] ? 1 : (b[this.i18n.locale] > a[this.i18n.locale] ? -1 : 0)));
 
     applyFilter(filterValue: string) {
         this.dataSource.filter = filterValue.trim().toLowerCase();
     }
 
     constructor(public dialogRef: MatDialogRef<DrawingDialogComponent>,
-                @Inject(MAT_DIALOG_DATA) public data: DrawingData, private sharedState: SharedStateService) {
+                @Inject(MAT_DIALOG_DATA) public data: DrawingData, private sharedState: SharedStateService, public i18n:I18NService) {
     }
 
     getImageUrl(file: string) {

@@ -20,6 +20,8 @@
 
 import {Component, OnInit} from '@angular/core';
 import {Filter} from "../drawingtools/drawingtools.component";
+import {SharedStateService} from "../shared-state.service";
+import {I18NService} from "../i18n.service";
 
 @Component({
     selector: 'app-filter',
@@ -30,13 +32,13 @@ export class FilterComponent implements OnInit {
 
 
     filters: Filter[] = [
-        {value: null, viewValue: 'Kein Filter', color: 'white', textcolor: 'black'},
-        {value: 'damage', viewValue: 'Beschädigungen', color: 'red', textcolor: 'white'},
-        {value: 'danger', viewValue: 'Gefahren', color: 'orange', textcolor: 'black'},
-        {value: 'resources', viewValue: 'Einsatzmittel', color: 'blue', textcolor: 'white'}
+        {value: null, viewValue: this.i18n.get("noFilter"), color: 'white', textcolor: 'black'},
+        {value: 'damage', viewValue: this.i18n.get("damage"), color: 'red', textcolor: 'white'},
+        {value: 'danger', viewValue: this.i18n.get("danger") , color: 'orange', textcolor: 'black'},
+        {value: 'resources', viewValue:  this.i18n.get("resources"), color: 'blue', textcolor: 'white'}
     ];
 
-    constructor() {
+    constructor(public i18n:I18NService) {
     }
 
     ngOnInit() {

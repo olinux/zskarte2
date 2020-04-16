@@ -20,11 +20,13 @@
 
 <mat-card class="toolbar">
     <mat-card-content>
+        <span class="flags"><img *ngFor="let locale of i18n.LOCALES" (click)="setLocale(locale)" class="flag" src="assets/img/flags/{{locale}}.svg" [ngClass]="{'active': locale==i18n.locale}"/></span>
         <app-credits></app-credits>
         <app-geocoder></app-geocoder>
         <app-drawingtools *ngIf="!history.historyDate"></app-drawingtools>
         <!--<a class="mat-stroked-button" download="map.jpg"><span class="mat-button-wrapper"><i class="material-icons">photo_camera</i> Screenshot</span></a>-->
         <app-tools [drawLayer]="drawLayer" [history]="history" *ngIf="!history.historyDate"></app-tools>
         <app-layers></app-layers>
+
     </mat-card-content>
 </mat-card>

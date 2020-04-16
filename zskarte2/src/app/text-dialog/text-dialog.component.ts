@@ -23,6 +23,7 @@ import { MatDialogRef } from "@angular/material/dialog";
 import {DrawingDialogComponent} from "../drawing-dialog/drawing-dialog.component";
 import {SharedStateService} from "../shared-state.service";
 import {Sign} from "../entity/sign";
+import {I18NService} from "../i18n.service";
 
 @Component({
     selector: 'app-text-dialog',
@@ -31,7 +32,7 @@ import {Sign} from "../entity/sign";
 })
 export class TextDialogComponent implements OnInit {
 
-    constructor(public dialogRef: MatDialogRef<DrawingDialogComponent>, private sharedState: SharedStateService) {
+    constructor(public dialogRef: MatDialogRef<DrawingDialogComponent>, private sharedState: SharedStateService, public i18n:I18NService) {
     }
 
     text: string = null;

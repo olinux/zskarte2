@@ -27,6 +27,7 @@ import {DrawingDialogComponent} from "../drawing-dialog/drawing-dialog.component
 import {ImportDialogComponent} from "../import-dialog/import-dialog.component";
 import {TextDialogComponent} from "../text-dialog/text-dialog.component";
 import {DownloadDialogComponent} from "../download-dialog/download-dialog.component";
+import {I18NService} from "../i18n.service";
 
 
 @Component({
@@ -53,7 +54,7 @@ export class ToolsComponent implements OnInit {
 
     downloadData = null;
 
-    constructor(private sanitizer: DomSanitizer, public dialog: MatDialog) {
+    constructor(private sanitizer: DomSanitizer, public dialog: MatDialog, public i18n:I18NService) {
     }
 
 

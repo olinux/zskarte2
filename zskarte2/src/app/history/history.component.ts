@@ -21,6 +21,7 @@
 import {Component, OnInit} from '@angular/core';
 import {SharedStateService} from '../shared-state.service';
 import {NgxIndexedDBService} from "ngx-indexed-db";
+import {I18NService} from "../i18n.service";
 
 @Component({
     selector: 'app-history',
@@ -32,7 +33,7 @@ export class HistoryComponent implements OnInit {
     historyDate = null;
     historyPerc = 100;
 
-    constructor(private sharedState: SharedStateService, private dbService: NgxIndexedDBService) {
+    constructor(private sharedState: SharedStateService, private dbService: NgxIndexedDBService, public i18n:I18NService) {
     }
 
     getDateByPerc(perc): Promise<Date> {

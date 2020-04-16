@@ -19,6 +19,8 @@
  */
 
 import {Component, OnInit} from '@angular/core';
+import {SharedStateService} from "../shared-state.service";
+import {I18NService} from "../i18n.service";
 
 @Component({
     selector: 'app-clock',
@@ -27,7 +29,7 @@ import {Component, OnInit} from '@angular/core';
 })
 export class ClockComponent implements OnInit {
 
-    constructor() {
+    constructor(public i18n:I18NService) {
     }
 
     now: Date;

@@ -30,6 +30,8 @@ import {Layer} from "../layers/layer";
 import {coordinatesProjection, mercatorProjection} from "../projections";
 import MousePosition from 'ol/control/MousePosition';
 import {createStringXY} from 'ol/coordinate';
+import {GeoadminService} from "../geoadmin.service";
+import {I18NService} from "../i18n.service";
 
 @Component({
     selector: 'app-map',
@@ -43,7 +45,7 @@ export class MapComponent implements OnInit {
     layer: Layer;
     view: OlView;
 
-    constructor(private sharedState: SharedStateService) {
+    constructor(private sharedState: SharedStateService, public i18n:I18NService) {
     }
 
     ngOnInit() {

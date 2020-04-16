@@ -2,22 +2,22 @@
     <div class="modal-content">
         <div class="modal-body">
             <p>
-                Aktuellen Stand herunterladen.
+                {{i18n.get("downloadCurrentState")}}
             </p>
             <mat-radio-group>
                 <div>
-                    <mat-radio-button value="withHistory" checked>Mit History</mat-radio-button>
+                    <mat-radio-button value="withHistory" checked>{{i18n.get("withHistory")}}</mat-radio-button>
                 </div>
                 <div>
-                    <mat-radio-button value="withoutHistory">Ohne History</mat-radio-button>
+                    <mat-radio-button value="withoutHistory">{{i18n.get("withoutHistory")}}</mat-radio-button>
                 </div>
             </mat-radio-group>
         </div>
         <div class="modal-footer">
-            <button mat-stroked-button (click)="cancel()">Abbrechen</button>
+            <button mat-stroked-button (click)="cancel()">{{i18n.get("cancel")}}</button>
             <a mat-raised-button color="primary" download="features.json" id="export" (click)="download()"
                [href]="downloadData"
-               style="width:auto;"><i class="material-icons">save</i> Herunterladen</a>
+               style="width:auto;"><i class="material-icons">save</i> <span>{{i18n.get("download")}}</span></a>
         </div>
     </div>
 </div>

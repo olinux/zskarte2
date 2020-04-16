@@ -22,12 +22,12 @@
     <div class="modal-content">
         <div class="modal-body">
             <mat-form-field>
-                <textarea matInput placeholder="Your text" [(ngModel)]="text"></textarea>
+                <textarea matInput placeholder="{{i18n.get('yourText')}}" [(ngModel)]="text"></textarea>
             </mat-form-field>
         </div>
         <div class="modal-footer">
-            <button mat-stroked-button (click)="cancel()">Abbrechen</button>
-            <button mat-raised-button color="primary" (click)="submit()">Übernehmen</button>
+            <button mat-stroked-button (click)="cancel()" >{{i18n.get("cancel")}}</button>
+            <button mat-raised-button color="primary" (click)="submit()" >{{i18n.get("ok")}}</button>
         </div>
     </div>
 </div>

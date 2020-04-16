@@ -29,6 +29,8 @@ export class Signs {
             kat: "blue",
             src: "ABC Dekontaminationsstelle.png",
             de: "ABC Dekontaminationsstelle",
+            en: "ABC Dekontaminationsstelle",
+            fr: "Place de décontamination",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -38,6 +40,8 @@ export class Signs {
             kat: "blue",
             src: "Absperrung Einsatzraum.png",
             de: "Absperrung Einsatzraum",
+            en: "Absperrung Einsatzraum",
+            fr: "Barrage du secteur d’engagement",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -47,6 +51,8 @@ export class Signs {
             kat: "blue",
             src: "Absperrung Verkehrswege.png",
             de: "Absperrung Verkehrswege",
+            en: "Absperrung Verkehrswege",
+            fr: "Fermeture de la route",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -56,6 +62,8 @@ export class Signs {
             kat: "blue",
             src: "Achse fuer Ei, Rttg, Vsg.png",
             de: "Achse fuer Ei, Rttg, Vsg",
+            en: "Achse fuer Ei, Rttg, Vsg",
+            fr: "Axe d’engagement pour le sauvetage, l’approvisionnement, etc.",
             style: "dash",
             text: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -65,6 +73,8 @@ export class Signs {
             kat: "blue",
             src: "Angehoerigensammelstelle.png",
             de: "Angehoerigensammelstelle",
+            en: "Angehoerigensammelstelle",
+            fr: "Poste collecteur pour les proches",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -74,6 +84,8 @@ export class Signs {
             kat: "red",
             src: "Atomunfall.png",
             de: "Atomunfall",
+            en: "Atomunfall",
+            fr: "Accident nucléaire",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -82,7 +94,9 @@ export class Signs {
             type: "Point",
             kat: "red",
             src: "Autounfall_2.png",
-            de: "Autounfall_2",
+            de: "Autounfall",
+            en: "Autounfall",
+            fr: "Accident de circulation automobile",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -92,6 +106,8 @@ export class Signs {
             kat: "blue",
             src: "Beabsichtigte Erkundung.png",
             de: "Beabsichtigte Erkundung",
+            en: "Beabsichtigte Erkundung",
+            fr: "Exploration / Reconnaissances prévues",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -101,6 +117,8 @@ export class Signs {
             kat: "blue",
             src: "Beabsichtigter Einsatz.png",
             de: "Beabsichtigter Einsatz",
+            en: "Beabsichtigter Einsatz",
+            fr: "Engagements prévus",
             style: "dash",
             text: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -110,6 +128,8 @@ export class Signs {
             kat: "blue",
             src: "Beabsichtigte Verschiebung.png",
             de: "Beabsichtigte Verschiebung",
+            en: "Beabsichtigte Verschiebung",
+            fr: "Mouvements prévus",
             style: "dash",
             text: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -119,6 +139,8 @@ export class Signs {
             kat: "blue",
             src: "Beobachtung.png",
             de: "Beobachtung",
+            en: "Beobachtung",
+            fr: "Observation",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -127,7 +149,9 @@ export class Signs {
             type: "Point",
             kat: "red",
             src: "Beschaedigung.png",
-            de: "Beschaedigung",
+            de: "Beschädigung",
+            en: "Beschäigung",
+            fr: "Dégât",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -137,6 +161,8 @@ export class Signs {
             kat: "blue",
             src: "Betreuungsstelle.png",
             de: "Betreuungsstelle",
+            en: "Betreuungsstelle",
+            fr: "Poste d’assistance",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -146,6 +172,8 @@ export class Signs {
             kat: "blue",
             src: "Betriebsstoffabgabestelle.png",
             de: "Betriebsstoffabgabestelle",
+            en: "Betriebsstoffabgabestelle",
+            fr: "Station de carburant",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -155,6 +183,8 @@ export class Signs {
             kat: "blue",
             src: "Bezirksfuehrungsorgan.png",
             de: "Bezirksfuehrungsorgan",
+            en: "Bezirksfuehrungsorgan",
+            fr: "Organe de conduite de district",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -164,6 +194,8 @@ export class Signs {
             kat: "other",
             src: "Biologisch verseuchtes Gebiet.png",
             de: "Biologisch verseuchtes Gebiet",
+            en: "Biologisch verseuchtes Gebiet",
+            fr: "Zone biologiquement contaminée",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -173,6 +205,8 @@ export class Signs {
             kat: "red",
             src: "Biounfall.png",
             de: "Biounfall",
+            en: "Biounfall",
+            fr: "Accident biologique",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -182,6 +216,8 @@ export class Signs {
             kat: "blue",
             src: "B Laboratorium.png",
             de: "B Laboratorium",
+            en: "B Laboratorium",
+            fr: "Laboratoire B",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -191,6 +227,8 @@ export class Signs {
             kat: "red",
             src: "Bombenanschlag.png",
             de: "Bombenanschlag",
+            en: "Bombenanschlag",
+            fr: "Attentat à la bombe",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -200,6 +238,8 @@ export class Signs {
             kat: "red",
             src: "Bombendrohung.png",
             de: "Bombendrohung",
+            en: "Bombendrohung",
+            fr: "Menace à la bombe",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -209,6 +249,8 @@ export class Signs {
             kat: "red",
             src: "Brandanschlag.png",
             de: "Brandanschlag",
+            en: "Brandanschlag",
+            fr: "Incendie criminel",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -218,24 +260,8 @@ export class Signs {
             kat: "red",
             src: "Brand einzelnes Gebaeude Flamme.png",
             de: "Brand einzelnes Gebaeude Flamme",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
-        },
-        {
-            type: "Polygon",
-            kat: "red",
-            src: "Brand einzelnes Gebaeude - Signatur.png",
-            de: "Brand einzelnes Gebaeude - Signatur",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
-        },
-        {
-            type: "Polygon",
-            kat: "red",
-            src: "Brand mehrerer Gebaeude - Signatur.png",
-            de: "Brand mehrerer Gebaeude - Signatur",
+            en: "Brand einzelnes Gebaeude Flamme",
+            fr: "Incendie isolé",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -245,6 +271,8 @@ export class Signs {
             kat: "red",
             src: "Brand.png",
             de: "Brand",
+            en: "Brand",
+            fr: "Incendie",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -253,7 +281,9 @@ export class Signs {
             type: "LineString",
             kat: "red",
             src: "Branduebergriff erfolgt - Signatur.png",
-            de: "Branduebergriff erfolgt",
+            de: "Brandübergriff erfolgt",
+            en: "Brandübergriff erfolgt",
+            fr: "Extension du feu",
             example: "Branduebergriff erfolgt - Beispiel.png",
             text: null,
             style: null,
@@ -263,7 +293,9 @@ export class Signs {
             type: "LineString",
             kat: "red",
             src: "Branduebergriffsgefahr - Signatur.png",
-            de: "Branduebergriffsgefahr - Signatur",
+            de: "Brandübergriffsgefahr",
+            en: "Brandübergriffsgefahr",
+            fr: "Danger d'extension",
             example: "Branduebergriffsgefahr - Beispiel.png",
             style: "dash",
             text: null, fillOpacity: null, color: null, dataUrl: null
@@ -272,7 +304,9 @@ export class Signs {
             type: "Polygon",
             kat: "red",
             src: "Brandzone Flaechenbrand.png",
-            de: "Brandzone Flaechenbrand",
+            de: "Brandzone Flächenbrand",
+            en: "Brandzone Flächenbrand",
+            fr: "Zone en feu",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -282,6 +316,8 @@ export class Signs {
             kat: "red",
             src: "Chemieunfall.png",
             de: "Chemieunfall",
+            en: "Chemieunfall",
+            fr: "Accident chimique",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -290,7 +326,9 @@ export class Signs {
             type: "Polygon",
             kat: "other",
             src: "Chemievergiftetes Gebiet gasfoermig - fluechtig.png",
-            de: "Chemievergiftetes Gebiet gasfoermig - fluechtig",
+            de: "Chemievergiftetes Gebiet gasförmig - flüchtig",
+            en: "Chemievergiftetes Gebiet gasförmig - flüchtig",
+            fr: "Zone chimiquement contaminée gazeux - volatil",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -299,7 +337,9 @@ export class Signs {
             type: "Polygon",
             kat: "other",
             src: "Chemievergiftete Zone fluessig - sesshaft.png",
-            de: "Chemievergiftete Zone fluessig - sesshaft",
+            de: "Chemievergiftete Zone flüssig - sesshaft",
+            en: "Chemievergiftete Zone flüssig - sesshaft",
+            fr: "Zone chimiquement contaminée liquide",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -309,6 +349,8 @@ export class Signs {
             kat: "orange",
             src: "Chemikalien.png",
             de: "Chemikalien",
+            en: "Chemikalien",
+            fr: "Chimique",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -318,6 +360,8 @@ export class Signs {
             kat: "blue",
             src: "Debriefingstelle.png",
             de: "Debriefingstelle",
+            en: "Debriefingstelle",
+            fr: "Poste de débriefing",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -327,6 +371,8 @@ export class Signs {
             kat: "red",
             src: "Demo gewaltlos.png",
             de: "Demo gewaltlos",
+            en: "Demo gewaltlos",
+            fr: "Manifestation",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -336,6 +382,8 @@ export class Signs {
             kat: "red",
             src: "Demo gewaltsam.png",
             de: "Demo gewaltsam",
+            en: "Demo gewaltsam",
+            fr: "Manifestation avec exactions",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -345,6 +393,8 @@ export class Signs {
             kat: "red",
             src: "Drohung.png",
             de: "Drohung",
+            en: "Drohung",
+            fr: "Menace",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -353,7 +403,9 @@ export class Signs {
             type: "Point",
             kat: "red",
             src: "Duerre.png",
-            de: "Duerre",
+            de: "Dürre",
+            en: "Dürre",
+            fr: "Sécheresse",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -362,7 +414,9 @@ export class Signs {
             type: "LineString",
             kat: "blue",
             src: "Durchgefuehrte Erkundung.png",
-            de: "Durchgefuehrte Erkundung",
+            de: "Durchgeführte Erkundung",
+            en: "Durchgeführte Erkundung",
+            fr: "Exploration / Reconnaissances exécutées",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -371,7 +425,9 @@ export class Signs {
             type: "LineString",
             kat: "blue",
             src: "Durchgefuehrter Einsatz.png",
-            de: "Durchgefuehrter Einsatz",
+            de: "Durchgeführter Einsatz",
+            en: "Durchgeführter Einsatz",
+            fr: "Engagements exécutés",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -380,7 +436,9 @@ export class Signs {
             type: "LineString",
             kat: "blue",
             src: "Durchgefuehrte Verschiebung.png",
-            de: "Durchgefuehrte Verschiebung",
+            de: "Durchgeführte Verschiebung",
+            en: "Durchgeführte Verschiebung",
+            fr: "Mouvements exécutés",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -390,6 +448,8 @@ export class Signs {
             kat: "red",
             src: "Eingesperrte - Abgeschnittene.png",
             de: "Eingesperrte - Abgeschnittene",
+            en: "Eingesperrte - Abgeschnittene",
+            fr: "Personnes enfermées ou retranchées",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -399,6 +459,8 @@ export class Signs {
             kat: "blue",
             src: "Einsatzleiter.png",
             de: "Einsatzleiter",
+            en: "Einsatzleiter",
+            fr: "Chef d’intervention",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -408,6 +470,8 @@ export class Signs {
             kat: "blue",
             src: "Einsatzleitung.png",
             de: "Einsatzleitung",
+            en: "Einsatzleitung",
+            fr: "Direction d’intervention",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -417,6 +481,8 @@ export class Signs {
             kat: "blue",
             src: "Einsatzzentrale.png",
             de: "Einsatzzentrale",
+            en: "Einsatzzentrale",
+            fr: "Centrale d‘engagement",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -425,7 +491,9 @@ export class Signs {
             type: "Point",
             kat: "red",
             src: "Eisenbahnunglueck.png",
-            de: "Eisenbahnunglueck",
+            de: "Eisenbahnunglück",
+            en: "Eisenbahnunglück",
+            fr: "Accident ferroviaire",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -434,7 +502,9 @@ export class Signs {
             type: "Point",
             kat: "orange",
             src: "Elektrizitaet.png",
-            de: "Elektrizitaet",
+            de: "Elektrizität",
+            en: "Elektrizität",
+            fr: "Electricité",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -444,6 +514,8 @@ export class Signs {
             kat: "red",
             src: "Energieausfall.png",
             de: "Energieausfall",
+            en: "Energieausfall",
+            fr: "Panne énergétique",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -453,6 +525,8 @@ export class Signs {
             kat: "red",
             src: "Epidemie.png",
             de: "Epidemie",
+            en: "Epidemie",
+            fr: "Epidemie",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -462,6 +536,8 @@ export class Signs {
             kat: "red",
             src: "Erdbeben.png",
             de: "Erdbeben",
+            en: "Erdbeben",
+            fr: "Tremblement de terre",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -471,6 +547,8 @@ export class Signs {
             kat: "red",
             src: "Erdrutsch.png",
             de: "Erdrutsch",
+            en: "Erdrutsch",
+            fr: "Glissement de terrain",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -480,6 +558,8 @@ export class Signs {
             kat: "orange",
             src: "Explosion.png",
             de: "Explosion",
+            en: "Explosion",
+            fr: "Explosion",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -488,7 +568,9 @@ export class Signs {
             type: "Polygon",
             kat: "red",
             src: "Explosionsherd - Signatur.png",
-            de: "Explosionsherd - Signatur",
+            de: "Explosionsherd",
+            en: "Explosionsherd",
+            fr: "Foyer d’explosion",
             example: "Explosionsherd - Beispiel.png",
             text: null,
             style: null, fillOpacity: null, color: null, dataUrl: null
@@ -498,6 +580,8 @@ export class Signs {
             kat: "blue",
             src: "Fahrzeugplatz.png",
             de: "Fahrzeugplatz",
+            en: "Fahrzeugplatz",
+            fr: "Place pour véhicules",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -506,7 +590,9 @@ export class Signs {
             type: "Point",
             kat: "red",
             src: "Fluechtlinge.png",
-            de: "Fluechtlinge",
+            de: "Flüchtlinge",
+            en: "Flüchtlinge",
+            fr: "Réfugiés",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -516,6 +602,8 @@ export class Signs {
             kat: "red",
             src: "Flugzeugabsturz.png",
             de: "Flugzeugabsturz",
+            en: "Flugzeugabsturz",
+            fr: "Catastrophe aérienne",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -525,6 +613,8 @@ export class Signs {
             kat: "orange",
             src: "Gas.png",
             de: "Gas",
+            en: "Gas",
+            fr: "Gaz",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -533,7 +623,9 @@ export class Signs {
             type: "Point",
             kat: "red",
             src: "Gebaeudeeinsturz.png",
-            de: "Gebaeudeeinsturz",
+            de: "Gebäudeeinsturz",
+            en: "Gebäudeeinsturz",
+            fr: "Immeuble effondré",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -542,7 +634,9 @@ export class Signs {
             type: "Point",
             kat: "orange",
             src: "Gefahr durch Loeschen mit Wasser.png",
-            de: "Gefahr durch Loeschen mit Wasser",
+            de: "Gefahr durch Löschen mit Wasser",
+            en: "Gefahr durch Löschen mit Wasser",
+            fr: "Danger en cas d'extinction avec de l'eau",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -552,6 +646,8 @@ export class Signs {
             kat: "orange",
             src: "Gefahrentafel mit UN-Nummer.png",
             de: "Gefahrentafel mit UN-Nummer",
+            en: "Gefahrentafel mit UN-Nummer",
+            fr: "Plaque de danger avec numéro ONU",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -561,6 +657,8 @@ export class Signs {
             kat: "orange",
             src: "Gefahr fuer Grundwasser.png",
             de: "Gefahr fuer Grundwasser",
+            en: "Gefahr fuer Grundwasser",
+            fr: "Danger pour les eaux de surface et/ou nappes souterraines",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -569,7 +667,9 @@ export class Signs {
             type: "Point",
             kat: "blue",
             src: "Gemeindefuehrungsorgan.png",
-            de: "Gemeindefuehrungsorgan",
+            de: "Gemeindeführungsorgan",
+            en: "Gemeindeführungsorgan",
+            fr: "Organe de conduite communal",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -578,7 +678,9 @@ export class Signs {
             type: "Point",
             kat: "blue",
             src: "Gruppenfuehrer.png",
-            de: "Gruppenfuehrer",
+            de: "Gruppenführer",
+            en: "Gruppenführer",
+            fr: "Chef de groupe",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -588,6 +690,8 @@ export class Signs {
             kat: "blue",
             src: "Gruppe.png",
             de: "Gruppe",
+            en: "Gruppe",
+            fr: "Groupe",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -597,6 +701,8 @@ export class Signs {
             kat: "blue",
             src: "Helikopterlandeplatz.png",
             de: "Helikopterlandeplatz",
+            en: "Helikopterlandeplatz",
+            fr: "Place d’atterrissage pour hélicoptère",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -606,6 +712,8 @@ export class Signs {
             kat: "blue",
             src: "Informationsstelle.png",
             de: "Informationsstelle",
+            en: "Informationsstelle",
+            fr: "Point d’information",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -615,6 +723,8 @@ export class Signs {
             kat: "blue",
             src: "Informationszentrum.png",
             de: "Informationszentrum",
+            en: "Informationszentrum",
+            fr: "Centre de presse",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -624,6 +734,8 @@ export class Signs {
             kat: "red",
             src: "Infrastrukturschaden.png",
             de: "Infrastrukturschaden",
+            en: "Infrastrukturschaden",
+            fr: "Dommages aux infrastructures",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -633,6 +745,8 @@ export class Signs {
             kat: "blue",
             src: "Kadaversammelstelle.png",
             de: "Kadaversammelstelle",
+            en: "Kadaversammelstelle",
+            fr: "Poste collecteur de cadavres d’animaux",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -642,6 +756,8 @@ export class Signs {
             kat: "red",
             src: "Kanalisationsausfall.png",
             de: "Kanalisationsausfall",
+            en: "Kanalisationsausfall",
+            fr: "Egoûts défectueux",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -650,7 +766,9 @@ export class Signs {
             type: "Point",
             kat: "blue",
             src: "Kantonales Fuehrungsorgan.png",
-            de: "Kantonales Fuehrungsorgan",
+            de: "Kantonales Führungsorgan",
+            en: "Kantonales Führungsorgan",
+            fr: "Organe de conduite cantonal",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -660,6 +778,8 @@ export class Signs {
             kat: "blue",
             src: "KGS Sammelpunkt.png",
             de: "KGS Sammelpunkt",
+            en: "KGS Sammelpunkt",
+            fr: "Point de collecte PBC",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -669,6 +789,8 @@ export class Signs {
             kat: "blue",
             src: "Kommandoposten Front.png",
             de: "Kommandoposten Front",
+            en: "Kommandoposten Front",
+            fr: "PC engagement",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -677,7 +799,9 @@ export class Signs {
             type: "Point",
             kat: "blue",
             src: "Kommandoposten Rueckwaertiges.png",
-            de: "Kommandoposten Rueckwaertiges",
+            de: "Kommandoposten Rückwärtiges",
+            en: "Kommandoposten Rückwärtiges",
+            fr: "PC opérations",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -686,7 +810,9 @@ export class Signs {
             type: "Polygon",
             kat: "red",
             src: "Kommunikationsstoerung.png",
-            de: "Kommunikationsstoerung",
+            de: "Kommunikationsstörung",
+            en: "Kommunikationsstörung",
+            fr: "Perturbation de la communication",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -696,6 +822,8 @@ export class Signs {
             kat: "blue",
             src: "Kompanie.png",
             de: "Kompanie",
+            en: "Kompanie",
+            fr: "Compagnie",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -705,6 +833,8 @@ export class Signs {
             kat: "blue",
             src: "Kontrollstelle.png",
             de: "Kontrollstelle",
+            en: "Kontrollstelle",
+            fr: "Point de contrôle",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -714,6 +844,8 @@ export class Signs {
             kat: "blue",
             src: "Kontrollzentrum.png",
             de: "Kontrollzentrum",
+            en: "Kontrollzentrum",
+            fr: "Centre de contrôle",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -723,6 +855,8 @@ export class Signs {
             kat: "red",
             src: "Lawine.png",
             de: "Lawine",
+            en: "Lawine",
+            fr: "Avalanche",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -732,6 +866,8 @@ export class Signs {
             kat: "red",
             src: "Massenpanik.png",
             de: "Massenpanik",
+            en: "Massenpanik",
+            fr: "Effets de panique",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -741,6 +877,8 @@ export class Signs {
             kat: "blue",
             src: "Materialdepot.png",
             de: "Materialdepot",
+            en: "Materialdepot",
+            fr: "Dépôt de matériel",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -750,6 +888,8 @@ export class Signs {
             kat: "blue",
             src: "Mobile Einsatzzentrale.png",
             de: "Mobile Einsatzzentrale",
+            en: "Mobile Einsatzzentrale",
+            fr: "Centrale d’engagement mobile",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -759,6 +899,8 @@ export class Signs {
             kat: "red",
             src: "Obdachlose.png",
             de: "Obdachlose",
+            en: "Obdachlose",
+            fr: "Sans-abri",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -767,7 +909,9 @@ export class Signs {
             type: "Polygon",
             kat: "red",
             src: "Oelverschmutzung.png",
-            de: "Oelverschmutzung",
+            de: "Ölverschmutzung",
+            en: "Ölverschmutzung",
+            fr: "Pollution aux hydrocarbures",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -776,7 +920,9 @@ export class Signs {
             type: "Point",
             kat: "blue",
             src: "Offizier - Zugfuehrer.png",
-            de: "Offizier - Zugfuehrer",
+            de: "Offizier - Zugführer",
+            en: "Offizier - Zugführer",
+            fr: "Officier",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -786,25 +932,19 @@ export class Signs {
             kat: "blue",
             src: "Patientensammelstelle.png",
             de: "Patientensammelstelle",
+            en: "Patientensammelstelle",
+            fr: "Poste collecteur de patients",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
         },
         {
             type: "Point",
-            kat: null,
-            src: "Personenbergungsuebersicht - Leerraster.png",
-            de: "Personenbergungsuebersicht - Leerraster",
-            example: "Personenbergungsuebersicht - Beispiel.png",
-            text: null,
-            style: null,
-            fillOpacity: null, color: null, dataUrl: null
-        },
-        {
-            type: "Point",
             kat: "blue",
             src: "Pforte.png",
             de: "Pforte",
+            en: "Pforte",
+            fr: "Porte",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -813,7 +953,9 @@ export class Signs {
             type: "Point",
             kat: "red",
             src: "Pluenderung.png",
-            de: "Pluenderung",
+            de: "Plünderung",
+            en: "Plünderung",
+            fr: "Pillage",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -823,6 +965,8 @@ export class Signs {
             kat: "other",
             src: "Radioaktives Gebiet.png",
             de: "Radioaktives Gebiet",
+            en: "Radioaktives Gebiet",
+            fr: "Zone radioactive",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -832,6 +976,8 @@ export class Signs {
             kat: "orange",
             src: "Radioaktive Stoffe.png",
             de: "Radioaktive Stoffe",
+            en: "Radioaktive Stoffe",
+            fr: "Substances radioactives",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -840,7 +986,9 @@ export class Signs {
             type: "Point",
             kat: "blue",
             src: "Regionales Fuehrungsorgan.png",
-            de: "Regionales Fuehrungsorgan",
+            de: "Regionales Führungsorgan",
+            en: "Regionales Führungsorgan",
+            fr: "Organe de conduite régional",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -850,6 +998,8 @@ export class Signs {
             kat: "red",
             src: "Rutschgebiet.png",
             de: "Rutschgebiet",
+            en: "Rutschgebiet",
+            fr: "Glissement de terrain",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -859,6 +1009,8 @@ export class Signs {
             kat: "red",
             src: "Sabotage.png",
             de: "Sabotage",
+            en: "Sabotage",
+            fr: "Sabotage",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -868,6 +1020,8 @@ export class Signs {
             kat: "blue",
             src: "Sammelstelle.png",
             de: "Sammelstelle",
+            en: "Sammelstelle",
+            fr: "Poste collecteur",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -876,7 +1030,9 @@ export class Signs {
             type: "Point",
             kat: "blue",
             src: "Sanitaetshilfsstelle.png",
-            de: "Sanitaetshilfsstelle",
+            de: "Sanitätshilfsstelle",
+            en: "Sanitätshilfsstelle",
+            fr: "Poste médical avancé",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -885,16 +1041,9 @@ export class Signs {
             type: "Point",
             kat: "blue",
             src: "Sanitaetsumladestelle.png",
-            de: "Sanitaetsumladestelle",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
-        },
-        {
-            type: "Polygon",
-            kat: "red",
-            src: "Schadengebiet - Schadenraum.png",
-            de: "Schadengebiet - Schadenraum",
+            de: "Sanitätsumladestelle",
+            en: "Sanitätsumladestelle",
+            fr: "Poste sanitaire de transfert",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -904,6 +1053,8 @@ export class Signs {
             kat: "blue",
             src: "Sperre.png",
             de: "Sperre",
+            en: "Sperre",
+            fr: "Barrage",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -912,7 +1063,9 @@ export class Signs {
             type: "Point",
             kat: "blue",
             src: "Standort mobile Fuehrungsstelle.png",
-            de: "Standort mobile Fuehrungsstelle",
+            de: "Standort mobile Führungsstelle",
+            en: "Standort mobile Führungsstelle",
+            fr: "Poste de conduite",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -922,6 +1075,8 @@ export class Signs {
             kat: "red",
             src: "Starkniederschlag.png",
             de: "Starkniederschlag",
+            en: "Starkniederschlag",
+            fr: "Fortes précipitations",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -931,6 +1086,8 @@ export class Signs {
             kat: "red",
             src: "Stau.png",
             de: "Stau",
+            en: "Stau",
+            fr: "Embouteillage",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -939,7 +1096,9 @@ export class Signs {
             type: "LineString",
             kat: "red",
             src: "Str erschwert befahrbar - begehbar.png",
-            de: "Str erschwert befahrbar - begehbar",
+            de: "Strasse erschwert befahrbar - begehbar",
+            en: "Strasse erschwert befahrbar - begehbar",
+            fr: "Route difficilement praticable pour les vhc, possible pour les piétons",
             style: "dash",
             text: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -949,6 +1108,8 @@ export class Signs {
             kat: "blue",
             src: "Streugutsammelstelle.png",
             de: "Streugutsammelstelle",
+            en: "Streugutsammelstelle",
+            fr: "Poste collecteur des objets trouvés",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -957,7 +1118,9 @@ export class Signs {
             type: "LineString",
             kat: "red",
             src: "Str nicht befahrbar - schwer begehbar.png",
-            de: "Str nicht befahrbar - schwer begehbar",
+            de: "Strasse nicht befahrbar - schwer begehbar",
+            en: "Strasse nicht befahrbar - schwer begehbar",
+            fr: "Route impraticable pour les vhc et difficile pour les piétons",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -966,7 +1129,9 @@ export class Signs {
             type: "LineString",
             kat: "red",
             src: "Str unpassierbar - gesperrt.png",
-            de: "Str unpassierbar - gesperrt",
+            de: "Strasse unpassierbar - gesperrt",
+            en: "Strasse unpassierbar - gesperrt",
+            fr: "Route impraticable / barrée",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -975,7 +1140,9 @@ export class Signs {
             type: "Point",
             kat: "blue",
             src: "Stuetzpunkt.png",
-            de: "Stuetzpunkt",
+            de: "Stützpunkt",
+            en: "Stützpunkt",
+            fr: "Point de sécurité",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -985,6 +1152,8 @@ export class Signs {
             kat: "red",
             src: "Sturm.png",
             de: "Sturm",
+            en: "Sturm",
+            fr: "Tempête",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -993,7 +1162,9 @@ export class Signs {
             type: "Point",
             kat: "blue",
             src: "Tankloeschfahrzeug.png",
-            de: "Tankloeschfahrzeug",
+            de: "Tanklöschfahrzeug",
+            en: "Tanklöschfahrzeug",
+            fr: "Tonne-pompe",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -1002,7 +1173,9 @@ export class Signs {
             type: "Polygon",
             kat: "red",
             src: "Teilzerstoerung.png",
-            de: "Teilzerstoerung",
+            de: "Teilzerstörung",
+            en: "Teilzerstörung",
+            fr: "Destruction partielle",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -1012,6 +1185,8 @@ export class Signs {
             kat: "red",
             src: "Terroranschlag.png",
             de: "Terroranschlag",
+            en: "Terroranschlag",
+            fr: "Acte de terrorisme",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -1021,6 +1196,8 @@ export class Signs {
             kat: "red",
             src: "Tierseuche.png",
             de: "Tierseuche",
+            en: "Tierseuche",
+            fr: "Epizootie",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -1029,7 +1206,9 @@ export class Signs {
             type: "Polygon",
             kat: "red",
             src: "Totalzerstoerung.png",
-            de: "Totalzerstoerung",
+            de: "Totalzerstörung",
+            en: "Totalzerstörung",
+            fr: "Destruction totale",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -1039,6 +1218,8 @@ export class Signs {
             kat: "blue",
             src: "Totensammelstelle.png",
             de: "Totensammelstelle",
+            en: "Totensammelstelle",
+            fr: "Poste collecteur de cadavres",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -1048,6 +1229,8 @@ export class Signs {
             kat: "red",
             src: "Tote.png",
             de: "Tote",
+            en: "Tote",
+            fr: "Morts",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -1057,24 +1240,19 @@ export class Signs {
             kat: "blue",
             src: "Trinkwasserabgabestelle.png",
             de: "Trinkwasserabgabestelle",
+            en: "Trinkwasserabgabestelle",
+            fr: "Poste de distribution d’eau potable",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
-        },
-        {
-            type: "Polygon",
-            kat: "red",
-            src: "Truemmerbereich - Signatur.png",
-            de: "Truemmerbereich - Signatur",
-            example: "Truemmerbereich - Beispiel.png",
-            text: null,
-            style: null,fillOpacity: null, color: null, dataUrl: null
         },
         {
             type: "Point",
             kat: "blue",
             src: "Trupp.png",
             de: "Trupp",
+            en: "Trupp",
+            fr: "Patrouille",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -1083,7 +1261,9 @@ export class Signs {
             type: "Polygon",
             kat: "red",
             src: "Ueberschwemmtes Gebiet.png",
-            de: "Ueberschwemmtes Gebiet",
+            de: "Überschwemmtes Gebiet",
+            en: "Überschwemmtes Gebiet",
+            fr: "Zone inondée ou submergée",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -1092,7 +1272,9 @@ export class Signs {
             type: "Polygon",
             kat: "red",
             src: "Ueberschwemmung.png",
-            de: "Ueberschwemmung",
+            de: "Überschwemmung",
+            en: "Überschwemmung",
+            fr: "Inondation",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -1101,7 +1283,9 @@ export class Signs {
             type: "Point",
             kat: "blue",
             src: "Ueberwachung.png",
-            de: "Ueberwachung",
+            de: "Überwachung",
+            en: "Überwachung",
+            fr: "Surveillance",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -1111,6 +1295,8 @@ export class Signs {
             kat: "blue",
             src: "Umleitung.png",
             de: "Umleitung",
+            en: "Umleitung",
+            fr: "Déviations",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -1120,6 +1306,8 @@ export class Signs {
             kat: "orange",
             src: "Unfall.png",
             de: "Unfall",
+            en: "Unfall",
+            fr: "Accident",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -1129,6 +1317,8 @@ export class Signs {
             kat: "blue",
             src: "Verkehrsposten.png",
             de: "Verkehrsposten",
+            en: "Verkehrsposten",
+            fr: "Poste de circulation",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -1138,6 +1328,8 @@ export class Signs {
             kat: "blue",
             src: "Verletztennest.png",
             de: "Verletztennest",
+            en: "Verletztennest",
+            fr: "Nid de blessés",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -1147,6 +1339,8 @@ export class Signs {
             kat: "red",
             src: "Verletzte.png",
             de: "Verletzte",
+            en: "Verletzte",
+            fr: "Patients (blessés)",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -1156,6 +1350,8 @@ export class Signs {
             kat: "red",
             src: "Vermisste.png",
             de: "Vermisste",
+            en: "Vermisste",
+            fr: "Disparus",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -1165,6 +1361,8 @@ export class Signs {
             kat: "blue",
             src: "Verpflegungsabgabestelle.png",
             de: "Verpflegungsabgabestelle",
+            en: "Verpflegungsabgabestelle",
+            fr: "Poste de distribution de subsistance",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -1174,6 +1372,8 @@ export class Signs {
             kat: "red",
             src: "Wasservsgausfall.png",
             de: "Wasserversorgungsausfall",
+            en: "Wasserversorgungsausfall",
+            fr: "Interruption de l’approvisionnement en eau",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -1183,6 +1383,8 @@ export class Signs {
             kat: "blue",
             src: "Wasserwerfer.png",
             de: "Wasserwerfer",
+            en: "Wasserwerfer",
+            fr: "Canon à eau",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -1191,16 +1393,9 @@ export class Signs {
             type: "Polygon",
             kat: "red",
             src: "Zerstoerte Zone einer Ortschaft.png",
-            de: "Zerstoerte Zone einer Ortschaft",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
-        },
-        {
-            type: "Point",
-            kat: "blue",
-            src: "Ziviles Fuehrungsorgan.png",
-            de: "Ziviles Fuehrungsorgan",
+            de: "Zerstörte Zone einer Ortschaft",
+            en: "Zerstörte Zone einer Ortschaft",
+            fr: "Zone sinistrée, impraticable à l’intérieur d’une localité",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null
@@ -1210,6 +1405,8 @@ export class Signs {
             kat: "blue",
             src: "Zug.png",
             de: "Zug",
+            en: "Zug",
+            fr: "Section",
             text: null,
             style: null,
             example: null, fillOpacity: null, color: null, dataUrl: null

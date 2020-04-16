@@ -3,10 +3,10 @@
         <div class="imgwrapper" *ngIf="selectedSignature.src!=null"><img [src]="getImageUrl(selectedSignature.src)"/></div>
         <div class="imgcustomwrapper" *ngIf="selectedSignature.dataUrl!=null"><img [src]="selectedSignature.dataUrl"/></div>
 
-        <div *ngIf="selectedSignature.de!=null" class="label">{{selectedSignature.de}}</div>
+        <div *ngIf="selectedSignature[i18n.locale]!=null" class="label">{{selectedSignature[i18n.locale]}}</div>
         <div *ngIf="selectedSignature.text!=null" class="label">{{selectedSignature.text}}</div>
         <div class="buttonPanel" *ngIf="selectedSignature.kat!==null">
-            Rotieren:
+            <span>{{i18n.get("rotate")}}</span>
         <mat-slider
                 [max]="180"
                 [min]="-180"
@@ -16,8 +16,8 @@
         </mat-slider>
 
         </div>
-        <div class="buttonPanel" *ngIf="selectedSignature.type==='Polygon' || selectedSignature.type==='Circle'">
-            Transparenz:
+        <div class="buttonPanel" *ngIf="selectedSignature.type==='Polygon' || selectedSignature.type==='Circle'" >
+            <span >{{i18n.get("opacity")}}:</span>
             <mat-slider #ctrl="ngModel"
                         [max]="1"
                     [min]="0"
@@ -27,15 +27,15 @@
         </div>
 
         <div class="buttonPanel" >
-            Linie:
+            {{i18n.get("line")}}:
             <select #ctrl="ngModel" matNativeControl [(ngModel)]="selectedSignature.style" (ngModelChange)="redraw()">
-                <option value="">Durchgezogen</option>
-                <option value="dash">Gestrichelt</option>
+                <option value="">{{i18n.get("solidLine")}}</option>
+                <option value="dash" >{{i18n.get("dashedLine")}}</option>
             </select>
         </div>
 
         <div class="buttonPanel" *ngIf="selectedSignature.type==='Polygon' || selectedSignature.type==='Circle'">
-            Linien-Dicke:
+            <span >{{i18n.get("lineWidth")}}</span>
             <mat-slider #ctrl="ngModel"
                         [max]="4"
                         [min]="1"
@@ -45,14 +45,14 @@
         </div>
 
         <div class="buttonPanel" *ngIf="selectedSignature.kat===null">
-            Farbe: <mat-form-field>
+            <span >Farbe: </span><mat-form-field>
                 <input matInput type="color" name="color" #ctrl="ngModel" [(ngModel)]="selectedSignature.color" (ngModelChange)="redraw()"/>
             </mat-form-field>
         </div>
 
 
         <div class="buttonPanel">
-            <button mat-raised-button color="primary" (click)="delete()"><i class="material-icons">delete</i>Löschen</button>
+            <button mat-raised-button color="primary" (click)="delete()"><i class="material-icons">delete</i><span >{{i18n.get("delete")}}</span></button>
         </div>
     </mat-card-content>
 </mat-card>

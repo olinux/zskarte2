@@ -18,6 +18,18 @@
  *
  */
 
+.flag{
+    height: 1em;
+    border: 2px solid white;
+}
+
+.flag.active{
+    border: 2px solid darkblue;
+}
+
+.flags .flag{
+    margin: 0.2em;
+}
 .toolbar{
     position:absolute;
     right: 2em;

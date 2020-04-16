@@ -20,16 +20,18 @@
 
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
+import {MatDialog} from "@angular/material/dialog";
+import {I18NService} from "./i18n.service";
 
 @Injectable({
     providedIn: 'root'
 })
 export class GeoadminService {
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient, public i18n:I18NService) {
     }
 
     getFeatures():any {
-        return this.http.get('https://api3.geo.admin.ch/rest/services/api/MapServer/layersConfig?lang=de');
+        return this.http.get('https://api3.geo.admin.ch/rest/services/api/MapServer/layersConfig?lang='+this.i18n.locale);
     }
 }

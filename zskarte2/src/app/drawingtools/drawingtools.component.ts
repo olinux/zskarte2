@@ -26,6 +26,7 @@ import {HttpClient} from "@angular/common/http";
 import {Sign} from "../entity/sign";
 import {TextDialogComponent} from "../text-dialog/text-dialog.component";
 import {Md5} from "ts-md5";
+import {I18NService} from "../i18n.service";
 
 export interface Filter {
     value: string;
@@ -45,7 +46,7 @@ export class DrawingtoolsComponent implements OnInit {
     draw: DrawingData = null;
     sourceUrl = './assets/img/signs/signaturen.json';
 
-    constructor(public drawDialog: MatDialog, public textDialog: MatDialog, private sharedState: SharedStateService) {
+    constructor(public drawDialog: MatDialog, public textDialog: MatDialog, private sharedState: SharedStateService, public i18n:I18NService) {
     }
 
     ngOnInit() {

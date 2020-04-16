@@ -28,6 +28,7 @@ import OlTileWMTS from 'ol/source/WMTS';
 import OlTileXYZ from 'ol/source/XYZ';
 import {SharedStateService} from "../shared-state.service";
 import {GeoadminService} from "../geoadmin.service";
+import {I18NService} from "../i18n.service";
 
 
 export function createGeoAdminLayer(layerId: string, timestamp:string, extension:string) {
@@ -56,7 +57,7 @@ export function createGeoAdminLayer(layerId: string, timestamp:string, extension
 })
 export class LayersComponent implements OnInit {
 
-    constructor(private sharedState: SharedStateService, private geoAdminService: GeoadminService) {
+    constructor(private sharedState: SharedStateService, private geoAdminService: GeoadminService, public i18n:I18NService) {
     }
 
     currentLayer: Layer = null;
@@ -141,19 +142,26 @@ export class LayersComponent implements OnInit {
         //By default, we're launching the first layer registered.
         this.currentLayer = this.layers[0];
         this.sharedState.switchToLayer(this.layers[0]);
+        this.loadFeatures();
+        this.i18n.currentLocale.subscribe(l => {
+            this.loadFeatures();
+        });
+    }
+
+    loadFeatures(){
+        this.features = null;
         this.geoAdminService.getFeatures().subscribe(data=>{
             let newFeatures = [];
             for(let featureName in data){
                 let feature = data[featureName];
                 if(feature.timestamps!==undefined && feature.timestamps.length>0){
-                   newFeatures.push(feature);
+                    newFeatures.push(feature);
                 }
             }
             newFeatures.sort((a, b) => a.label.localeCompare(b.label));
             this.features = newFeatures;
         })
     }
-
 
     changeToLayer(layer: Layer) {
         this.currentLayer = layer;

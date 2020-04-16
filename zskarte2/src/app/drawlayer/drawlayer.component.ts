@@ -35,6 +35,7 @@ import {SharedStateService} from '../shared-state.service';
 import {DrawStyle} from './draw-style';
 import {Sign} from "../entity/sign";
 import {NgxIndexedDBService} from "ngx-indexed-db";
+import {I18NService} from "../i18n.service";
 
 @Component({
     selector: 'app-drawlayer',
@@ -72,7 +73,7 @@ export class DrawlayerComponent implements OnInit {
     firstLoad = true;
     drawHole = null;
 
-    constructor(private sharedState: SharedStateService, private dbService: NgxIndexedDBService) {
+    constructor(private sharedState: SharedStateService, private dbService: NgxIndexedDBService, public i18n:I18NService) {
     }
 
 

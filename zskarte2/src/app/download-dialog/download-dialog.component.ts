@@ -5,6 +5,7 @@ import {Sign} from "../entity/sign";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {DrawlayerComponent} from "../drawlayer/drawlayer.component";
 import {DomSanitizer} from "@angular/platform-browser";
+import {I18NService} from "../i18n.service";
 
 @Component({
   selector: 'app-download-dialog',
@@ -15,7 +16,7 @@ export class DownloadDialogComponent implements OnInit {
 
   downloadData = null;
 
-  constructor( @Inject(MAT_DIALOG_DATA) public data: any, private sanitizer: DomSanitizer, public dialogRef: MatDialogRef<DownloadDialogComponent>, private sharedState: SharedStateService) {
+  constructor( @Inject(MAT_DIALOG_DATA) public data: any, private sanitizer: DomSanitizer, public dialogRef: MatDialogRef<DownloadDialogComponent>, private sharedState: SharedStateService, public i18n:I18NService) {
   }
 
   ngOnInit() {

@@ -18,7 +18,6 @@
  *
  */
 
-.drawingTools>*{
-    margin-left:0.5em;
-    margin-right:0.5em;
+.drawingTools .text {
+    margin-right: 1em;
 }

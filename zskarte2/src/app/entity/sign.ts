@@ -25,6 +25,8 @@ export interface Sign {
     kat: string;
     src: string;
     de?: string;
+    fr?: string;
+    en?: string;
     text?:string;
     style?:string;
     example?:string;

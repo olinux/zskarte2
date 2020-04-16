@@ -3,6 +3,8 @@ import {SharedStateService} from "../shared-state.service";
 import {Sign} from "../entity/sign";
 import {DrawStyle} from "../drawlayer/draw-style";
 import {HistoryComponent} from "../history/history.component";
+import {GeoadminService} from "../geoadmin.service";
+import {I18NService} from "../i18n.service";
 
 @Component({
     selector: 'app-selected-feature',
@@ -11,7 +13,7 @@ import {HistoryComponent} from "../history/history.component";
 })
 export class SelectedFeatureComponent implements OnInit {
 
-    constructor(private sharedState: SharedStateService) {
+    constructor(private sharedState: SharedStateService, public i18n:I18NService) {
     }
 
     selectedFeature: any = null;
