@@ -214,6 +214,16 @@ export class I18NService {
       de: "History",
       fr: "Histoire",
       en: "History"
+    },
+    color: {
+      de: "Farbe",
+      fr: "Couleur",
+      en: "Color"
+    },
+    drawHole: {
+      de: "Loch zeichnen",
+      fr: "Dessiner un trou",
+      en: "Draw a hole"
     }
 
   }

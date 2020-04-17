@@ -26,7 +26,7 @@
     "material-design-icons": "^3.0.1",
     "ngx-indexed-db": "^4.0.14",
     "ol": "^5.3.3",
-    "ol-ext": "^3.1.11",
+    "ol-ext": "^3.1.12",
     "proj4": "^2.5.0",
     "rxjs": "~6.5.5",
     "ts-md5": "^1.2.7",

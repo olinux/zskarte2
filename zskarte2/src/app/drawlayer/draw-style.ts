@@ -24,7 +24,7 @@ import Fill from 'ol/style/Fill';
 import Icon from 'ol/style/Icon';
 import Circle from 'ol/style/Circle';
 import Text from 'ol/style/Text';
-import Point from 'ol/geom/Point';
+import {Md5} from "ts-md5";
 
 // This is a helper class which involves the definitions of stylings used to draw on the map
 export class DrawStyle {
@@ -58,22 +58,22 @@ export class DrawStyle {
         return 'assets/img/signs/' + file;
     }
 
-    static scaleFunction(resolution, scaleFactor): any {
+    static scale(resolution:number, scaleFactor:number): any {
         return Math.max(0.15, scaleFactor * Math.sqrt(0.5 * resolution) / resolution);
     }
 
-    static getDash(feature, resolution): any {
-        if (feature.get('sig').style === 'dash') {
-            const value = Math.max(30, DrawStyle.scaleFunction(resolution, 20));
+    static getDash(lineStyle:string, resolution:number): any {
+        if (lineStyle === 'dash') {
+            const value = Math.max(30, DrawStyle.scale(resolution, 20));
             return [value, value];
         } else {
             return [0, 0];
         }
     }
 
-    static getDashOffset(feature, resolution): any {
-        if (feature.get('sig').style === 'dash') {
-            return Math.max(30, DrawStyle.scaleFunction(resolution, 20));
+    static getDashOffset(lineStyle:string, resolution:number): any {
+        if (lineStyle === 'dash') {
+            return Math.max(30, DrawStyle.scale(resolution, 20));
         } else {
             return 0;
         }
@@ -92,7 +92,7 @@ export class DrawStyle {
         // } else {
         if (signature.text !== undefined && signature.text !== null) {
             // It's a text-entry...
-            return DrawStyle.textStyleFunction(feature, resolution, signature);
+            return DrawStyle.textStyleFunction(feature, resolution);
         } else {
             // It's a symbol-signature.
             return DrawStyle.imageStyleFunction(feature, resolution, signature, true);
@@ -109,7 +109,7 @@ export class DrawStyle {
         // } else {
         if (signature.text !== undefined && signature.text !== null) {
             // It's a text-entry...
-            return DrawStyle.textStyleFunction(feature, resolution, signature);
+            return DrawStyle.textStyleFunction(feature, resolution);
         } else {
             // It's a symbol-signature.
             return DrawStyle.imageStyleFunction(feature, resolution, signature, false);
@@ -117,74 +117,74 @@ export class DrawStyle {
         // }
     }
 
+
+    private static symbolStyleCache = {}
+
+    private static calculateCacheHashForSymbol(signature, feature, resolution, selected):string{
+        return Md5.hashStr(JSON.stringify({
+            kat: signature.kat,
+            color: signature.color,
+            selected: selected,
+            opacity: signature.fillOpacity,
+            resolution: resolution,
+            lineStyle: signature.style,
+            rotation: feature.rotation,
+            signatureSrc: signature.src,
+            signaturePayload: signature.dataUrl ? signature.dataUrl.src : null,
+            strokeWidth: signature.strokeWidth
+        })).toString();
+    }
+
+
     static imageStyleFunction(feature, resolution, signature, selected): any {
         const isCustomSignature = signature.dataUrl !== undefined && signature.dataUrl !== null    ;
         let scale;
         let symbol = null;
         if (isCustomSignature) {
-            scale = DrawStyle.scaleFunction(resolution, DrawStyle.defaultScaleFactor);
             symbol = new Image();
             symbol.src = signature.dataUrl.src;
         }
-        scale = DrawStyle.scaleFunction(resolution, DrawStyle.defaultScaleFactor);
-
-        const symbolStyle = new Style({
-            stroke: new Stroke({
-                color: DrawStyle.colorFunction(signature, selected ? 'highlight' : 'default', 1.0),
-                width: scale * 20,
-                lineDash: DrawStyle.getDash(feature, resolution),
-                lineDashOffset: DrawStyle.getDashOffset(feature, resolution)
-            }),
-            fill: new Fill({
-                color: DrawStyle.colorFunction(signature, selected ? 'highlight' : 'default', selected ? signature.fillOpacity == null ? 0.3 : Math.min(1, signature.fillOpacity + 0.1) : signature.fillOpacity == null ? 0.2 : Math.min(1, signature.fillOpacity))
-            }),
-            image: new Icon(({
-                anchor: [0.5, 0.5],
-                anchorXUnits: 'fraction',
-                anchorYUnits: 'fraction',
-                scale: DrawStyle.scaleFunction(resolution, DrawStyle.defaultScaleFactor),
-                opacity: 1,
-                rotation: feature.rotation !== undefined ? feature.rotation * Math.PI / 180 : 0,
-                src: isCustomSignature ? undefined : this.getImageUrl(signature.src),
-                img: isCustomSignature ? symbol : undefined,
-                imgSize: isCustomSignature ? [signature.dataUrl.nativeWidth, signature.dataUrl.nativeHeight] : undefined
-            }))
-        });
-
-
-        const strokeStyle = new Style({
-            stroke: new Stroke({
-                color: [255, 255, 255, selected ? 0.7 : 0.5],
-                width: scale * 20 * (signature.strokeWidth !== undefined && signature.strokeWidth !== null ? signature.strokeWidth : 1),
-                lineDash: DrawStyle.getDash(feature, resolution),
-                lineDashOffset: DrawStyle.getDashOffset(feature, resolution)
-            }),
-            image: signature.src != null ? new Circle({
-                radius: scale * 210,
+        scale = DrawStyle.scale(resolution, DrawStyle.defaultScaleFactor);
+        const symbolCacheHash = DrawStyle.calculateCacheHashForSymbol(signature, feature, resolution, selected);
+        let symbolStyle = this.symbolStyleCache[symbolCacheHash];
+        if (!symbolStyle){
+            console.log("Did not hit cache for symbol style - creating a new one!")
+            symbolStyle  = this.symbolStyleCache[symbolCacheHash] = new Style({
+                stroke: new Stroke({
+                    color: DrawStyle.colorFunction(signature.kat, signature.color, selected ? 'highlight' : 'default', 1.0),
+                    width: scale * 20 * (signature.strokeWidth !== undefined && signature.strokeWidth !== null ? signature.strokeWidth : 1),
+                    lineDash: DrawStyle.getDash(signature.style, resolution),
+                    lineDashOffset: DrawStyle.getDashOffset(signature.style, resolution)
+                }),
                 fill: new Fill({
-                    color: [255, 255, 255, selected ? 0.9 : 0.6]
-                })
-            }) : null
-        });
-        const highlightStyle = new Style({
-            stroke: new Stroke({
-                color: DrawStyle.colorFunction(signature, 'highlight', 1.0),
-                width: scale * 20 * (signature.strokeWidth !== undefined && signature.strokeWidth !== null ? signature.strokeWidth : 1),
-                lineDash: DrawStyle.getDash(feature, resolution),
-                lineDashOffset: DrawStyle.getDashOffset(feature, resolution)
-            })
-        });
-
-        return selected ? [strokeStyle, symbolStyle] : [highlightStyle, strokeStyle, symbolStyle];
+                    color: DrawStyle.colorFunction(signature.kat, signature.color, selected ? 'highlight' : 'default', selected ? signature.fillOpacity == null ? 0.3 : Math.min(1, signature.fillOpacity + 0.1) : signature.fillOpacity == null ? 0.2 : Math.min(1, signature.fillOpacity))
+                }),
+                image: new Icon(({
+                    anchor: [0.5, 0.5],
+                    anchorXUnits: 'fraction',
+                    anchorYUnits: 'fraction',
+                    scale: DrawStyle.scale(resolution, DrawStyle.defaultScaleFactor),
+                    opacity: 1,
+                    rotation: feature.rotation !== undefined ? feature.rotation * Math.PI / 180 : 0,
+                    src: isCustomSignature ? undefined : this.getImageUrl(signature.src),
+                    img: isCustomSignature ? symbol : undefined,
+                    imgSize: isCustomSignature ? [signature.dataUrl.nativeWidth, signature.dataUrl.nativeHeight] : undefined
+                }))
+            });
+        }
+        else{
+            console.log("Hit cache for symbol style!")
+        }
+        return [symbolStyle];
     }
 
-    static textStyleFunction(feature, resolution, signature) {
+    static textStyleFunction(feature, resolution) {
         return new Style({
             text: new Text({
                 text: feature.get('sig').text,
                 font: '30px sans-serif',
                 rotation: feature.rotation !== undefined ? feature.rotation * Math.PI / 180 : 0,
-                scale: DrawStyle.scaleFunction(resolution, DrawStyle.textScaleFactor),
+                scale: DrawStyle.scale(resolution, DrawStyle.textScaleFactor),
                 stroke: new Stroke({
                     color: '#FFFF66',
                     width: 3
@@ -196,34 +196,17 @@ export class DrawStyle {
         });
     }
 
-    static styleFunctionModify(feature, resolution) {
-        return new Style({
-            image: new Circle({
-                radius: 20 * 2,
-                fill: new Fill({
-                    color: [255, 0, 0, 1]
-                }),
-                stroke: new Stroke({
-                    color: [255, 255, 255, 1],
-                    width: 20 / 2
-                })
-            }),
-            zIndex: Infinity
-        });
-    }
-
-
-    static colorFunction = function (signature, style, alpha) {
-        if (signature.kat == null) {
-            if (signature.color !== undefined && signature.color !== null) {
+    static colorFunction = function (signatureKat, signatureColor, style, alpha) {
+        if (signatureKat == null) {
+            if (signatureColor !== undefined && signatureColor !== null) {
                 let hexAlpha=(Math.floor(255*(alpha !== undefined ? alpha : 1))).toString(16);
                 if(hexAlpha.length==1){
                     hexAlpha="0"+hexAlpha;
                 }
-                return signature.color+hexAlpha;
+                return signatureColor+hexAlpha;
             }
         } else {
-            const color = DrawStyle.colorMap[signature.kat][style];
+            const color = DrawStyle.colorMap[signatureKat][style];
             if (color !== undefined) {
                 return 'rgba(' + color + ', ' + (alpha !== undefined ? alpha : '1') + ')';
             }
@@ -231,50 +214,4 @@ export class DrawStyle {
         return 'rgba(121, 153, 242, ' + (alpha !== undefined ? alpha : '1') + ')';
     };
 
-
-    static arrowStyleFunction(feature, resolution) {
-        const geometry = feature.getGeometry();
-        const scale = DrawStyle.scaleFunction(resolution, 1);
-        const styles = [
-                new Style({
-                    stroke: new Stroke({
-                        color: DrawStyle.colorFunction(feature.get('sig'), 'default', 1.0),
-                        width: scale * 10,
-                        lineDash: [0, 0]
-                    }),
-                    fill: new Fill({
-                        color: DrawStyle.colorFunction(feature.get('sig'), 'default', 0.2)
-                    }),
-                    image: new Icon(({
-                        anchor: [0.5, 0.5],
-                        anchorXUnits: 'fraction',
-                        anchorYUnits: 'fraction',
-                        scale: DrawStyle.scaleFunction(resolution, 0.5),
-                        opacity: 1,
-                        src: this.getImageUrl(feature.get('sig').src)
-                    }))
-                })
-            ]
-        ;
-
-        if (geometry.getType() === 'LineString') {
-            geometry.forEachSegment(function (start, end) {
-                const dx = end[0] - start[0];
-                const dy = end[1] - start[1];
-                const rotation = Math.atan2(dy, dx);
-                // arrows
-                styles.push(new Style({
-                    geometry: new Point(end),
-                    image: new Icon({
-                        src: 'img/arrow' + feature.get('sig').kat + '.png',
-                        scale: DrawStyle.scaleFunction(resolution, 2),
-                        anchor: [0.75, 0.5],
-                        rotateWithView: false,
-                        rotation: -rotation
-                    })
-                }));
-            });
-        }
-        return styles;
-    }
 }
