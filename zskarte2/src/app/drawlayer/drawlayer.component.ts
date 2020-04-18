@@ -163,8 +163,8 @@ export class DrawlayerComponent implements OnInit {
 
     endHistoryMode() {
         this.load().then(x => {
-            this.map.addInteraction(this.select);
-            this.map.addInteraction(this.modify);
+            this.select.setActive(true);
+            this.select.setActive(true);
         });
     }
 
@@ -174,8 +174,8 @@ export class DrawlayerComponent implements OnInit {
 
     processHistory(history, date) {
         if (history !== null) {
-            this.map.removeInteraction(this.modify);
-            this.map.removeInteraction(this.select);
+            this.modify.setActive(false);
+            this.select.setActive(false);
             for (let i = history.elements.length; i > 0; i--) {
                 const element = history.elements[i - 1];
                 if (date > new Date(element.time)) {
@@ -329,7 +329,7 @@ export class DrawlayerComponent implements OnInit {
                     type: this.currentDrawingSign.type
                 });
                 drawer.drawLayer = this;
-                drawer.once('drawend', function (event) {
+                drawer.addEventListener('drawend', function (event) {
                     this.drawLayer.endDrawing(event);
                 });
                 this.map.addInteraction(drawer);

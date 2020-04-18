@@ -22,6 +22,7 @@ import {Component, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {SharedStateService} from "../shared-state.service";
 import {I18NService} from "../i18n.service";
+import {FormControl} from '@angular/forms';
 
 @Component({
     selector: 'app-geocoder',
@@ -30,7 +31,11 @@ import {I18NService} from "../i18n.service";
 })
 export class GeocoderComponent implements OnInit {
 
-    geocoderUrl = 'https://nominatim.openstreetmap.org/search?format=json&q=';
+    geocoderUrl = 'https://api3.geo.admin.ch/rest/services/api/SearchServer?type=locations&searchText='
+    //geocoderUrl = 'https://nominatim.openstreetmap.org/search?format=json&q=';
+    foundLocations = []
+    formControl = new FormControl();
+    inputText: string = undefined;
 
     constructor(private http: HttpClient, private sharedState: SharedStateService, public i18n:I18NService) {
     }
@@ -38,13 +43,26 @@ export class GeocoderComponent implements OnInit {
     ngOnInit() {
     }
 
-    geocodeChange(newValue: string) {
-        this.http.get(this.geocoderUrl + newValue).subscribe(result => {
-            const results = <any[]>result;
-            if (results.length > 0) {
-                this.sharedState.gotoCoordinate({lat: parseFloat(results[0].lat), lon: parseFloat(results[0].lon)});
-            }
-        });
+    geoCodeLoad() {
+        if(this.inputText.length>1) {
+            const originalInput = this.inputText;
+            this.http.get(this.geocoderUrl + this.inputText).subscribe(result => {
+                if(this.inputText === originalInput) {
+                    this.foundLocations = <any[]>(result["results"]);
+                }
+            });
+        }
+        else{
+            this.foundLocations = [];
+        }
+    }
+
+    getLabel(selected){
+        return selected ? selected.label.replace(/<[^>]*>/g, '') : undefined;
+    }
+
+    geoCodeChange(selected){
+        this.sharedState.gotoCoordinate({lat: selected.lat, lon: selected.lon})
     }
 
 }

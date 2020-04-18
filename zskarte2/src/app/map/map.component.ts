@@ -21,17 +21,17 @@
 import {Component, OnInit} from '@angular/core';
 import OlMap from 'ol/Map';
 import OlView from 'ol/View';
-import {fromLonLat} from 'ol/proj';
-import {condition} from 'ol/events';
 import {transform} from 'ol/proj';
-import {proj} from 'ol';
 import {SharedStateService} from '../shared-state.service';
 import {Layer} from "../layers/layer";
 import {coordinatesProjection, mercatorProjection} from "../projections";
-import MousePosition from 'ol/control/MousePosition';
-import {createStringXY} from 'ol/coordinate';
-import {GeoadminService} from "../geoadmin.service";
+import Feature from 'ol/Feature';
 import {I18NService} from "../i18n.service";
+import VectorSource from 'ol/source/Vector';
+import VectorLayer from 'ol/layer/Vector';
+import Style from 'ol/style/Style';
+import Icon from 'ol/style/Icon';
+import Point from 'ol/geom/Point';
 
 @Component({
     selector: 'app-map',
@@ -45,11 +45,29 @@ export class MapComponent implements OnInit {
     layer: Layer;
     view: OlView;
 
+    positionFlagLocation:Point = new Point([0, 0]);
+    positionFlag:Feature = new Feature({
+        geometry: this.positionFlagLocation
+    });
+    navigationSource = new VectorSource({
+        features: [this.positionFlag]
+    });
+    navigationLayer = new VectorLayer({
+        source: this.navigationSource
+    })
+
     constructor(private sharedState: SharedStateService, public i18n:I18NService) {
+        this.positionFlag.setStyle(new Style({
+            image: new Icon({
+                anchor: [0.5, 1],
+                anchorXUnits: 'fraction',
+                anchorYUnits: 'fraction',
+                src: 'assets/img/place.png'
+            })
+        }));
     }
 
     ngOnInit() {
-
         let previousPosition: any = localStorage.getItem('viewport');
         if(previousPosition!=null){
             previousPosition = JSON.parse(previousPosition);
@@ -78,15 +96,20 @@ export class MapComponent implements OnInit {
             controls: []
             //controls: [mousePositionControl]
         });
+        this.map.addLayer(this.navigationLayer);
         this.sharedState.currentCoordinate.subscribe(coordinate => {
             if (coordinate != null) {
                 const c = transform([coordinate.lon, coordinate.lat], coordinatesProjection, mercatorProjection);
+                this.positionFlagLocation.setCoordinates(c);
+                this.positionFlag.changed();
                 this.map.getView().setCenter(c);
             }
         });
         this.sharedState.addAdditionalLayer.subscribe(layer => {
             if(layer!=null){
+                this.map.removeLayer(this.navigationLayer);
                 this.map.addLayer(layer);
+                this.map.addLayer(this.navigationLayer);
                 this.sharedState.didChangeLayer();
             }
         });
