@@ -6,6 +6,14 @@
 
 }
 
+mat-form-field{
+    display: block;
+}
+
+mat-slider{
+    width: 100%;
+}
+
 .imgwrapper{
     height:4em;
     text-align:center;
@@ -30,4 +38,5 @@
 
 .label{
     text-align:center;
+    margin-bottom: 2em;
 }

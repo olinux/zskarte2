@@ -59,7 +59,14 @@ export class SharedStateService {
     private deleteFeatureSource = new BehaviorSubject<any>(null);
     deletedFeature = this.deleteFeatureSource.asObservable();
 
+    private drawHoleModeSource = new BehaviorSubject<boolean>(false);
+    drawHoleMode = this.drawHoleModeSource.asObservable();
+
     constructor() {
+    }
+
+    updateDrawHoleMode(drawHole: boolean){
+        this.drawHoleModeSource.next(drawHole);
     }
 
     updateDownloadData(data: string) {

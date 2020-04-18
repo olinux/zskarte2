@@ -26,9 +26,9 @@ import Vector from 'ol/source/Vector';
 import LayerVector from 'ol/layer/Vector';
 import GeoJSON from 'ol/format/GeoJSON';
 import Draw from 'ol/interaction/Draw';
-import DrawHole from 'ol-ext/interaction/DrawHole';
-import GeometryCollection from 'ol/geom/GeometryCollection';
+import Feature from 'ol/Feature';
 import OlMap from 'ol/Map';
+import DrawHole from 'ol-ext/interaction/DrawHole';
 import {never} from 'ol/events/condition';
 import {SharedStateService} from '../shared-state.service';
 import {DrawStyle} from './draw-style';
@@ -55,11 +55,9 @@ export class DrawlayerComponent implements OnInit {
         condition: never
     });
 
-
     modify = new Modify({
         features: this.select.getFeatures()
     });
-
     source = new Vector({
         format: new GeoJSON()
     });
@@ -67,12 +65,14 @@ export class DrawlayerComponent implements OnInit {
         source: this.source,
         style: DrawStyle.styleFunction
     });
-    drawer = null;
     historyMode = false;
     firstLoad = true;
-    drawHole = null;
+    drawHole = new DrawHole(
+        {
+            layers: [this.layer]
+        });
 
-    constructor(private sharedState: SharedStateService, private dbService: NgxIndexedDBService, public i18n:I18NService) {
+    constructor(private sharedState: SharedStateService, private dbService: NgxIndexedDBService, public i18n: I18NService) {
     }
 
 
@@ -82,8 +82,15 @@ export class DrawlayerComponent implements OnInit {
         this.map.drawLayer = this;
         this.map.addInteraction(this.select);
         this.map.addInteraction(this.modify);
+        this.map.addInteraction(this.drawHole);
+        this.drawHole.setActive(true);
+        this.drawHole.drawLayer = this;
+        this.drawHole.addEventListener('drawend', function (event) {
+            this.drawLayer.sharedState.updateDrawHoleMode(false);
+        });
         this.sharedState.deletedFeature.subscribe(feature => this.removeFeature(feature))
         this.sharedState.currentSign.subscribe(sign => this.startDrawing(sign));
+        this.sharedState.drawHoleMode.subscribe(drawHole => this.doDrawHole(drawHole));
         this.sharedState.historyDate.subscribe(historyDate => this.toggleHistory(historyDate));
         // Because of the closure, we end up inside the map -> let's just add an
         // indirection and go back to the drawlayer level again.
@@ -95,23 +102,22 @@ export class DrawlayerComponent implements OnInit {
                     }
                     this.map.addLayer(this.layer);
                     if (this.firstLoad) {
-                        if(localStorage.getItem("map")!==null){
+                        if (localStorage.getItem("map") !== null) {
                             this.status = "Migrating your old data to the new storage system...";
                             //Migration from local storage to ngf
-                            this.dbService.update("map",  localStorage.getItem("map"), "map").then(x => {
+                            this.dbService.update("map", localStorage.getItem("map"), "map").then(x => {
                                 localStorage.removeItem("map");
                                 this.dbService.update("map", localStorage.getItem("mapold"), "history").then(x => {
-                                  localStorage.removeItem("mapold");
-                                  this.status = "Migration done - now loading the data...";
-                                  this.load().then(x => {
-                                      this.status = "Data loaded";
-                                      this.startAutoSave();
-                                      this.firstLoad = false;
-                                  });
-                              });
+                                    localStorage.removeItem("mapold");
+                                    this.status = "Migration done - now loading the data...";
+                                    this.load().then(x => {
+                                        this.status = "Data loaded";
+                                        this.startAutoSave();
+                                        this.firstLoad = false;
+                                    });
+                                });
                             });
-                        }
-                        else {
+                        } else {
                             this.load().then(x => {
                                 this.status = "Data loaded";
                                 this.startAutoSave();
@@ -139,7 +145,6 @@ export class DrawlayerComponent implements OnInit {
             .on(
                 'addfeature'
                 ,
-
                 function (event) {
                     this.drawLayer.selectionChanged();
                 }
@@ -169,8 +174,8 @@ export class DrawlayerComponent implements OnInit {
 
     processHistory(history, date) {
         if (history !== null) {
-            this.map.removeInteraction(this.select);
             this.map.removeInteraction(this.modify);
+            this.map.removeInteraction(this.select);
             for (let i = history.elements.length; i > 0; i--) {
                 const element = history.elements[i - 1];
                 if (date > new Date(element.time)) {
@@ -245,13 +250,13 @@ export class DrawlayerComponent implements OnInit {
         return 'data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(this.writeFeatures()));
     }
 
-    handleCustomSignatures(features:object[], signatureHandler){
+    handleCustomSignatures(features: object[], signatureHandler) {
         for (let f of features) {
             // @ts-ignore
             let properties = f.properties;
-            if(properties!==null){
+            if (properties !== null) {
                 let signature = (properties.sig as Sign);
-                if(signature!==null && signature.dataUrl!==null){
+                if (signature !== null && signature.dataUrl !== null) {
                     signatureHandler(signature)
                 }
             }
@@ -267,7 +272,7 @@ export class DrawlayerComponent implements OnInit {
         }
     }
 
-    save():Promise<{}> {
+    save(): Promise<{}> {
         if (!this.historyMode) {
             this.dbService.getByKey("map", "map").then(previouslyStored => {
                 const now = this.writeFeatures();
@@ -279,7 +284,7 @@ export class DrawlayerComponent implements OnInit {
                             }
                             // @ts-ignore
                             history.elements.push({'time': new Date(), 'content': now});
-                            return this.dbService.update("map", history,"history");
+                            return this.dbService.update("map", history, "history");
                         });
                     });
                 }
@@ -291,52 +296,51 @@ export class DrawlayerComponent implements OnInit {
     loadElements(elements) {
         this.source.clear();
         this.select.getFeatures().clear();
-        if (elements!==undefined && elements !== null) {
+        if (elements !== undefined && elements !== null) {
             this.handleCustomSignatures(elements.features, signature => {
-               //TODO load dataUrls
+                //TODO load dataUrls
             });
             var features = new GeoJSON({defaultDataProjection: 'EPSG:3857'}).readFeatures(elements);
             this.source.addFeatures(features);
         }
     }
 
-    load():Promise<void> {
-        return this.dbService.getByKey("map", "map").then(items => {this.loadElements(items);}, error=> {console.log(error);});
+    load(): Promise<void> {
+        return this.dbService.getByKey("map", "map").then(items => {
+            this.loadElements(items);
+        }, error => {
+            console.log(error);
+        });
     }
 
     loadFromString(text) {
         this.loadElements(JSON.parse(text));
     }
 
+    private drawers: { [key: string]: Draw; } = {}
 
     startDrawing(sign) {
         this.currentDrawingSign = sign;
-        if (this.drawer !== null) {
-            this.map.removeInteraction(this.drawer);
-        }
-        if (this.currentDrawingSign != null) {
-            this.drawer = new Draw({
-                source: this.source,
-                type: this.currentDrawingSign.type
-            });
-            this.drawer.drawLayer = this;
-            this.drawer.once('drawend', function (event) {
-                this.drawLayer.endDrawing(event);
-            });
-            this.map.addInteraction(this.drawer);
+        if (sign) {
+            let drawer = this.drawers[sign.type];
+            if (!drawer) {
+                drawer = this.drawers[sign.type] = new Draw({
+                    source: this.source,
+                    type: this.currentDrawingSign.type
+                });
+                drawer.drawLayer = this;
+                drawer.once('drawend', function (event) {
+                    this.drawLayer.endDrawing(event);
+                });
+                this.map.addInteraction(drawer);
+            }
+            drawer.setActive(true);
         }
     }
 
     endDrawing(event) {
         event.feature.set('sig', this.currentDrawingSign);
-        if (event.feature.getGeometry().getType() === 'Polygon') {
-            const point = new Point(event.feature.getGeometry().getFirstCoordinate());
-            const coll = new GeometryCollection();
-            coll.setGeometries([event.feature.getGeometry(), point]);
-            event.feature.setGeometry(coll);
-        }
-        this.map.removeInteraction(this.drawer);
-        this.currentDrawingSign = null;
+        Object.values(this.drawers).forEach(drawer => drawer.setActive(false));
     }
 
     addFeatures(features) {
@@ -347,6 +351,16 @@ export class DrawlayerComponent implements OnInit {
         if (feature != null) {
             this.source.removeFeature(feature);
             this.select.getFeatures().clear();
+        }
+    }
+
+
+    private doDrawHole(drawHole: boolean) {
+        if (drawHole) {
+            Object.values(this.drawers).forEach(drawer => drawer.setActive(false));
+            this.drawHole.setActive(true);
+        } else {
+            this.drawHole.setActive(false)
         }
     }
 
@@ -362,7 +376,7 @@ export class DrawlayerComponent implements OnInit {
                 this.status = null;
             }, 1000);
             this.startAutoSave();
-        }, 10000);
+        }, 60000);
     }
 
 }

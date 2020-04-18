@@ -18,8 +18,8 @@ export class SelectedFeatureComponent implements OnInit {
 
     selectedFeature: any = null;
     selectedSignature: Sign = null;
-
     rotationPercent: number = 0;
+    drawHoleMode: boolean = false;
 
     setRotation(perc) {
         if(this.selectedFeature!=null){
@@ -38,6 +38,7 @@ export class SelectedFeatureComponent implements OnInit {
             this.selectedFeature = feature;
             this.selectedSignature = feature != null ? feature.get('sig') : null;
         });
+        this.sharedState.drawHoleMode.subscribe(drawHoleMode => this.drawHoleMode = drawHoleMode);
     }
 
     delete() {
@@ -46,5 +47,9 @@ export class SelectedFeatureComponent implements OnInit {
 
     getImageUrl(file: string) {
         return DrawStyle.getImageUrl(file);
+    }
+
+    drawHole() {
+        this.sharedState.updateDrawHoleMode(!this.drawHoleMode);
     }
 }
