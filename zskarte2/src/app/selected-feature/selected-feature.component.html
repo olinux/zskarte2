@@ -60,7 +60,7 @@
         </div>
 
         <div class="buttonPanel">
-            <button mat-raised-button (click)="drawHole()" [disabled]="drawHoleMode"><i
+            <button mat-raised-button (click)="drawHole()" [disabled]="drawHoleMode" *ngIf="selectedSignature.type==='Polygon' || selectedSignature.type==='MultiPolygon'"><i
                 class="material-icons">vignette</i><span> {{i18n.get("drawHole")}}</span></button>
             <button mat-raised-button color="primary" (click)="delete()"><i
                     class="material-icons">delete</i><span>{{i18n.get("delete")}}</span></button>

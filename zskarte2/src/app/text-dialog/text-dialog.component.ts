@@ -47,7 +47,7 @@ export class TextDialogComponent implements OnInit {
 
     submit(): void{
         const textSign:Sign = {
-            type: 'Point',
+            type: 'LineString',
             text: this.text,
             kat: null,
             de: null,

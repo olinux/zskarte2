@@ -24,6 +24,7 @@ import Fill from 'ol/style/Fill';
 import Icon from 'ol/style/Icon';
 import Text from 'ol/style/Text';
 import Point from 'ol/geom/Point';
+import LineString from 'ol/geom/LineString';
 import Circle from 'ol/style/Circle';
 import {Md5} from "ts-md5";
 
@@ -32,7 +33,7 @@ export class DrawStyle {
 
     static defaultScaleFactor = 0.2;
 
-    static textScaleFactor = 1.2;
+    static textScaleFactor = 1;
 
     static colorMap = ({
         'blue': {
@@ -59,8 +60,8 @@ export class DrawStyle {
         return 'assets/img/signs/' + file;
     }
 
-    static scale(resolution: number, scaleFactor: number): any {
-        return Math.max(0.15, scaleFactor * Math.sqrt(0.5 * resolution) / resolution);
+    static scale(resolution: number, scaleFactor: number, min:number=0.15): any {
+        return Math.max(min, scaleFactor * Math.sqrt(0.5 * resolution) / resolution);
     }
 
     static getDash(lineStyle: string, resolution: number): any {
@@ -92,7 +93,7 @@ export class DrawStyle {
             return [];
         } else if (signature.text !== undefined && signature.text !== null) {
             // It's a text-entry...
-            return DrawStyle.textStyleFunction(signature, resolution);
+            return DrawStyle.textStyleFunction(feature, resolution);
         } else {
             // It's a symbol-signature.
             return DrawStyle.imageStyleFunction(feature, resolution, signature, true);
@@ -171,7 +172,7 @@ export class DrawStyle {
             switch (feature.getGeometry().getType()) {
                 case "Polygon":
                 case "MultiPolygon":
-                case "StringLine":
+                case "LineString":
                     iconStyle = this.symbolStyleCache[symbolCacheHash] = [new Style({
                         image: new Circle({
                             radius: scale * 210,
@@ -224,28 +225,55 @@ export class DrawStyle {
             }
         }
         let styles = [vectorStyle];
-        if(iconStyle){
+        if (iconStyle) {
             iconStyle.forEach(i => styles.push(i));
         }
         return styles;
     }
 
     static textStyleFunction(feature, resolution) {
-        return new Style({
+        let defaultScale = DrawStyle.scale(resolution, DrawStyle.defaultScaleFactor);
+        let signature = feature.get('sig');
+        return [new Style({
+            stroke: new Stroke({
+                color: feature.get('sig').color ? feature.get('sig').color : 'black',
+                width: defaultScale * 20,
+                lineDash: DrawStyle.getDash(signature.style, resolution),
+                lineDashOffset: DrawStyle.getDashOffset(signature.style, resolution)
+            }),
+        }), new Style({
             text: new Text({
                 text: feature.get('sig').text,
+                backgroundFill: new Fill({
+                    color: [255, 255, 255, 1]
+                }),
                 font: '30px sans-serif',
                 rotation: feature.rotation !== undefined ? feature.rotation * Math.PI / 180 : 0,
-                scale: DrawStyle.scale(resolution, DrawStyle.textScaleFactor),
-                stroke: new Stroke({
-                    color: '#FFFF66',
-                    width: 3
-                }),
+                scale: DrawStyle.scale(resolution, DrawStyle.textScaleFactor, 0.4),
                 fill: new Fill({
-                    color: 'black'
-                })
-            })
-        });
+                    color: feature.get('sig').color ? feature.get('sig').color : 'black'
+                }),
+                backgroundStroke: new Stroke({
+                    color: feature.get('sig').color ? feature.get('sig').color : 'black',
+                    width: defaultScale * 20
+                }),
+                padding: [5, 5, 5, 5]
+            }),
+            geometry: function (feature) {
+                return new Point(feature.getGeometry().getCoordinates()[feature.getGeometry().getCoordinates().length - 1])
+            }
+        }), new Style({
+            image: new Circle({
+                radius: defaultScale * 50,
+                fill: new Fill({
+                    color: feature.get('sig').color ? feature.get('sig').color : 'black'
+                }),
+            }),
+            geometry: function (feature) {
+                return new Point(feature.getGeometry().getCoordinates()[0])
+            }
+        })
+        ]
     }
 
     static colorFunction = function (signatureKat, signatureColor, style, alpha) {
