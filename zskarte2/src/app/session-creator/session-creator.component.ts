@@ -3,14 +3,10 @@ import {SharedStateService} from "../shared-state.service";
 import {I18NService} from "../i18n.service";
 import {Session} from "../entity/session";
 import {v4 as uuidv4} from 'uuid';
-import {FormGroup} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
-import {DrawingDialogComponent} from "../drawing-dialog/drawing-dialog.component";
-import {getZSOById, LIST_OF_ZSO, ZSO} from "../entity/zso"
+import {LIST_OF_ZSO, ZSO} from "../entity/zso"
 import {PreferencesService} from "../preferences.service";
 import {SessionsService} from "../sessions.service";
-import {ImportDialogComponent} from "../import-dialog/import-dialog.component";
-import {ToolbarComponent} from "../toolbar/toolbar.component";
 import {MapStoreService} from "../map-store.service";
 import {ConfirmationDialogComponent} from "../confirmation-dialog/confirmation-dialog.component";
 
@@ -73,8 +69,12 @@ export class SessionCreatorComponent implements OnInit {
 
     private handleSessionImport(session:Session, payload:any){
         delete payload["session"];
+        if(payload.history){
+            this.mapStore.saveHistory(session.uuid, payload.history);
+            delete payload["history"];
+        }
         this.sessions.saveSession(session);
-        this.mapStore.saveMap(session.uuid, payload).then(r => {
+        this.mapStore.saveMap(session.uuid, payload).then(() => {
                 this.loadSession(session);
                 this.dialogRef.close();
             }

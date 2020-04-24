@@ -114,14 +114,19 @@ export class I18NService {
             en: "Download the current drawing"
         },
         exportSession: {
-            de: "Karte mit History exportieren",
-            en: "Export map with history",
-            fr: "Exporter la carte avec historique"
-        },
-        exportSessionWithoutHistory: {
             de: "Karte exportieren",
             en: "Export map",
             fr: "Exporter la carte"
+        },
+        withHistory:{
+            de: "Mit History",
+            en: "With history",
+            fr: "Avec historique"
+        },
+        withoutHistory:{
+            de: "Ohne History",
+            en: "Without history",
+            fr: "Sans historique"
         },
         cancel: {
             de: "Abbrechen",

@@ -101,4 +101,8 @@ export class MapStoreService {
         return this.dbService.getByKey(MapStoreService.STORE_HISTORY, sessionId);
     }
 
+    public saveHistory(sessionId: string, payload: any): Promise<any>{
+        return this.dbService.update(MapStoreService.STORE_HISTORY, payload, sessionId);
+    }
+
 }

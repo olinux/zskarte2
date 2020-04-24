@@ -57,6 +57,8 @@ import {SessionCreatorComponent} from './session-creator/session-creator.compone
 import {NgxMdModule} from "ngx-md";
 import {LanguageChooserComponent} from './language-chooser/language-chooser.component';
 import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
+import { ExportDialogComponent } from './export-dialog/export-dialog.component';
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 const dbConfig: DBConfig = {
     name: 'ZSKarte2-DB1.0',
@@ -93,7 +95,8 @@ const dbConfig: DBConfig = {
         SelectedFeatureComponent,
         SessionCreatorComponent,
         LanguageChooserComponent,
-        ConfirmationDialogComponent
+        ConfirmationDialogComponent,
+        ExportDialogComponent
     ],
     imports: [
         BrowserModule,
@@ -114,13 +117,15 @@ const dbConfig: DBConfig = {
         MatRadioModule,
         MatListModule,
         NgxIndexedDBModule.forRoot(dbConfig),
-        NgxMdModule.forRoot()
+        NgxMdModule.forRoot(),
+        MatProgressSpinnerModule
     ],
     entryComponents: [
         DrawingDialogComponent,
         ImportDialogComponent,
         TextDialogComponent,
-        ConfirmationDialogComponent
+        ConfirmationDialogComponent,
+        ExportDialogComponent
     ],
     providers: [],
     bootstrap: [AppComponent]

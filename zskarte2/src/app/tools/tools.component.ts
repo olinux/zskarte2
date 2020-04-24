@@ -57,7 +57,7 @@ export class ToolsComponent implements OnInit {
     }
 
     getDownloadFileName(){
-        return "zskarte_"+this.downloadTime.toISOString()+".json";
+        return "zskarte_"+this.downloadTime.toISOString()+".geojson";
     }
 
     clear(): void {

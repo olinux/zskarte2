@@ -28,10 +28,9 @@ import {SessionCreatorComponent} from "../session-creator/session-creator.compon
 import {MatDialog} from "@angular/material/dialog";
 import {PreferencesService} from "../preferences.service";
 import {SessionsService} from "../sessions.service";
-import {DomSanitizer} from "@angular/platform-browser";
-import {ImportDialogComponent} from "../import-dialog/import-dialog.component";
 import {ConfirmationDialogComponent} from "../confirmation-dialog/confirmation-dialog.component";
 import {MapStoreService} from "../map-store.service";
+import {ExportDialogComponent} from "../export-dialog/export-dialog.component";
 
 @Component({
     selector: 'app-toolbar',
@@ -43,14 +42,8 @@ export class ToolbarComponent implements OnInit {
     @Input() drawLayer: DrawlayerComponent;
     @Input() history: HistoryComponent;
     session: Session;
-    downloadData = null;
-    downloadTime:string = new Date().toISOString();
 
-    constructor(private sanitizer: DomSanitizer, public i18n: I18NService, private cdr: ChangeDetectorRef, private sharedState: SharedStateService, public dialog: MatDialog, private preferences: PreferencesService, private sessions: SessionsService, private mapStore: MapStoreService) {
-    }
-
-    getDownloadFileName(){
-        return "zskarte_"+this.sharedState.getCurrentSession().uuid+"_"+this.downloadTime+".zsjson";
+    constructor(public i18n: I18NService, private cdr: ChangeDetectorRef, private sharedState: SharedStateService, public dialog: MatDialog, private preferences: PreferencesService, private sessions: SessionsService, private mapStore: MapStoreService) {
     }
 
     ngOnInit() {
@@ -119,16 +112,11 @@ export class ToolbarComponent implements OnInit {
         }
     }
 
-    importSession(): void {
-        const dialogRef = this.dialog.open(ImportDialogComponent);
-        dialogRef.afterClosed().subscribe(result => {
-            this.drawLayer.loadFromString(result);
+    exportSession(): void {
+        let features = this.drawLayer.writeFeatures();
+        this.dialog.open(ExportDialogComponent, {
+            data: features
         });
-    }
-
-    exportSession(withHistory:boolean): void {
-        this.downloadTime = new Date().toISOString()
-        this.downloadData = this.sanitizer.bypassSecurityTrustUrl(this.drawLayer.toDataUrl(true, withHistory));
     }
 
     toggleHistory(): void {

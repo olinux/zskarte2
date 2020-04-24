@@ -2,8 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {SharedStateService} from "../shared-state.service";
 import {Sign} from "../entity/sign";
 import {DrawStyle} from "../drawlayer/draw-style";
-import {HistoryComponent} from "../history/history.component";
-import {GeoadminService} from "../geoadmin.service";
 import {I18NService} from "../i18n.service";
 
 @Component({
