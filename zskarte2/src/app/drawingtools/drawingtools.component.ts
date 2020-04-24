@@ -54,10 +54,8 @@ export class DrawingtoolsComponent implements OnInit {
 
     openDrawDialog(): void {
         const dialogRef = this.drawDialog.open(DrawingDialogComponent, {
-            width: '600px',
-            maxWidth: '600px',
-            height: '90%',
-            maxHeight: '400px'
+            maxWidth: '80vw',
+            maxHeight: '70vh'
         });
 
         dialogRef.afterClosed().subscribe(result => {
@@ -68,10 +66,8 @@ export class DrawingtoolsComponent implements OnInit {
 
     openTextDialog(): void {
         const dialogRef = this.textDialog.open(TextDialogComponent, {
-            width: '600px',
-            maxWidth: '600px',
-            height: '90%',
-            maxHeight: '400px'
+            maxWidth: '80vw',
+            maxHeight: '70vh'
         });
 
         dialogRef.afterClosed().subscribe(result => {

@@ -19,12 +19,11 @@
   -->
 
 <span class="tools">
-  <button mat-stroked-button [matMenuTriggerFor]="mapMenu"><i class="material-icons">folder</i> {{i18n.get("tools")}}</button>
+  <button mat-stroked-button [matMenuTriggerFor]="mapMenu"><i class="material-icons">photo</i> {{i18n.get("currentDrawing")}}</button>
 <mat-menu #mapMenu="matMenu">
   <button mat-menu-item (click)="importData()"><i class="material-icons">open_in_browser</i> {{i18n.get("import")}}</button>
-  <a mat-menu-item download="features.json" id="export" (click)="download()" [href]="downloadData"><i class="material-icons">save</i> {{i18n.get("download")}}</a>
+  <a mat-menu-item [download]="getDownloadFileName()" id="export" (click)="download(false)" [href]="downloadData"><i class="material-icons">save</i> {{i18n.get("download")}}</a>
 <!--<button mat-menu-item (click)="openDownloadDialog()"><i class="material-icons">save</i> Herunterladen</button>-->
-  <button mat-menu-item (click)="toggleHistory()"><i class="material-icons">history</i> <span >{{i18n.get("history")}}</span></button>
   <button mat-menu-item (click)="clear()"><i class="material-icons" >delete</i> {{i18n.get("delete")}}</button>
 </mat-menu>
 

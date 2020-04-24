@@ -19,10 +19,9 @@
  */
 
 .credits {
-    background-color: #f6560e;
     padding: 0.2em;
     display:inline-block;
-    height: 2em;
+    height: 4.5em;
 }
 
 .credits a{

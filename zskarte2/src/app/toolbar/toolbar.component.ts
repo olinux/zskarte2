@@ -23,6 +23,15 @@ import {DrawlayerComponent} from '../drawlayer/drawlayer.component';
 import {HistoryComponent} from "../history/history.component";
 import {SharedStateService} from "../shared-state.service";
 import {I18NService} from "../i18n.service";
+import {Session} from "../entity/session";
+import {SessionCreatorComponent} from "../session-creator/session-creator.component";
+import {MatDialog} from "@angular/material/dialog";
+import {PreferencesService} from "../preferences.service";
+import {SessionsService} from "../sessions.service";
+import {DomSanitizer} from "@angular/platform-browser";
+import {ImportDialogComponent} from "../import-dialog/import-dialog.component";
+import {ConfirmationDialogComponent} from "../confirmation-dialog/confirmation-dialog.component";
+import {MapStoreService} from "../map-store.service";
 
 @Component({
     selector: 'app-toolbar',
@@ -33,18 +42,97 @@ export class ToolbarComponent implements OnInit {
 
     @Input() drawLayer: DrawlayerComponent;
     @Input() history: HistoryComponent;
+    session: Session;
+    downloadData = null;
+    downloadTime:string = new Date().toISOString();
 
-    constructor(public i18n:I18NService, private cdr: ChangeDetectorRef) {
+    constructor(private sanitizer: DomSanitizer, public i18n: I18NService, private cdr: ChangeDetectorRef, private sharedState: SharedStateService, public dialog: MatDialog, private preferences: PreferencesService, private sessions: SessionsService, private mapStore: MapStoreService) {
+    }
+
+    getDownloadFileName(){
+        return "zskarte_"+this.sharedState.getCurrentSession().uuid+"_"+this.downloadTime+".zsjson";
     }
 
     ngOnInit() {
+        this.sharedState.session.subscribe(s => {
+            this.session = s;
+            if (s) {
+                this.preferences.setLastSessionId(s.uuid);
+            }
+        })
+        let lastSession = this.preferences.getLastSessionId();
+        if (lastSession) {
+            let session = this.sessions.getSession(lastSession)
+            if (session) {
+                this.sharedState.loadSession(JSON.parse(session));
+                return;
+            }
+        }
+        this.createInitialSession();
     }
 
-    setLocale(locale:string){
-        this.i18n.locale = locale;
-        this.cdr.detectChanges();
+    private createInitialSession(){
+        this.dialog.open(SessionCreatorComponent, {
+            disableClose: true,
+            width: '80vw',
+            maxWidth: '80vw'
+        })
+    }
+
+    createOrLoadSession() {
+        this.dialog.open(SessionCreatorComponent,{
+            data: {
+                session: this.session,
+                edit: false
+            },
+            width: '80vw',
+            maxWidth: '80vw'
+        });
     }
 
 
+    editSession() {
+        this.dialog.open(SessionCreatorComponent, {
+            data: {
+                session: this.session,
+                edit: true
+            },
+            width: '80vw',
+            maxWidth: '80vw'
+        })
+    }
 
+    deleteSession():void{
+        if(this.session) {
+            const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+                data: this.i18n.get('confirmDeleteMap')
+            });
+            dialogRef.afterClosed().subscribe(result => {
+                if (result) {
+                    this.mapStore.removeMap(this.session.uuid, true);
+                    this.sessions.removeSession(this.session.uuid);
+                    this.preferences.removeSessionSpecificPreferences(this.session.uuid);
+                    this.sharedState.loadSession(null);
+                    this.createInitialSession();
+                }
+            })
+        }
+    }
+
+    importSession(): void {
+        const dialogRef = this.dialog.open(ImportDialogComponent);
+        dialogRef.afterClosed().subscribe(result => {
+            this.drawLayer.loadFromString(result);
+        });
+    }
+
+    exportSession(withHistory:boolean): void {
+        this.downloadTime = new Date().toISOString()
+        this.downloadData = this.sanitizer.bypassSecurityTrustUrl(this.drawLayer.toDataUrl(true, withHistory));
+    }
+
+    toggleHistory(): void {
+        this.drawLayer.save();
+        this.history.toggleHistoryMode();
+    }
 }

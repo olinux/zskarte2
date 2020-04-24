@@ -21,9 +21,9 @@
 <div class="geocoder">
     <mat-form-field>
         <input type="text" placeholder="{{i18n.get('findPlace')}}" matInput [matAutocomplete]="auto" [(ngModel)]="inputText" (ngModelChange)="geoCodeLoad()">
-        <mat-autocomplete #auto="matAutocomplete" [displayWith]="getLabel">
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="getLabel" (optionSelected)="geoCodeSelected($event)">
             <mat-option *ngFor="let location of foundLocations" [value]="location.attrs">
-                <span [innerHTML]="location.attrs.label" (click)="geoCodeChange(location.attrs)" [title]="getLabel(location.attrs)"></span>
+                <span [innerHTML]="location.attrs.label" [title]="getLabel(location.attrs)"></span>
             </mat-option>
         </mat-autocomplete>
     </mat-form-field>

@@ -18,9 +18,10 @@
  *
  */
 
-.geocoder{
-    display:inline-block;
-}
 .mat-option{
     font-size: 0.7em;
+}
+
+mat-form-field{
+    width: 100%;
 }

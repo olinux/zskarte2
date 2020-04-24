@@ -19,11 +19,20 @@
  */
 
 .clock {
-    position: absolute;
-    top: 2em;
-    left: 4em;
-    background-color: white;
+    display: inline-block;
+}
+
+.time{
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-bottom: 0.5em;
+    display:inline-block;
+}
+.date{
+    font-style: italic;
+}
+
+div{
+    display: inline-block;
     text-align: center;
-    z-index: 2000;
-    padding:0.5em;
 }

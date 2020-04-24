@@ -18,52 +18,7 @@
  *
  */
 
-.flexContainer{
-    display:flex;
-    flex-wrap: nowrap;
-    align-items: center;
-}
-
-mat-card-title {
-    margin-bottom: 0;
-}
-
-.spacer{
-    flex: 1;
-}
-
-.credits{
-    align-items: flex-start;
-}
-
-.tools{
-    flex: 1;
-    margin:0.5em;
-}
-
-.clock{
-    align-items: flex-end;
-    font-size: 0.9em;
-}
-mat-card-content.flexContainer *{
-    margin: 0.5em;
-}
-.mat-card-content{
-    margin-bottom: 0;
-}
-
-
-.edit{
-    transform: scale(0.6);
-    margin-left: 1em;
-    margin-right: 1em;
-}
-
-
-.toolbar{
-    position:absolute;
-    left: 0;
-    right: 0;
-    top:0;
-    padding: 0.5em;
+export interface Viewport {
+    coordinates: number[];
+    zoomLevel: number;
 }

@@ -17,24 +17,23 @@
  *
  *
  */
-
 import {Component, Input, OnInit} from '@angular/core';
-import Point from 'ol/geom/Point';
 import Select from 'ol/interaction/Select';
 import Modify from 'ol/interaction/Modify';
 import Vector from 'ol/source/Vector';
 import LayerVector from 'ol/layer/Vector';
 import GeoJSON from 'ol/format/GeoJSON';
 import Draw from 'ol/interaction/Draw';
-import Feature from 'ol/Feature';
 import OlMap from 'ol/Map';
 import DrawHole from 'ol-ext/interaction/DrawHole';
 import {never} from 'ol/events/condition';
 import {SharedStateService} from '../shared-state.service';
 import {DrawStyle} from './draw-style';
 import {Sign} from "../entity/sign";
-import {NgxIndexedDBService} from "ngx-indexed-db";
 import {I18NService} from "../i18n.service";
+import {MapStoreService} from "../map-store.service";
+import Circle from "ol/geom/Circle";
+import {SessionsService} from "../sessions.service";
 
 @Component({
     selector: 'app-drawlayer',
@@ -48,6 +47,8 @@ export class DrawlayerComponent implements OnInit {
     map: OlMap;
     currentDrawingSign = null;
     status = "Loading data...";
+    currentSessionId: string;
+    recordChanges: boolean = false;
 
     select = new Select({
         toggleCondition: never,
@@ -72,63 +73,70 @@ export class DrawlayerComponent implements OnInit {
             layers: [this.layer]
         });
 
-    constructor(private sharedState: SharedStateService, private dbService: NgxIndexedDBService, public i18n: I18NService) {
+    constructor(private sharedState: SharedStateService, private mapStore: MapStoreService, public i18n: I18NService, private sessions: SessionsService) {
     }
 
+
+    private drawingManipulated() {
+        this.status = "Save changes";
+        this.save().then(this.status = null);
+    }
 
     ngOnInit() {
         this.map = this.inputMap;
         this.source.drawLayer = this;
         this.map.drawLayer = this;
+        this.modify.drawLayer = this;
         this.map.addInteraction(this.select);
         this.map.addInteraction(this.modify);
         this.map.addInteraction(this.drawHole);
         this.drawHole.setActive(true);
         this.drawHole.drawLayer = this;
-        this.drawHole.addEventListener('drawend', function (event) {
+        this.source.addEventListener('addfeature', function (e) {
+            this.drawLayer.drawingManipulated();
+        });
+        this.source.addEventListener('removefeature', function (e) {
+            this.drawLayer.drawingManipulated();
+        });
+        this.source.addEventListener('changefeature', function (e) {
+            this.drawLayer.drawingManipulated();
+        });
+        this.drawHole.addEventListener('drawend', function (e) {
             this.drawLayer.sharedState.updateDrawHoleMode(false);
         });
         this.sharedState.deletedFeature.subscribe(feature => this.removeFeature(feature))
         this.sharedState.currentSign.subscribe(sign => this.startDrawing(sign));
         this.sharedState.drawHoleMode.subscribe(drawHole => this.doDrawHole(drawHole));
         this.sharedState.historyDate.subscribe(historyDate => this.toggleHistory(historyDate));
+        this.sharedState.session.subscribe(s => {
+            if(s){
+                if(this.currentSessionId !== s.uuid){
+                    this.currentSessionId = s.uuid;
+                    //The session has changed - we need to reload
+                    this.status = "Now loading the map...";
+                    this.load().then(() => {
+                        this.status = "Map loaded";
+                        this.recordChanges = true;
+                        //this.startAutoSave();
+                    });
+                }
+            }
+            else {
+                this.currentSessionId = null;
+                //this.removeAll();
+            }
+        })
         // Because of the closure, we end up inside the map -> let's just add an
         // indirection and go back to the drawlayer level again.
-
         this.sharedState.layerChanged.subscribe(changed => {
                 if (changed) {
                     if (!this.firstLoad) {
                         this.map.removeLayer(this.layer);
                     }
                     this.map.addLayer(this.layer);
-                    if (this.firstLoad) {
-                        if (localStorage.getItem("map") !== null) {
-                            this.status = "Migrating your old data to the new storage system...";
-                            //Migration from local storage to ngf
-                            this.dbService.update("map", localStorage.getItem("map"), "map").then(x => {
-                                localStorage.removeItem("map");
-                                this.dbService.update("map", localStorage.getItem("mapold"), "history").then(x => {
-                                    localStorage.removeItem("mapold");
-                                    this.status = "Migration done - now loading the data...";
-                                    this.load().then(x => {
-                                        this.status = "Data loaded";
-                                        this.startAutoSave();
-                                        this.firstLoad = false;
-                                    });
-                                });
-                            });
-                        } else {
-                            this.load().then(x => {
-                                this.status = "Data loaded";
-                                this.startAutoSave();
-                                this.firstLoad = false;
-                            });
-                        }
-                    }
                 }
             }
         );
-
 
         this
             .map
@@ -145,7 +153,7 @@ export class DrawlayerComponent implements OnInit {
             .on(
                 'addfeature'
                 ,
-                function (event) {
+                function () {
                     this.drawLayer.selectionChanged();
                 }
             );
@@ -162,28 +170,16 @@ export class DrawlayerComponent implements OnInit {
     }
 
     endHistoryMode() {
-        this.load().then(x => {
+        this.load().then(() => {
             this.select.setActive(true);
             this.select.setActive(true);
         });
     }
 
     loadFromHistory(date) {
-        this.dbService.getByKey("map", "history").then(history => this.processHistory(history, date));
-    }
-
-    processHistory(history, date) {
-        if (history !== null) {
-            this.modify.setActive(false);
-            this.select.setActive(false);
-            for (let i = history.elements.length; i > 0; i--) {
-                const element = history.elements[i - 1];
-                if (date > new Date(element.time)) {
-                    this.loadElements(element.content);
-                    break;
-                }
-            }
-        }
+        this.modify.setActive(false);
+        this.select.setActive(false);
+        this.mapStore.getHistoricalState(this.currentSessionId, date).then(historicalMap => this.loadElements(historicalMap));
     }
 
     selectHandler(event): void {
@@ -236,18 +232,24 @@ export class DrawlayerComponent implements OnInit {
         }
     }
 
-    filterFeatures(filter): void {
-        // this.style.filter = filter;
-        this.layer.changed();
+    private handleFeatureBeforeSaving(feature) {
+        switch (feature.type) {
+            case "Circle":
+                console.log("The feature " + JSON.stringify(feature) + " is a circle!!!");
+        }
+
     }
 
-
-    writeFeatures() {
+    writeFeatures(): GeoJSON {
         return JSON.parse(new GeoJSON({defaultDataProjection: 'EPSG:3857'}).writeFeatures(this.source.getFeatures()));
     }
 
-    toDataUrl() {
-        return 'data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(this.writeFeatures()));
+    toDataUrl(withSession: boolean, withHistory: boolean) {
+        let result = this.writeFeatures();
+        if (withSession) {
+            result.session = this.sharedState.getCurrentSession()
+        }
+        return 'data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(result));
     }
 
     handleCustomSignatures(features: object[], signatureHandler) {
@@ -265,52 +267,52 @@ export class DrawlayerComponent implements OnInit {
 
     removeAll() {
         if (!this.historyMode) {
-            this.dbService.delete("map", "map");
-            this.dbService.delete("map", "history");
+            this.mapStore.removeMap(this.currentSessionId, false).then(() => {
+            });
+            this.recordChanges = false;
             this.source.clear();
             this.select.getFeatures().clear();
+            this.save();
+            this.recordChanges = true;
         }
     }
 
-    save(): Promise<{}> {
+    save(): Promise<any> {
         if (!this.historyMode) {
-            this.dbService.getByKey("map", "map").then(previouslyStored => {
-                const now = this.writeFeatures();
-                if (now !== previouslyStored) {
-                    this.dbService.update("map", now, "map").then(x => {
-                        this.dbService.getByKey("map", "history").then(history => {
-                            if (history === undefined || history === null) {
-                                history = {'elements': []};
-                            }
-                            // @ts-ignore
-                            history.elements.push({'time': new Date(), 'content': now});
-                            return this.dbService.update("map", history, "history");
-                        });
-                    });
-                }
-            });
+            let features = this.writeFeatures();
+            return this.mapStore.saveMap(this.currentSessionId, features);
         }
         return Promise.resolve({});
     }
 
-    loadElements(elements) {
+    loadElements(elements: GeoJSON) {
+        this.recordChanges = false;
         this.source.clear();
         this.select.getFeatures().clear();
-        if (elements !== undefined && elements !== null) {
-            this.handleCustomSignatures(elements.features, signature => {
-                //TODO load dataUrls
-            });
-            var features = new GeoJSON({defaultDataProjection: 'EPSG:3857'}).readFeatures(elements);
-            this.source.addFeatures(features);
+        if (elements) {
+            if (elements.session) {
+                this.sessions.saveSession(elements.session);
+                this.sharedState.loadSession(elements.session);
+                return;
+            }
+            if (elements.features) {
+                this.handleCustomSignatures(elements.features, () => {
+                    //TODO load dataUrls
+                });
+                this.source.addFeatures(new GeoJSON({defaultDataProjection: 'EPSG:3857'}).readFeatures(elements));
+            }
         }
+        this.save();
+        this.recordChanges = true;
     }
 
-    load(): Promise<void> {
-        return this.dbService.getByKey("map", "map").then(items => {
-            this.loadElements(items);
-        }, error => {
-            console.log(error);
-        });
+    load(): Promise<any> {
+        return new Promise<any>(resolve => {
+            this.mapStore.getMap(this.currentSessionId).then(map => {
+                this.loadElements(map)
+                resolve("Elements loaded");
+            });
+        })
     }
 
     loadFromString(text) {
@@ -341,6 +343,7 @@ export class DrawlayerComponent implements OnInit {
     endDrawing(event) {
         event.feature.set('sig', this.currentDrawingSign);
         Object.values(this.drawers).forEach(drawer => drawer.setActive(false));
+        //this.drawingManipulated();
     }
 
     addFeatures(features) {
@@ -364,20 +367,18 @@ export class DrawlayerComponent implements OnInit {
         }
     }
 
-    clearSelection() {
-        this.select.getFeatures().clear();
-    }
-
-    startAutoSave() {
-        const t = setTimeout(() => {
-            this.status = 'auto save...';
-            this.save();
-            setTimeout(() => {
-                this.status = null;
-            }, 1000);
-            this.startAutoSave();
-        }, 60000);
-    }
+    // startAutoSave() {
+    //     const saveInterval: number = 10000;
+    //     setTimeout(() => {
+    //         this.status = 'auto save...';
+    //         this.save().then(() => {
+    //             setTimeout(() => {
+    //                 this.status = null;
+    //             }, 1000);
+    //             this.startAutoSave();
+    //         });
+    //     }, saveInterval);
+    // }
 
 }
 

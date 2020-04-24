@@ -36,6 +36,8 @@ export class GeocoderComponent implements OnInit {
     foundLocations = []
     formControl = new FormControl();
     inputText: string = undefined;
+    selected = null;
+
 
     constructor(private http: HttpClient, private sharedState: SharedStateService, public i18n:I18NService) {
     }
@@ -54,6 +56,7 @@ export class GeocoderComponent implements OnInit {
         }
         else{
             this.foundLocations = [];
+            this.sharedState.gotoCoordinate(null);
         }
     }
 
@@ -61,8 +64,8 @@ export class GeocoderComponent implements OnInit {
         return selected ? selected.label.replace(/<[^>]*>/g, '') : undefined;
     }
 
-    geoCodeChange(selected){
-        this.sharedState.gotoCoordinate({lat: selected.lat, lon: selected.lon})
+    geoCodeSelected(event){
+        this.sharedState.gotoCoordinate({lat: event.option.value.lat, lon: event.option.value.lon})
     }
 
 }

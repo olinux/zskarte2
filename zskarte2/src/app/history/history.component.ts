@@ -22,6 +22,7 @@ import {Component, OnInit} from '@angular/core';
 import {SharedStateService} from '../shared-state.service';
 import {NgxIndexedDBService} from "ngx-indexed-db";
 import {I18NService} from "../i18n.service";
+import {MapStoreService} from "../map-store.service";
 
 @Component({
     selector: 'app-history',
@@ -32,12 +33,15 @@ export class HistoryComponent implements OnInit {
 
     historyDate = null;
     historyPerc = 100;
+    currentSessionId = null;
 
-    constructor(private sharedState: SharedStateService, private dbService: NgxIndexedDBService, public i18n:I18NService) {
+    constructor(private sharedState: SharedStateService, private mapStore:MapStoreService, public i18n:I18NService) {
+        this.currentSessionId = this.sharedState.getCurrentSession();
+        this.sharedState.session.subscribe(s => {this.currentSessionId = s != null ? s.uuid : null});
     }
 
     getDateByPerc(perc): Promise<Date> {
-        return this.getFirstDateInHistory().then(firstDateInHistory => this.findDateByPerc(firstDateInHistory, perc));
+        return this.mapStore.getFirstDateInHistory(this.currentSessionId).then(firstDateInHistory => this.findDateByPerc(firstDateInHistory, perc));
     }
 
     findDateByPerc(firstDateInHistory, perc): Date {
@@ -57,9 +61,6 @@ export class HistoryComponent implements OnInit {
         return new Date();
     }
 
-    getFirstDateInHistory(): Promise<Date> {
-        return this.dbService.getByKey('map', "history").then(history => this.selectHistoryDate(history));
-    }
 
     ngOnInit(): void {
     }

@@ -22,7 +22,9 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs/index';
 import {Sign} from './entity/sign';
 import {Coordinate} from "./entity/coordinate";
+import {Session} from './entity/session';
 import {Layer} from "./layers/layer";
+import {ZSO} from "./entity/zso";
 
 @Injectable({
     providedIn: 'root'
@@ -62,7 +64,16 @@ export class SharedStateService {
     private drawHoleModeSource = new BehaviorSubject<boolean>(false);
     drawHoleMode = this.drawHoleModeSource.asObservable();
 
-    constructor() {
+    private sessionSource = new BehaviorSubject<Session>(null);
+    session = this.sessionSource.asObservable();
+
+    getCurrentSession(){
+        return this.sessionSource.getValue();
+    }
+
+
+    loadSession(session:Session){
+        this.sessionSource.next(session);
     }
 
     updateDrawHoleMode(drawHole: boolean){

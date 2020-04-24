@@ -18,15 +18,41 @@
   ~
   -->
 
-<mat-card class="toolbar">
-    <mat-card-content>
-        <span class="flags"><img *ngFor="let locale of i18n.LOCALES" (click)="setLocale(locale)" class="flag" src="assets/img/flags/{{locale}}.svg" [ngClass]="{'active': locale==i18n.locale}"/></span>
-        <app-credits></app-credits>
-        <app-geocoder></app-geocoder>
-        <app-drawingtools *ngIf="!history.historyDate"></app-drawingtools>
-        <!--<a class="mat-stroked-button" download="map.jpg"><span class="mat-button-wrapper"><i class="material-icons">photo_camera</i> Screenshot</span></a>-->
-        <app-tools [drawLayer]="drawLayer" [history]="history" *ngIf="!history.historyDate"></app-tools>
-        <app-layers></app-layers>
+<mat-card class="toolbar" *ngIf="session">
+    <div class="flexContainer">
+        <div class="credits">
+            <div class="flexContainer" style="flex-direction: column">
+                <app-credits></app-credits>
+                <app-language-chooser></app-language-chooser>
+            </div>
+        </div>
+        <div class="tools">
+            <div class="flexContainer">
+                <mat-card-title class="title">{{session.title}}</mat-card-title>
+                <button mat-mini-fab color="primary" class="edit" aria-label="Example icon button with a menu icon"  [matMenuTriggerFor]="mainMenu" *ngIf="!history.historyDate">
+                    <i class="material-icons">menu</i>
+                </button>
+                <div class="spacer"></div>
+                <div class="clock">
+                    <app-clock></app-clock>
+                </div>
+            </div>
+            <mat-card-content class="flexContainer">
+                <app-geocoder style="flex:1"></app-geocoder>
+                <app-drawingtools *ngIf="!history.historyDate"></app-drawingtools>
+                <!--<a class="mat-stroked-button" download="map.jpg"><span class="mat-button-wrapper"><i class="material-icons">photo_camera</i> Screenshot</span></a>-->
+                <app-tools [drawLayer]="drawLayer" [history]="history" *ngIf="!history.historyDate"></app-tools>
+                <app-layers></app-layers>
+            </mat-card-content>
 
-    </mat-card-content>
+
+            <mat-menu #mainMenu="matMenu">
+                <button mat-menu-item (click)="createOrLoadSession()"><i class="material-icons">swap_calls</i> {{i18n.get("createOrLoad")}}</button>
+                <button mat-menu-item (click)="editSession()"><i class="material-icons">edit</i> {{i18n.get("editMap")}}</button>
+                <button mat-menu-item (click)="toggleHistory()"><i class="material-icons">history</i><span> {{i18n.get("history")}}</span></button>
+                <a mat-menu-item [download]="getDownloadFileName()" id="exportSessionWithoutHistory" (click)="exportSession(false)" [href]="downloadData"><i class="material-icons">save</i> {{i18n.get("exportSessionWithoutHistory")}}</a>
+                <button mat-menu-item (click)="deleteSession()"><i class="material-icons">delete</i> {{i18n.get("deleteMap")}}</button>
+           </mat-menu>
+        </div>
+    </div>
 </mat-card>

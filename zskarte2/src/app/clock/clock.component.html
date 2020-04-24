@@ -17,10 +17,7 @@
   ~
   ~
   -->
-
-<mat-card class="clock">
-    <mat-card-content>
-        {{now | date:'HH:mm:ss'}}<br/>
-        {{now | date:'dd.MM.yyyy'}}
-    </mat-card-content>
-</mat-card>
+<div>
+    <span class="time">{{now | date:'HH:mm:ss'}}</span><br/>
+    <span class="date">{{now | date:'dd.MM.yyyy'}}</span>
+</div>

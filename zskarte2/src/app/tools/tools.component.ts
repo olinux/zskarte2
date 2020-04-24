@@ -23,11 +23,9 @@ import {DrawlayerComponent} from "../drawlayer/drawlayer.component";
 import {DomSanitizer} from "@angular/platform-browser";
 import {HistoryComponent} from "../history/history.component";
 import { MatDialog } from "@angular/material/dialog";
-import {DrawingDialogComponent} from "../drawing-dialog/drawing-dialog.component";
 import {ImportDialogComponent} from "../import-dialog/import-dialog.component";
-import {TextDialogComponent} from "../text-dialog/text-dialog.component";
-import {DownloadDialogComponent} from "../download-dialog/download-dialog.component";
 import {I18NService} from "../i18n.service";
+import {SharedStateService} from "../shared-state.service";
 
 
 @Component({
@@ -40,32 +38,11 @@ export class ToolsComponent implements OnInit {
     @Input() drawLayer: DrawlayerComponent;
     @Input() history: HistoryComponent;
 
-    // maps: Map[] = [
-    //     {value: 'osm', viewValue: 'Open Street Map', layers: null},
-    //     {
-    //         value: 'geoadmin', viewValue: 'GeoAdmin', layers: [
-    //             {value: 'pixelkarte', viewValue: 'Pixelkarte'},
-    //             {value: 'swissimage', viewValue: 'SwissImage'}
-    //         ]
-    //     }
-    // ];
-    // selectedMap = this.maps[0].value;
-    // selectedLayers = null;
-
     downloadData = null;
+    downloadTime = null;
 
-    constructor(private sanitizer: DomSanitizer, public dialog: MatDialog, public i18n:I18NService) {
+    constructor(private sanitizer: DomSanitizer, public dialog: MatDialog, public i18n:I18NService, private sharedState: SharedStateService) {
     }
-
-
-    // getSelectedMap(): Map {
-    //     for (const m of this.maps) {
-    //         if (m.value === this.selectedMap) {
-    //             return m;
-    //         }
-    //     }
-    //     return null;
-    // }
 
     importData(): void {
         const dialogRef = this.dialog.open(ImportDialogComponent, {
@@ -73,52 +50,26 @@ export class ToolsComponent implements OnInit {
             maxWidth: '600px',
             height: '90%',
             maxHeight: '400px'
-        });
+        }, );
         dialogRef.afterClosed().subscribe(result => {
             this.drawLayer.loadFromString(result);
         });
     }
 
-
-
-    // changeMap(event): void {
-    //     console.log('Model has changed');
-    //     if (this.getSelectedMap().layers === null) {
-    //         this.selectedLayers = null;
-    //     } else {
-    //         this.selectedLayers = [this.getSelectedMap().layers[0].value];
-    //     }
-    // }
-
-    toggleHistory(): void {
-        this.drawLayer.save();
-        this.history.toggleHistoryMode();
+    getDownloadFileName(){
+        return "zskarte_"+this.downloadTime.toISOString()+".json";
     }
-
 
     clear(): void {
         this.drawLayer.removeAll();
     }
 
     ngOnInit() {
+        this.downloadTime = new Date();
     }
 
-    download(): void {
-        this.downloadData = this.sanitizer.bypassSecurityTrustUrl(this.drawLayer.toDataUrl());
+    download(withHistory: boolean): void {
+        this.downloadData = this.sanitizer.bypassSecurityTrustUrl(this.drawLayer.toDataUrl(false, withHistory));
     }
-
-    // openDownloadDialog(): void {
-    //     this.drawLayer.status = "Preparing data for download...";
-    //     this.drawLayer.toDataUrl().then(payload=> {
-    //             this.drawLayer.status="";
-    //             const dialogRef = this.dialog.open(DownloadDialogComponent, {
-    //                 width: '600px',
-    //                 maxWidth: '600px',
-    //                 height: '90%',
-    //                 maxHeight: '400px',
-    //                 data: payload
-    //             })
-    //         })
-    // }
 
 }

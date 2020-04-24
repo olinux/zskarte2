@@ -25,7 +25,7 @@
         {{i18n.get("loadFromFile")}}
       </div>
       <div class="modal-body">
-        <input id="loadFromFile" type="file" #fileInput>
+        <input id="loadFromFile" type="file" accept=".json,.geojson,.zsjson" #fileInput>
       </div>
       <div class="modal-footer">
         <button mat-stroked-button (click)="onNoClick()" >{{i18n.get("cancel")}}</button>

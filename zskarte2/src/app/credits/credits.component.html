@@ -18,10 +18,10 @@
   ~
   -->
 
-<span class="credits">
+<span class="credits" *ngIf="zso">
 
-<a href="http://www.zso-bern-plus.ch/" target="_blank">
-  <img src="assets/img/logo_zs.png"/><span>{{i18n.get("zsoBernPlus")}}</span>
+<a [href]="zso.url" target="_blank">
+  <img [src]="'assets/img/zso/'+zso.id+'.png'"/>
 </a>
 
 </span>

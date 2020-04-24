@@ -32,6 +32,7 @@ import VectorLayer from 'ol/layer/Vector';
 import Style from 'ol/style/Style';
 import Icon from 'ol/style/Icon';
 import Point from 'ol/geom/Point';
+import {PreferencesService} from "../preferences.service";
 
 @Component({
     selector: 'app-map',
@@ -40,10 +41,10 @@ import Point from 'ol/geom/Point';
 })
 export class MapComponent implements OnInit {
 
-    initialCoordinates = [776217.9563903547,  5900111.880627786];
     map: OlMap = null;
     layer: Layer;
     view: OlView;
+    currentSessionId: string;
 
     positionFlagLocation:Point = new Point([0, 0]);
     positionFlag:Feature = new Feature({
@@ -54,9 +55,9 @@ export class MapComponent implements OnInit {
     });
     navigationLayer = new VectorLayer({
         source: this.navigationSource
-    })
+    });
 
-    constructor(private sharedState: SharedStateService, public i18n:I18NService) {
+    constructor(private sharedState: SharedStateService, private preferences: PreferencesService,  public i18n:I18NService) {
         this.positionFlag.setStyle(new Style({
             image: new Icon({
                 anchor: [0.5, 1],
@@ -68,35 +69,35 @@ export class MapComponent implements OnInit {
     }
 
     ngOnInit() {
-        let previousPosition: any = localStorage.getItem('viewport');
-        if(previousPosition!=null){
-            previousPosition = JSON.parse(previousPosition);
-        }
-
-        // let mousePositionControl = new MousePosition({
-        //     coordinateFormat: createStringXY(4),
-        //     projection: 'EPSG:3857',
-        //     // comment the following two lines to have the mouse position
-        //     // be placed within the map.
-        //     className: 'custom-mouse-position',
-        //     target: document.getElementById('mouse-position'),
-        //     undefinedHTML: '&nbsp;'
-        // });
-
+        this.navigationLayer.setZIndex(100);
+        const viewPort = this.preferences.getViewPortForSession(this.currentSessionId);
         window.addEventListener('beforeunload', (event) => {
             //Save zoom level and position before leaving (to recover when re-entering)
-            localStorage.setItem('viewport', JSON.stringify({"center": this.map.getView().getCenter(), "zoom": this.map.getView().getZoom()}));
+            if(this.currentSessionId) {
+                this.preferences.setViewPortForSession(this.currentSessionId, {
+                    coordinates: this.map.getView().getCenter(),
+                    zoomLevel: this.map.getView().getZoom()
+                });
+            }
         });
         this.map = new OlMap({
             target: 'map',
             view: new OlView({
-                center: previousPosition!=null && previousPosition.center != null ? previousPosition.center : this.initialCoordinates,
-                zoom: previousPosition!=null && previousPosition.zoom!=null ? previousPosition.zoom : 12
+                center: viewPort.coordinates,
+                zoom: viewPort.zoomLevel
             }),
             controls: []
             //controls: [mousePositionControl]
         });
         this.map.addLayer(this.navigationLayer);
+        this.sharedState.session.subscribe(s => {
+            if(s && s.uuid !== this.currentSessionId){
+                this.currentSessionId = s.uuid;
+                const viewPort = this.preferences.getViewPortForSession(this.currentSessionId);
+                this.map.getView().setCenter(viewPort.coordinates);
+                this.map.getView().setZoom(viewPort.zoomLevel);
+            }
+        })
         this.sharedState.currentCoordinate.subscribe(coordinate => {
             if (coordinate != null) {
                 const c = transform([coordinate.lon, coordinate.lat], coordinatesProjection, mercatorProjection);
