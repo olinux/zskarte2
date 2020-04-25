@@ -29,6 +29,8 @@ import OlTileXYZ from 'ol/source/XYZ';
 import {SharedStateService} from "../shared-state.service";
 import {GeoadminService} from "../geoadmin.service";
 import {I18NService} from "../i18n.service";
+import {MatDialog} from "@angular/material/dialog";
+import {MapLegendDisplayComponent} from "../map-legend-display/map-legend-display.component";
 
 
 export function createGeoAdminLayer(layerId: string, timestamp:string, extension:string) {
@@ -57,12 +59,19 @@ export function createGeoAdminLayer(layerId: string, timestamp:string, extension
 })
 export class LayersComponent implements OnInit {
 
-    constructor(private sharedState: SharedStateService, private geoAdminService: GeoadminService, public i18n:I18NService) {
+    constructor(private sharedState: SharedStateService, private geoAdminService: GeoadminService, public i18n:I18NService, public dialog: MatDialog) {
     }
 
     currentLayer: Layer = null;
 
     features: any = null;
+    layerFilter: string = null;
+    selectedFeatures = [];
+    availableFeatures = null;
+
+    updateAvailableFeatures(){
+        this.availableFeatures = this.features.filter(f => !f.layer && (!this.layerFilter || f.label.toLowerCase().includes(this.layerFilter.toLowerCase())));
+    }
 
     offlineHost:string = this.findOfflineHost();
 
@@ -71,7 +80,8 @@ export class LayersComponent implements OnInit {
             name: "Open Street Map",
             olLayer: new OlTileLayer({
                 source: new OSM()
-            })
+            }),
+            opacity: 1
         },
         {
             name: "SwissImage (GeoAdmin)",
@@ -81,7 +91,8 @@ export class LayersComponent implements OnInit {
                     'internet/swisstopo/en/home.html">swisstopo</a>'],
                     url: 'https://wmts10.geo.admin.ch/1.0.0/ch.swisstopo.swissimage/default/current/3857/{z}/{x}/{y}.jpeg'
                 })
-            })
+            }),
+            opacity: 1
         },
         {
             name: "Pixelkarte farbig (GeoAdmin)",
@@ -91,7 +102,8 @@ export class LayersComponent implements OnInit {
                     'internet/swisstopo/en/home.html">swisstopo</a>'],
                     url: 'https://wmts10.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg'
                 })
-            })
+            }),
+            opacity: 1
         },
         {
             name: "Pixelkarte grau (GeoAdmin)",
@@ -101,15 +113,25 @@ export class LayersComponent implements OnInit {
                     'internet/swisstopo/en/home.html">swisstopo</a>'],
                     url: 'https://wmts10.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-grau/default/current/3857/{z}/{x}/{y}.jpeg'
                 })
-            })
+            }),
+            opacity: 1
         },
         {
             name: "Offline",
             olLayer: new OlTileLayer({
                 source: new OSM({name: "Offline", url: this.offlineHost+"/styles/osm-bright/{z}/{x}/{y}.png"})
-            })
+            }),
+            opacity: 1
         }
     ];
+
+    get availableLayers():Layer[]{
+        if(this.currentLayer){
+            return this.layers.filter(l => l!==this.currentLayer);
+        }
+        return this.layers;
+    }
+
 
     findOfflineHost(){
         const fromUrlParam = new URLSearchParams(document.location.search).get("offlineHost");
@@ -130,12 +152,15 @@ export class LayersComponent implements OnInit {
     toggleFeature(feature:any){
         if(feature.layer===undefined) {
             feature.layer = createGeoAdminLayer(feature.serverLayerName, feature.timestamps[0], feature.format);
+            this.selectedFeatures.push(feature);
             this.sharedState.addFeatureLayer(feature.layer);
         }
         else{
             this.sharedState.removeFeatureLayer(feature.layer);
             feature.layer = undefined;
+            this.selectedFeatures = this.selectedFeatures.filter(f => f!==feature);
         }
+        this.updateAvailableFeatures();
     }
 
     ngOnInit() {
@@ -146,6 +171,17 @@ export class LayersComponent implements OnInit {
         this.i18n.currentLocale.subscribe(l => {
             this.loadFeatures();
         });
+    }
+
+    updateMapLayer(){
+        if(this.currentLayer) {
+            this.currentLayer.olLayer.setOpacity(this.currentLayer.opacity);
+        }
+    }
+
+
+    updateLayer(item:any){
+        item.layer.setOpacity(item.opacity);
     }
 
     loadFeatures(){
@@ -160,6 +196,7 @@ export class LayersComponent implements OnInit {
             }
             newFeatures.sort((a, b) => a.label.localeCompare(b.label));
             this.features = newFeatures;
+            this.updateAvailableFeatures();
         })
     }
 
@@ -168,4 +205,9 @@ export class LayersComponent implements OnInit {
         this.sharedState.switchToLayer(layer);
     }
 
+    showLegend(item){
+        this.dialog.open(MapLegendDisplayComponent, {
+            data: item.serverLayerName
+        })
+    }
 }

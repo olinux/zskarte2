@@ -35,6 +35,8 @@ import {MapStoreService} from "../map-store.service";
 import Circle from "ol/geom/Circle";
 import {SessionsService} from "../sessions.service";
 
+export const DRAW_LAYER_ZINDEX=100000;
+
 @Component({
     selector: 'app-drawlayer',
     templateUrl: './drawlayer.component.html',
@@ -64,8 +66,10 @@ export class DrawlayerComponent implements OnInit {
     });
     layer = new LayerVector({
         source: this.source,
-        style: DrawStyle.styleFunction
+        style: DrawStyle.styleFunction,
+        className: 'drawLayer'
     });
+
     historyMode = false;
     firstLoad = true;
     drawHole = new DrawHole(
@@ -83,6 +87,7 @@ export class DrawlayerComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.layer.setZIndex(DRAW_LAYER_ZINDEX);
         this.map = this.inputMap;
         this.source.drawLayer = this;
         this.map.drawLayer = this;

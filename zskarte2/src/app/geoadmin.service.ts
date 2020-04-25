@@ -34,4 +34,8 @@ export class GeoadminService {
     getFeatures():any {
         return this.http.get('https://api3.geo.admin.ch/rest/services/api/MapServer/layersConfig?lang='+this.i18n.locale);
     }
+
+    getLegend(layerId:string):any{
+        return this.http.get('https://api3.geo.admin.ch/rest/services/api/MapServer/'+layerId+'/legend?lang='+this.i18n.locale, {responseType: 'text'});
+    }
 }

@@ -203,15 +203,15 @@ export class I18NService {
             fr: "Importer",
             en: "Import"
         },
-        maps: {
-            de: "Karten",
-            fr: "Cartes",
-            en: "Maps"
+        drawLayer:{
+            de: "Zeichnungsebene",
+            fr: "Couche de dessin",
+            en: "Drawing layer"
         },
-        thematicMaps: {
-            de: "Thematische Karten",
-            fr: "Cartes thématiques",
-            en: "Thematic maps"
+        layers: {
+            de: "Ebenen",
+            fr: "Couches cartographiques",
+            en: "Layers"
         },
         rotate: {
             de: "Rotieren",
@@ -318,6 +318,36 @@ export class I18NService {
             de: "Wollen Sie die entsprechende Zeichnung wirklich importieren? Die aktuelle Zeichnung wird dabei ersetzt, die History bleibt aber bestehen!",
             en: "Do you really want to import this drawing? The current drawing will be replaced - the history of the map will remain though!",
             fr: "Voulez-vous vraiment importer le dessin correspondant ? Le dessin actuel sera remplacé, mais l'histoire restera !"
+        },
+        availableLayers: {
+            de: "Verfügbare Ebenen",
+            en: "Available layers",
+            fr: "Couches cartographiques disponibles"
+        },
+        selectedLayers: {
+            de: "Gewählte Ebene",
+            en: "Selected layers",
+            fr: "Couches cartographiques sélectionnées"
+        },
+        currentMap:{
+            de: "Aktuelle Karte",
+            fr: "Carte actuelle",
+            en: "Current map"
+        },
+        otherMaps:{
+            de: "Andere Karten",
+            fr: "Autre cartes",
+            en: "Other map"
+        },
+        map:{
+            de: "Karte",
+            fr: "Carte",
+            en: "Map"
+        },
+        legendNotLoaded:{
+            de: "Die Legende für diese Karte konnte leider nicht geladen werden",
+            fr: "La légende de cette carte n'a pas pu être chargée",
+            en: "The legend for this map could not be loaded"
         }
     }
     ;

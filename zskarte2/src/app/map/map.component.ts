@@ -33,6 +33,7 @@ import Style from 'ol/style/Style';
 import Icon from 'ol/style/Icon';
 import Point from 'ol/geom/Point';
 import {PreferencesService} from "../preferences.service";
+import {DRAW_LAYER_ZINDEX} from "../drawlayer/drawlayer.component";
 
 @Component({
     selector: 'app-map',
@@ -69,7 +70,7 @@ export class MapComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.navigationLayer.setZIndex(100);
+        this.navigationLayer.setZIndex(DRAW_LAYER_ZINDEX+1);
         const viewPort = this.preferences.getViewPortForSession(this.currentSessionId);
         window.addEventListener('beforeunload', (event) => {
             //Save zoom level and position before leaving (to recover when re-entering)
@@ -108,9 +109,7 @@ export class MapComponent implements OnInit {
         });
         this.sharedState.addAdditionalLayer.subscribe(layer => {
             if(layer!=null){
-                this.map.removeLayer(this.navigationLayer);
                 this.map.addLayer(layer);
-                this.map.addLayer(this.navigationLayer);
                 this.sharedState.didChangeLayer();
             }
         });

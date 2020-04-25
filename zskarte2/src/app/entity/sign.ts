@@ -28,6 +28,7 @@ export interface Sign {
     fr?: string;
     en?: string;
     text?:string;
+    label?:string;
     style?:string;
     example?:string;
     fillOpacity?:number;

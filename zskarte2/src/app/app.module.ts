@@ -59,6 +59,7 @@ import {LanguageChooserComponent} from './language-chooser/language-chooser.comp
 import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
 import { ExportDialogComponent } from './export-dialog/export-dialog.component';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import { MapLegendDisplayComponent } from './map-legend-display/map-legend-display.component';
 
 const dbConfig: DBConfig = {
     name: 'ZSKarte2-DB1.0',
@@ -96,7 +97,8 @@ const dbConfig: DBConfig = {
         SessionCreatorComponent,
         LanguageChooserComponent,
         ConfirmationDialogComponent,
-        ExportDialogComponent
+        ExportDialogComponent,
+        MapLegendDisplayComponent
     ],
     imports: [
         BrowserModule,
@@ -125,7 +127,8 @@ const dbConfig: DBConfig = {
         ImportDialogComponent,
         TextDialogComponent,
         ConfirmationDialogComponent,
-        ExportDialogComponent
+        ExportDialogComponent,
+        MapLegendDisplayComponent
     ],
     providers: [],
     bootstrap: [AppComponent]
