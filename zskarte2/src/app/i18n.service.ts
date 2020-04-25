@@ -193,7 +193,12 @@ export class I18NService {
             fr: "Charger à partir du fichier",
             en: "Load from file"
         },
-        import: {
+        importDrawing: {
+            de: "Mit importierter Zeichnung ersetzen",
+            fr: "Remplacer par un dessin importé",
+            en: "Replace with imported drawing"
+        },
+        import:{
             de: "Importieren",
             fr: "Importer",
             en: "Import"
@@ -259,9 +264,9 @@ export class I18NService {
             en: "Your text"
         },
         currentDrawing: {
-            de: "Zeichnung",
-            fr: "Dessin",
-            en: "Drawing"
+            de: "Aktuelle Zeichnung",
+            fr: "Dessin actuel",
+            en: "Current drawing"
         },
         history: {
             de: "History anzeigen",
@@ -303,9 +308,17 @@ export class I18NService {
             de: "Verwenden Sie eine **.zsjson** Datei um eine vollständige Karte zu importieren.",
             fr: "Utilisez un fichier **.zsjson** pour importer une carte complète.",
             en: "Use a **.zsjson** file to import a complete map."
+        },
+        confirmClearDrawing: {
+            de: "Wollen Sie wirklich alle Elemente der Zeichnung entfernen? Die History der Karte bleibt dabei bestehen!",
+            en: "Do you really want to clear all elements of this drawing? The history of the map will remain!",
+            fr: "Voulez-vous vraiment supprimer tous les éléments du dessin ? L'histoire de la carte restera !"
+        },
+        confirmImportDrawing: {
+            de: "Wollen Sie die entsprechende Zeichnung wirklich importieren? Die aktuelle Zeichnung wird dabei ersetzt, die History bleibt aber bestehen!",
+            en: "Do you really want to import this drawing? The current drawing will be replaced - the history of the map will remain though!",
+            fr: "Voulez-vous vraiment importer le dessin correspondant ? Le dessin actuel sera remplacé, mais l'histoire restera !"
         }
-
-
     }
     ;
 }

@@ -17,20 +17,11 @@
   ~
   ~
   -->
-
-<div id="loadFromFileDialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header" >
-        {{i18n.get("loadFromFile")}}
-      </div>
-      <div class="modal-body">
-        <input id="loadFromFile" type="file" accept=".json,.geojson,.zsjson" #fileInput>
-      </div>
-      <div class="modal-footer">
-        <button mat-stroked-button (click)="onNoClick()" >{{i18n.get("cancel")}}</button>
-        <button mat-raised-button color="primary" (click)="readFromFile()" >{{i18n.get("import")}}</button>
-      </div>
-    </div>
-  </div>
+<h1 mat-dialog-title>{{i18n.get("importDrawing")}}</h1>
+<div mat-dialog-content>
+    <input id="loadFromFile" type="file" accept=".json,.geojson,.zsjson" #fileInput>
+</div>
+<div mat-dialog-actions align="end">
+    <button mat-raised-button (click)="onNoClick()">{{i18n.get("cancel")}}</button>
+    <button mat-raised-button color="primary" (click)="readFromFile()">{{i18n.get("import")}}</button>
 </div>

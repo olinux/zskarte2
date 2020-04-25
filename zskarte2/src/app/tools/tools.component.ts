@@ -22,10 +22,11 @@ import {Component, Input, OnInit} from '@angular/core';
 import {DrawlayerComponent} from "../drawlayer/drawlayer.component";
 import {DomSanitizer} from "@angular/platform-browser";
 import {HistoryComponent} from "../history/history.component";
-import { MatDialog } from "@angular/material/dialog";
+import {MatDialog} from "@angular/material/dialog";
 import {ImportDialogComponent} from "../import-dialog/import-dialog.component";
 import {I18NService} from "../i18n.service";
 import {SharedStateService} from "../shared-state.service";
+import {ConfirmationDialogComponent} from "../confirmation-dialog/confirmation-dialog.component";
 
 
 @Component({
@@ -41,27 +42,39 @@ export class ToolsComponent implements OnInit {
     downloadData = null;
     downloadTime = null;
 
-    constructor(private sanitizer: DomSanitizer, public dialog: MatDialog, public i18n:I18NService, private sharedState: SharedStateService) {
+    constructor(private sanitizer: DomSanitizer, public dialog: MatDialog, public i18n: I18NService, private sharedState: SharedStateService) {
     }
 
     importData(): void {
         const dialogRef = this.dialog.open(ImportDialogComponent, {
-            width: '600px',
-            maxWidth: '600px',
-            height: '90%',
-            maxHeight: '400px'
-        }, );
+            maxWidth: '80vw',
+            maxHeight: '80vh'
+        });
         dialogRef.afterClosed().subscribe(result => {
-            this.drawLayer.loadFromString(result);
+            if(result) {
+                this.dialog.open(ConfirmationDialogComponent, {
+                    data: this.i18n.get('confirmImportDrawing')
+                }).afterClosed().subscribe(confirmed => {
+                    if (confirmed) {
+                        this.drawLayer.loadFromString(result);
+                    }
+                })
+            }
         });
     }
 
-    getDownloadFileName(){
-        return "zskarte_"+this.downloadTime.toISOString()+".geojson";
+    getDownloadFileName() {
+        return "zskarte_" + this.downloadTime.toISOString() + ".geojson";
     }
 
     clear(): void {
-        this.drawLayer.removeAll();
+        this.dialog.open(ConfirmationDialogComponent, {
+            data: this.i18n.get('confirmClearDrawing')
+        }).afterClosed().subscribe(confirmed => {
+            if (confirmed) {
+                this.drawLayer.removeAll();
+            }
+        })
     }
 
     ngOnInit() {
