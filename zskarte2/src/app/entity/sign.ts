@@ -36,3 +36,18 @@ export interface Sign {
     strokeWidth?:number;
     iconOffset?: number[];
 }
+
+export function defineDefaultValuesForSignature(signature:Sign){
+    if(!signature.style){
+        signature.style="solid";
+    }
+    if(!signature.color){
+        signature.color = "#535353";
+    }
+    if(!signature.fillOpacity){
+        signature.fillOpacity = 0.2;
+    }
+    if(!signature.strokeWidth){
+        signature.strokeWidth = 1;
+    }
+}

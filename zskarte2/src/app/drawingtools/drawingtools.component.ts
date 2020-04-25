@@ -63,7 +63,6 @@ export class DrawingtoolsComponent implements OnInit {
         });
     }
 
-
     openTextDialog(): void {
         const dialogRef = this.textDialog.open(TextDialogComponent, {
             maxWidth: '80vw',
@@ -79,9 +78,7 @@ export class DrawingtoolsComponent implements OnInit {
             this.sharedState.selectSign({
                 type: "Polygon",
                 kat: null,
-                src: null,
-                fillOpacity: 0.2,
-                color: "#535353"
+                src: null
             });
     }
 
@@ -89,9 +86,7 @@ export class DrawingtoolsComponent implements OnInit {
         this.sharedState.selectSign({
             type: "LineString",
             kat: null,
-            src: null,
-            fillOpacity: 0.2,
-            color: "#535353"
+            src: null
         });
     }
 
@@ -100,9 +95,7 @@ export class DrawingtoolsComponent implements OnInit {
         this.sharedState.selectSign({
             type: "Circle",
             kat: null,
-            src: null,
-            fillOpacity: 0.2,
-            color: "#535353"
+            src: null
         });
     }
 }

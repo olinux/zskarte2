@@ -27,6 +27,7 @@ import Point from 'ol/geom/Point';
 import LineString from 'ol/geom/LineString';
 import Circle from 'ol/style/Circle';
 import {Md5} from "ts-md5";
+import {defineDefaultValuesForSignature} from "../entity/sign";
 
 // This is a helper class which involves the definitions of stylings used to draw on the map
 export class DrawStyle {
@@ -144,6 +145,7 @@ export class DrawStyle {
 
 
     static imageStyleFunction(feature, resolution, signature, selected): any {
+        defineDefaultValuesForSignature(signature);
         const isCustomSignature = signature.dataUrl !== undefined && signature.dataUrl !== null;
         let symbol = null;
         if (isCustomSignature) {
@@ -157,12 +159,12 @@ export class DrawStyle {
             vectorStyle = this.vectorStyleCache[vectorCacheHash] = new Style({
                 stroke: new Stroke({
                     color: DrawStyle.colorFunction(signature.kat, signature.color, selected ? 'highlight' : 'default', 1.0),
-                    width: scale * 20 * (signature.strokeWidth !== undefined && signature.strokeWidth !== null ? signature.strokeWidth : 1),
+                    width: scale * 20 * signature.strokeWidth,
                     lineDash: DrawStyle.getDash(signature.style, resolution),
                     lineDashOffset: DrawStyle.getDashOffset(signature.style, resolution)
                 }),
                 fill: new Fill({
-                    color: DrawStyle.colorFunction(signature.kat, signature.color, selected ? 'highlight' : 'default', selected ? signature.fillOpacity == null ? 0.3 : Math.min(1, signature.fillOpacity + 0.1) : signature.fillOpacity == null ? 0.2 : Math.min(1, signature.fillOpacity))
+                    color: DrawStyle.colorFunction(signature.kat, signature.color, selected ? 'highlight' : 'default', selected ? Math.min(1, signature.fillOpacity + 0.1) : Math.min(1, signature.fillOpacity))
                 })
             });
         }
@@ -234,16 +236,17 @@ export class DrawStyle {
     static textStyleFunction(feature, resolution) {
         let defaultScale = DrawStyle.scale(resolution, DrawStyle.defaultScaleFactor);
         let signature = feature.get('sig');
+        defineDefaultValuesForSignature(signature);
         return [new Style({
             stroke: new Stroke({
-                color: feature.get('sig').color ? feature.get('sig').color : 'black',
+                color: signature.color,
                 width: defaultScale * 20,
                 lineDash: DrawStyle.getDash(signature.style, resolution),
                 lineDashOffset: DrawStyle.getDashOffset(signature.style, resolution)
             }),
         }), new Style({
             text: new Text({
-                text: feature.get('sig').text,
+                text: signature.text,
                 backgroundFill: new Fill({
                     color: [255, 255, 255, 1]
                 }),
@@ -251,10 +254,10 @@ export class DrawStyle {
                 rotation: feature.rotation !== undefined ? feature.rotation * Math.PI / 180 : 0,
                 scale: DrawStyle.scale(resolution, DrawStyle.textScaleFactor, 0.4),
                 fill: new Fill({
-                    color: feature.get('sig').color ? feature.get('sig').color : 'black'
+                    color: signature.color
                 }),
                 backgroundStroke: new Stroke({
-                    color: feature.get('sig').color ? feature.get('sig').color : 'black',
+                    color: signature.color,
                     width: defaultScale * 20
                 }),
                 padding: [5, 5, 5, 5]
@@ -266,7 +269,7 @@ export class DrawStyle {
             image: new Circle({
                 radius: defaultScale * 50,
                 fill: new Fill({
-                    color: feature.get('sig').color ? feature.get('sig').color : 'black'
+                    color: signature.color
                 }),
             }),
             geometry: function (feature) {

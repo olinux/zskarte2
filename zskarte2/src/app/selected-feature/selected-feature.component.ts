@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {SharedStateService} from "../shared-state.service";
-import {Sign} from "../entity/sign";
+import {defineDefaultValuesForSignature, Sign} from "../entity/sign";
 import {DrawStyle} from "../drawlayer/draw-style";
 import {I18NService} from "../i18n.service";
 
@@ -35,6 +35,9 @@ export class SelectedFeatureComponent implements OnInit {
         this.sharedState.currentFeature.subscribe(feature => {
             this.selectedFeature = feature;
             this.selectedSignature = feature != null ? feature.get('sig') : null;
+            if(this.selectedSignature) {
+                defineDefaultValuesForSignature(this.selectedSignature);
+            }
         });
         this.sharedState.drawHoleMode.subscribe(drawHoleMode => this.drawHoleMode = drawHoleMode);
     }

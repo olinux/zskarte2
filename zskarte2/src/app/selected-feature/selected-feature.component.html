@@ -33,7 +33,7 @@
             <mat-form-field *ngIf="selectedSignature.type==='Polygon' || selectedSignature.type==='Circle'">
                 <mat-label>{{i18n.get("lineWidth")}}</mat-label>
                 <mat-slider [max]="4"
-                            [min]="1"
+                            [min]="0.1"
                             [step]="0.1"
                             [(ngModel)]="selectedSignature.strokeWidth" (ngModelChange)="redraw()">
                 </mat-slider>
@@ -44,7 +44,7 @@
                 <mat-label>{{i18n.get("line")}}:</mat-label>
                 <select #ctrl="ngModel" matNativeControl [(ngModel)]="selectedSignature.style"
                         (ngModelChange)="redraw()">
-                    <option value="">{{i18n.get("solidLine")}}</option>
+                    <option value="solid">{{i18n.get("solidLine")}}</option>
                     <option value="dash">{{i18n.get("dashedLine")}}</option>
                 </select>
             </mat-form-field>
