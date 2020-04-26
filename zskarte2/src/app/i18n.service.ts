@@ -284,6 +284,22 @@ export class I18NService {
             en: "Draw a hole"
         }
         ,
+        ungroup: {
+            de: "Gruppierung aufheben",
+            fr: "Dégrouper",
+            en: "Ungroup"
+        }
+        , group: {
+            de: "Gruppieren",
+            fr: "Grouper",
+            en: "Group"
+        }
+        , cancelGrouping: {
+            de: "Gruppieren abbrechen",
+            fr: "Annuler le groupement",
+            en: "Cancel grouping"
+        }
+        ,
         sessionCreatorTitle: {
             de: "Willkommen bei ZSKarte 2!",
             fr: "Bienvenue à ZSKarte 2 !",

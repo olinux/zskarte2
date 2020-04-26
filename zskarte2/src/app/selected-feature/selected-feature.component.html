@@ -1,5 +1,10 @@
 <mat-card class="selection" *ngIf="selectedSignature!=null">
-    <mat-card-content>
+    <mat-card-content *ngIf="!mergeMode">
+        <div class="menu-wrapper">
+            <button mat-mini-fab class="menu" [matMenuTriggerFor]="signatureMenu">
+                <i class="material-icons">menu</i>
+            </button>
+        </div>
         <div class="imgwrapper" *ngIf="selectedSignature.src!=null"><img [src]="getImageUrl(selectedSignature.src)"/>
         </div>
         <div class="imgcustomwrapper" *ngIf="selectedSignature.dataUrl!=null"><img [src]="selectedSignature.dataUrl"/>
@@ -7,11 +12,11 @@
 
         <div *ngIf="selectedSignature[i18n.locale]!=null" class="label">{{selectedSignature[i18n.locale]}}</div>
         <div>
-            <mat-form-field  *ngIf="!selectedSignature.text">
+            <mat-form-field *ngIf="!selectedSignature.text">
                 <mat-label>{{i18n.get("name")}}</mat-label>
                 <input type="text" matInput [(ngModel)]="selectedSignature.label"/>
             </mat-form-field>
-            <mat-form-field  *ngIf="selectedSignature.text">
+            <mat-form-field *ngIf="selectedSignature.text">
                 <mat-label>{{i18n.get("name")}}</mat-label>
                 <textarea matInput [(ngModel)]="selectedSignature.text" (ngModelChange)="redraw()"></textarea>
             </mat-form-field>
@@ -72,14 +77,26 @@
             </mat-form-field>
 
 
-
         </div>
-
-        <div class="buttonPanel">
-            <button mat-raised-button (click)="drawHole()" [disabled]="drawHoleMode" *ngIf="selectedSignature.type==='Polygon' || selectedSignature.type==='MultiPolygon'"><i
-                class="material-icons">vignette</i><span> {{i18n.get("drawHole")}}</span></button>
-            <button mat-raised-button color="primary" (click)="delete()"><i
+        <mat-menu #signatureMenu="matMenu">
+            <button mat-menu-item (click)="split()"
+                    *ngIf="(selectedSignature.type==='Polygon' || selectedSignature.type==='MultiPolygon') && canSplit">
+                <i
+                        class="material-icons">call_split</i><span>{{i18n.get("ungroup")}}</span></button>
+            <button mat-menu-item (click)="merge(true)"
+                    *ngIf="selectedSignature.type==='Polygon' || selectedSignature.type==='MultiPolygon'"><i
+                    class="material-icons">call_merge</i><span> {{i18n.get("group")}}</span></button>
+            <button mat-menu-item (click)="drawHole()" [disabled]="drawHoleMode"
+                    *ngIf="selectedSignature.type==='Polygon' || selectedSignature.type==='MultiPolygon'"><i
+                    class="material-icons">vignette</i><span> {{i18n.get("drawHole")}}</span></button>
+            <button mat-menu-item color="primary" (click)="delete()"><i
                     class="material-icons">delete</i><span>{{i18n.get("delete")}}</span></button>
-        </div>
+        </mat-menu>
+    </mat-card-content>
+    <mat-card-content *ngIf="mergeMode">
+        <div>Zu gruppierende Fläche auswählen</div>
+        <button mat-raised-button (click)="merge(false)" [disabled]="drawHoleMode"
+                *ngIf="selectedSignature.type==='Polygon' || selectedSignature.type==='MultiPolygon'"><i
+                class="material-icons">cancel</i><span> {{i18n.get("cancelGrouping")}}</span></button>
     </mat-card-content>
 </mat-card>

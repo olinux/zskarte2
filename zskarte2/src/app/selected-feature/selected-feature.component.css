@@ -1,7 +1,7 @@
 .selection{
     position:absolute;
-    bottom:1em;
-    left:1em;
+    bottom:0;
+    left:0;
     background-color: white;
 
 }
@@ -39,4 +39,12 @@ mat-slider{
 .label{
     text-align:center;
     margin-bottom: 2em;
+}
+
+.menu-wrapper{
+    text-align:right;
+}
+
+.menu{
+    transform: scale(0.6);
 }

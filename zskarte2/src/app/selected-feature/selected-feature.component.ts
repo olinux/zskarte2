@@ -18,6 +18,8 @@ export class SelectedFeatureComponent implements OnInit {
     selectedSignature: Sign = null;
     rotationPercent: number = 0;
     drawHoleMode: boolean = false;
+    mergeMode:boolean = false;
+
 
     setRotation(perc) {
         if(this.selectedFeature!=null){
@@ -35,12 +37,16 @@ export class SelectedFeatureComponent implements OnInit {
         this.sharedState.currentFeature.subscribe(feature => {
             this.selectedFeature = feature;
             this.selectedSignature = feature != null ? feature.get('sig') : null;
-            if(this.selectedSignature) {
+            if (this.selectedSignature) {
                 defineDefaultValuesForSignature(this.selectedSignature);
             }
         });
         this.sharedState.drawHoleMode.subscribe(drawHoleMode => this.drawHoleMode = drawHoleMode);
+        this.sharedState.mergeMode.subscribe(m => {
+            this.mergeMode = m;
+        });
     }
+
 
     delete() {
         this.sharedState.deleteFeature(this.selectedFeature);
@@ -53,4 +59,17 @@ export class SelectedFeatureComponent implements OnInit {
     drawHole() {
         this.sharedState.updateDrawHoleMode(!this.drawHoleMode);
     }
+
+    merge(merge:boolean){
+        this.sharedState.setMergeMode(merge);
+    }
+
+    get canSplit():boolean{
+        return this.selectedFeature!=null && this.selectedFeature.getGeometry().getCoordinates().length>1;
+    }
+
+    split(){
+        this.sharedState.setSplitMode(true);
+    }
+
 }

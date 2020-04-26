@@ -67,6 +67,20 @@ export class SharedStateService {
     private sessionSource = new BehaviorSubject<Session>(null);
     session = this.sessionSource.asObservable();
 
+    private mergeModeSource = new BehaviorSubject<boolean>(false);
+    mergeMode = this.mergeModeSource.asObservable();
+
+    private splitSource = new BehaviorSubject<boolean>(false);
+    splitMode = this.splitSource.asObservable();
+
+    setSplitMode(splitMode:boolean){
+        this.splitSource.next(splitMode);
+    }
+
+    setMergeMode(mergeMode:boolean){
+        this.mergeModeSource.next(mergeMode);
+    }
+
     getCurrentSession(){
         return this.sessionSource.getValue();
     }

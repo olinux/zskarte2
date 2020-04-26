@@ -23,6 +23,8 @@ import Modify from 'ol/interaction/Modify';
 import Vector from 'ol/source/Vector';
 import LayerVector from 'ol/layer/Vector';
 import GeoJSON from 'ol/format/GeoJSON';
+import Polygon from 'ol/geom/Polygon';
+import Feature from 'ol/Feature';
 import Draw from 'ol/interaction/Draw';
 import OlMap from 'ol/Map';
 import DrawHole from 'ol-ext/interaction/DrawHole';
@@ -101,33 +103,48 @@ export class DrawlayerComponent implements OnInit {
         return this.modify["lastPointerEvent_"] && this.modify["vertexFeature_"] && this.select.getFeatures();
     }
 
-    private indexOfPointInCoordinateGroup(coordinateGroup:number[][], compareCoordinate: number[]){
-        for(let i=0; i<coordinateGroup.length; i++){
+    private indexOfPointInCoordinateGroup(coordinateGroup: number[][], compareCoordinate: number[]) {
+        for (let i = 0; i < coordinateGroup.length; i++) {
             let coordinate = coordinateGroup[i];
-            if(coordinate[0] === compareCoordinate[0] && coordinate[1] === compareCoordinate[1]){
+            if (coordinate[0] === compareCoordinate[0] && coordinate[1] === compareCoordinate[1]) {
                 return i;
             }
         }
         return -1;
     }
 
-    private getCoordinationGroupOfLastPoint(){
+    private getCoordinationGroupOfLastPoint() {
         //Since we're working with single select, this should be only one - we iterate it nevertheless for being defensive
         for (let feature of this.select.getFeatures().getArray()) {
             let geometry = feature.getGeometry();
             switch (geometry.getType()) {
                 case "Polygon":
-                    for (let i=0; i<geometry.getCoordinates().length; i++) {
+                    for (let i = 0; i < geometry.getCoordinates().length; i++) {
                         let coordinateGroup = geometry.getCoordinates()[i];
-                        if(this.indexOfPointInCoordinateGroup(coordinateGroup, this.lastModificationPointCoordinates)!=-1){
-                            return {feature: feature, coordinateGroupIndex: i, otherCoordinationGroupCount: geometry.getCoordinates().length-1, minimalAmountOfPoints: coordinateGroup.length<=4};
+                        if (this.indexOfPointInCoordinateGroup(coordinateGroup, this.lastModificationPointCoordinates) != -1) {
+                            return {
+                                feature: feature,
+                                coordinateGroupIndex: i,
+                                otherCoordinationGroupCount: geometry.getCoordinates().length - 1,
+                                minimalAmountOfPoints: coordinateGroup.length <= 4
+                            };
                         }
                     }
                     return null;
                 case "LineString":
-                    return {feature: feature, coordinateGroupIndex: null, otherCoordinationGroupCount: 0, minimalAmountOfPoints: geometry.getCoordinates().length<=2};
+                    return {
+                        feature: feature,
+                        coordinateGroupIndex: null,
+                        otherCoordinationGroupCount: 0,
+                        minimalAmountOfPoints: geometry.getCoordinates().length <= 2
+                    };
                 case "Point":
-                    return {feature: feature, coordinateGroupIndex: null, otherCoordinationGroupCount: 0, minimalAmountOfPoints: true}
+                    return {
+                        feature: feature,
+                        coordinateGroupIndex: null,
+                        otherCoordinationGroupCount: 0,
+                        minimalAmountOfPoints: true
+                    }
             }
         }
         return null;
@@ -160,21 +177,19 @@ export class DrawlayerComponent implements OnInit {
         });
         this.removeButton.getElement().addEventListener('click', e => {
             let coordinationGroup = this.getCoordinationGroupOfLastPoint()
-            if(coordinationGroup){
-                if(!coordinationGroup.minimalAmountOfPoints){
+            if (coordinationGroup) {
+                if (!coordinationGroup.minimalAmountOfPoints) {
                     this.modify.removePoint();
-                }
-                else if(coordinationGroup.otherCoordinationGroupCount==0){
+                } else if (coordinationGroup.otherCoordinationGroupCount == 0) {
                     //It's the last coordination group - we can remove the feature.
                     this.removeFeature(coordinationGroup.feature);
                     this.sharedState.selectFeature(null);
-                }
-                else if(coordinationGroup.coordinateGroupIndex){
+                } else if (coordinationGroup.coordinateGroupIndex) {
                     //It's not the last coordination group - so we need to get rid of the coordination group inside the feature
                     let oldCoordinates = coordinationGroup.feature.getGeometry().getCoordinates();
                     let newCoordinates = [];
-                    for(let i=0; i<oldCoordinates.length; i++){
-                        if(i!=coordinationGroup.coordinateGroupIndex){
+                    for (let i = 0; i < oldCoordinates.length; i++) {
+                        if (i != coordinationGroup.coordinateGroupIndex) {
                             newCoordinates.push(oldCoordinates[i]);
                         }
                     }
@@ -210,10 +225,13 @@ export class DrawlayerComponent implements OnInit {
         this.drawHole.addEventListener('drawend', function (e) {
             this.drawLayer.sharedState.updateDrawHoleMode(false);
         });
+
         this.sharedState.deletedFeature.subscribe(feature => this.removeFeature(feature))
         this.sharedState.currentSign.subscribe(sign => this.startDrawing(sign));
         this.sharedState.drawHoleMode.subscribe(drawHole => this.doDrawHole(drawHole));
         this.sharedState.historyDate.subscribe(historyDate => this.toggleHistory(historyDate));
+        this.sharedState.mergeMode.subscribe(mergeMode => this.mergeMode(mergeMode));
+        this.sharedState.splitMode.subscribe(splitMode => this.splitMode(splitMode));
         this.sharedState.session.subscribe(s => {
             if (s) {
                 if (this.currentSessionId !== s.uuid) {
@@ -254,6 +272,51 @@ export class DrawlayerComponent implements OnInit {
             );
     }
 
+    mergeSource: any = null;
+
+    splitMode(split: boolean) {
+        if (split) {
+            let currentFeature = this.select.getFeatures().getLength() == 1 ? this.select.getFeatures().item(0) : null;
+            if (currentFeature && currentFeature.getGeometry().getType() === "Polygon") {
+                let coordinateGroups = currentFeature.getGeometry().getCoordinates();
+                let splittedFeatures = []
+                for (let coordinateGroup of coordinateGroups) {
+                    let f = new Feature({
+                        geometry: new Polygon([coordinateGroup]),
+                        sig: Object.assign({}, currentFeature.get('sig'))
+                    })
+                    splittedFeatures.push(f)
+                }
+                this.source.addFeatures(splittedFeatures);
+                this.removeFeature(currentFeature);
+                this.select.getFeatures().clear();
+                this.sharedState.selectFeature(null);
+            }
+        }
+    }
+
+    mergeMode(merge: boolean) {
+        if (merge) {
+            this.mergeSource = this.select.getFeatures() ? this.select.getFeatures().item(0) : null;
+        } else {
+            this.mergeSource = null;
+        }
+    }
+
+    mergeFeatures(featureA, featureB) {
+        if (featureA.getGeometry().getType() == "Polygon" && featureB.getGeometry().getType() == "Polygon") {
+            let newCoordinates = [];
+            featureA.getGeometry().getCoordinates().forEach(c => newCoordinates.push(c));
+            featureB.getGeometry().getCoordinates().forEach(c => newCoordinates.push(c));
+            featureA.getGeometry().setCoordinates(newCoordinates);
+            this.removeFeature(featureB)
+            this.select.getFeatures().clear();
+            this.select.getFeatures().push(featureA);
+            this.sharedState.selectFeature(featureA);
+        }
+        this.sharedState.setMergeMode(false);
+    }
+
     toggleHistory(date: Date) {
         if (date === null && this.historyMode) {
             this.historyMode = false;
@@ -280,7 +343,11 @@ export class DrawlayerComponent implements OnInit {
     selectionChanged() {
         this.toggleRemoveButton(false);
         if (this.select.getFeatures().getLength() === 1) {
-            this.sharedState.selectFeature(this.select.getFeatures().item(0));
+            if (this.mergeSource) {
+                this.mergeFeatures(this.mergeSource, this.select.getFeatures().item(0))
+            } else {
+                this.sharedState.selectFeature(this.select.getFeatures().item(0));
+            }
         } else if (this.select.getFeatures().getLength() === 0) {
             this.sharedState.selectFeature(null);
         } else {
