@@ -348,6 +348,11 @@ export class I18NService {
             de: "Die Legende für diese Karte konnte leider nicht geladen werden",
             fr: "La légende de cette carte n'a pas pu être chargée",
             en: "The legend for this map could not be loaded"
+        },
+        fontSize:{
+            de: "Schriftgrösse",
+            fr: "Taille de police",
+            en: "Font size"
         }
     }
     ;

@@ -29,6 +29,7 @@ export interface Sign {
     en?: string;
     text?:string;
     label?:string;
+    fontSize?: number;
     style?:string;
     example?:string;
     fillOpacity?:number;
@@ -50,5 +51,8 @@ export function defineDefaultValuesForSignature(signature:Sign){
     }
     if(!signature.strokeWidth){
         signature.strokeWidth = 1;
+    }
+    if(!signature.fontSize){
+        signature.fontSize = 1;
     }
 }

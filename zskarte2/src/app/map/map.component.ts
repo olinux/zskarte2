@@ -34,6 +34,7 @@ import Icon from 'ol/style/Icon';
 import Point from 'ol/geom/Point';
 import {PreferencesService} from "../preferences.service";
 import {DRAW_LAYER_ZINDEX} from "../drawlayer/drawlayer.component";
+import {defaults} from "ol/interaction";
 
 @Component({
     selector: 'app-map',
@@ -87,7 +88,8 @@ export class MapComponent implements OnInit {
                 center: viewPort.coordinates,
                 zoom: viewPort.zoomLevel
             }),
-            controls: []
+            controls: [],
+            interactions : defaults({doubleClickZoom :false, rotate: false, pinchRotate: false, shiftDragZoom: false}),
             //controls: [mousePositionControl]
         });
         this.map.addLayer(this.navigationLayer);

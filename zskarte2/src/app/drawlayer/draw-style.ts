@@ -95,7 +95,7 @@ export class DrawStyle {
             return [];
         } else if (signature.text !== undefined && signature.text !== null) {
             // It's a text-entry...
-            return DrawStyle.textStyleFunction(feature, resolution);
+            return DrawStyle.textStyleFunction(feature, resolution, true);
         } else {
             // It's a symbol-signature.
             return DrawStyle.imageStyleFunction(feature, resolution, signature, true);
@@ -110,7 +110,7 @@ export class DrawStyle {
             return [];
         } else if (signature.text) {
             // It's a text-entry...
-            return DrawStyle.textStyleFunction(feature, resolution);
+            return DrawStyle.textStyleFunction(feature, resolution, false);
         } else {
             // It's a symbol-signature.
             return DrawStyle.imageStyleFunction(feature, resolution, signature, false);
@@ -166,6 +166,21 @@ export class DrawStyle {
                                 color: [255, 255, 255, selected ? 0.9 : 0.6]
                             })
                         }),
+                        geometry: function (feature) {
+                            return new Point(feature.getGeometry().getCoordinates()[0][0]);
+                        }
+                    }), new Style({
+                        image: new Icon(({
+                            anchor: [0.5, 0.5],
+                            anchorXUnits: 'fraction',
+                            anchorYUnits: 'fraction',
+                            scale: DrawStyle.scale(resolution, DrawStyle.defaultScaleFactor),
+                            opacity: 1,
+                            rotation: feature.rotation !== undefined ? feature.rotation * Math.PI / 180 : 0,
+                            src: isCustomSignature ? undefined : this.getImageUrl(signature.src),
+                            img: isCustomSignature ? symbol : undefined,
+                            imgSize: isCustomSignature ? [signature.dataUrl.nativeWidth, signature.dataUrl.nativeHeight] : undefined
+                        })),
                         geometry: function (feature) {
                             return new Point(feature.getGeometry().getCoordinates()[0][0]);
                         }
@@ -268,11 +283,11 @@ export class DrawStyle {
         return styles;
     }
 
-    static textStyleFunction(feature, resolution) {
+    static textStyleFunction(feature, resolution, selected) {
         let defaultScale = DrawStyle.scale(resolution, DrawStyle.defaultScaleFactor);
         let signature = feature.get('sig');
         defineDefaultValuesForSignature(signature);
-        return [new Style({
+        let textStyles = [new Style({
             stroke: new Stroke({
                 color: signature.color,
                 width: defaultScale * 20,
@@ -285,7 +300,7 @@ export class DrawStyle {
                 backgroundFill: new Fill({
                     color: [255, 255, 255, 1]
                 }),
-                font: '30px sans-serif',
+                font: signature.fontSize*30+'px sans-serif',
                 rotation: feature.rotation !== undefined ? feature.rotation * Math.PI / 180 : 0,
                 scale: DrawStyle.scale(resolution, DrawStyle.textScaleFactor, 0.4),
                 fill: new Fill({
@@ -312,6 +327,11 @@ export class DrawStyle {
             }
         })
         ]
+        let highlightPoints = this.getHighlightPointsWhenSelectedStyle(feature, defaultScale, selected)
+        if(highlightPoints){
+            textStyles.push(highlightPoints);
+        }
+        return textStyles;
     }
 
     static

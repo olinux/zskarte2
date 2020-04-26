@@ -126,6 +126,8 @@ export class DrawlayerComponent implements OnInit {
                     return null;
                 case "LineString":
                     return {feature: feature, coordinateGroupIndex: null, otherCoordinationGroupCount: 0, minimalAmountOfPoints: geometry.getCoordinates().length<=2};
+                case "Point":
+                    return {feature: feature, coordinateGroupIndex: null, otherCoordinationGroupCount: 0, minimalAmountOfPoints: true}
             }
         }
         return null;
