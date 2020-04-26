@@ -25,6 +25,7 @@
             ],
             "styles": [
               "src/styles.css",
+              "node_modules/ol/ol.css",
               "node_modules/material-design-icons/iconfont/material-icons.css"
             ],
             "scripts": []
