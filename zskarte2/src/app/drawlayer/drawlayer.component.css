@@ -26,3 +26,12 @@
     background-color: white;
     text-align: center
 }
+
+#removePoint{
+    position:absolute;
+    z-index: 200000;
+}
+
+.closeBox{
+    background: yellow;
+}

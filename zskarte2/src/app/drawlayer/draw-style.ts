@@ -24,6 +24,7 @@ import Fill from 'ol/style/Fill';
 import Icon from 'ol/style/Icon';
 import Text from 'ol/style/Text';
 import Point from 'ol/geom/Point';
+import MultiPoint from 'ol/geom/MultiPoint';
 import LineString from 'ol/geom/LineString';
 import Circle from 'ol/style/Circle';
 import {Md5} from "ts-md5";
@@ -61,7 +62,7 @@ export class DrawStyle {
         return 'assets/img/signs/' + file;
     }
 
-    static scale(resolution: number, scaleFactor: number, min:number=0.15): any {
+    static scale(resolution: number, scaleFactor: number, min: number = 0.15): any {
         return Math.max(min, scaleFactor * Math.sqrt(0.5 * resolution) / resolution);
     }
 
@@ -144,38 +145,21 @@ export class DrawStyle {
     }
 
 
-    static imageStyleFunction(feature, resolution, signature, selected): any {
-        defineDefaultValuesForSignature(signature);
+    private static getIconStyle(feature, resolution, signature, selected, scale): Style[] {
         const isCustomSignature = signature.dataUrl !== undefined && signature.dataUrl !== null;
         let symbol = null;
         if (isCustomSignature) {
             symbol = new Image();
             symbol.src = signature.dataUrl.src;
         }
-        const scale = DrawStyle.scale(resolution, DrawStyle.defaultScaleFactor);
-        const vectorCacheHash = DrawStyle.calculateCacheHashForVector(signature, resolution, selected);
-        let vectorStyle = this.vectorStyleCache[vectorCacheHash];
-        if (!vectorStyle) {
-            vectorStyle = this.vectorStyleCache[vectorCacheHash] = new Style({
-                stroke: new Stroke({
-                    color: DrawStyle.colorFunction(signature.kat, signature.color, selected ? 'highlight' : 'default', 1.0),
-                    width: scale * 20 * signature.strokeWidth,
-                    lineDash: DrawStyle.getDash(signature.style, resolution),
-                    lineDashOffset: DrawStyle.getDashOffset(signature.style, resolution)
-                }),
-                fill: new Fill({
-                    color: DrawStyle.colorFunction(signature.kat, signature.color, selected ? 'highlight' : 'default', selected ? Math.min(1, signature.fillOpacity + 0.1) : Math.min(1, signature.fillOpacity))
-                })
-            });
-        }
         const symbolCacheHash = DrawStyle.calculateCacheHashForSymbol(signature, feature, resolution, selected);
-        let iconStyle = this.symbolStyleCache[symbolCacheHash];
-        if (!iconStyle && (signature.src || signature.dataUrl) && feature.getGeometry()) {
+        let iconStyles = this.symbolStyleCache[symbolCacheHash];
+        if (!iconStyles && (signature.src || signature.dataUrl) && feature.getGeometry()) {
             switch (feature.getGeometry().getType()) {
                 case "Polygon":
                 case "MultiPolygon":
                 case "LineString":
-                    iconStyle = this.symbolStyleCache[symbolCacheHash] = [new Style({
+                    return this.symbolStyleCache[symbolCacheHash] = [new Style({
                         image: new Circle({
                             radius: scale * 210,
                             fill: new Fill({
@@ -185,25 +169,9 @@ export class DrawStyle {
                         geometry: function (feature) {
                             return new Point(feature.getGeometry().getCoordinates()[0][0]);
                         }
-                    }), new Style({
-                        image: new Icon(({
-                            anchor: [0.5, 0.5],
-                            anchorXUnits: 'fraction',
-                            anchorYUnits: 'fraction',
-                            scale: DrawStyle.scale(resolution, DrawStyle.defaultScaleFactor),
-                            opacity: 1,
-                            rotation: feature.rotation !== undefined ? feature.rotation * Math.PI / 180 : 0,
-                            src: isCustomSignature ? undefined : this.getImageUrl(signature.src),
-                            img: isCustomSignature ? symbol : undefined,
-                            imgSize: isCustomSignature ? [signature.dataUrl.nativeWidth, signature.dataUrl.nativeHeight] : undefined
-                        })),
-                        geometry: function (feature) {
-                            return new Point(feature.getGeometry().getCoordinates()[0][0]);
-                        }
                     })];
-                    break;
                 case "Point":
-                    iconStyle = this.symbolStyleCache[symbolCacheHash] = [new Style({
+                    return this.symbolStyleCache[symbolCacheHash] = [new Style({
                         image: new Circle({
                             radius: scale * 210,
                             fill: new Fill({
@@ -223,12 +191,79 @@ export class DrawStyle {
                             imgSize: isCustomSignature ? [signature.dataUrl.nativeWidth, signature.dataUrl.nativeHeight] : undefined
                         }))
                     })]
-                    break;
             }
         }
+        return iconStyles;
+    }
+
+    private static getVectorStyle(feature, resolution, signature, selected, scale): Style {
+        const vectorCacheHash = DrawStyle.calculateCacheHashForVector(signature, resolution, selected);
+        let vectorStyle = this.vectorStyleCache[vectorCacheHash];
+        if (!vectorStyle) {
+            return this.vectorStyleCache[vectorCacheHash] = new Style({
+                stroke: new Stroke({
+                    color: DrawStyle.colorFunction(signature.kat, signature.color, selected ? 'highlight' : 'default', 1.0),
+                    width: scale * 20 * signature.strokeWidth,
+                    lineDash: DrawStyle.getDash(signature.style, resolution),
+                    lineDashOffset: DrawStyle.getDashOffset(signature.style, resolution)
+                }),
+                fill: new Fill({
+                    color: DrawStyle.colorFunction(signature.kat, signature.color, selected ? 'highlight' : 'default', selected ? Math.min(1, signature.fillOpacity + 0.1) : Math.min(1, signature.fillOpacity))
+                })
+            });
+        }
+        return vectorStyle;
+    }
+
+    private static getHighlightPointsWhenSelectedStyle(feature, scale, selected): Style {
+        if(selected) {
+            let coordinatesFunction = null;
+            switch (feature.getGeometry().getType()) {
+                case "Polygon":
+                case "MultiPolygon":
+                    coordinatesFunction = function (feature) {
+                        let coordinates = [];
+                        for (let c of feature.getGeometry().getCoordinates()) {
+                            c.forEach(coord => coordinates.push(coord));
+                        }
+                        return coordinates;
+                    }
+                    break;
+                case "LineString":
+                    coordinatesFunction = function (feature) {
+                        return feature.getGeometry().getCoordinates();
+                    }
+                    break;
+            }
+            if(coordinatesFunction) {
+                return new Style({
+                    image: new Circle({
+                        radius: scale*30,
+                        fill: new Fill({
+                            color: 'orange'
+                        })
+                    }),
+                    geometry: function (feature) {
+                        return new MultiPoint(coordinatesFunction(feature));
+                    }
+                })
+            }
+        }
+        return null;
+    }
+
+    static imageStyleFunction(feature, resolution, signature, selected): any {
+        defineDefaultValuesForSignature(signature);
+        const scale = DrawStyle.scale(resolution, DrawStyle.defaultScaleFactor);
+        let vectorStyle = this.getVectorStyle(feature, resolution, signature, selected, scale);
+        let iconStyles = this.getIconStyle(feature, resolution, signature, selected, scale);
+        let highlightPointsWhenSelectedStyle = this.getHighlightPointsWhenSelectedStyle(feature, scale, selected);
         let styles = [vectorStyle];
-        if (iconStyle) {
-            iconStyle.forEach(i => styles.push(i));
+        if (iconStyles) {
+            iconStyles.forEach(i => styles.push(i));
+        }
+        if(highlightPointsWhenSelectedStyle){
+            styles.push(highlightPointsWhenSelectedStyle)
         }
         return styles;
     }
@@ -279,7 +314,8 @@ export class DrawStyle {
         ]
     }
 
-    static colorFunction = function (signatureKat, signatureColor, style, alpha) {
+    static
+    colorFunction = function (signatureKat, signatureColor, style, alpha) {
         if (signatureKat == null) {
             if (signatureColor !== undefined && signatureColor !== null) {
                 let hexAlpha = (Math.floor(255 * (alpha !== undefined ? alpha : 1))).toString(16);

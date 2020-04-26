@@ -29,7 +29,7 @@
         <div class="tools">
             <div class="flexContainer">
                 <mat-card-title class="title">{{session.title}}</mat-card-title>
-                <button mat-mini-fab color="primary" class="edit" aria-label="Example icon button with a menu icon"  [matMenuTriggerFor]="mainMenu" *ngIf="!history.historyDate">
+                <button mat-mini-fab color="primary" class="edit" [matMenuTriggerFor]="mainMenu" *ngIf="!history.historyDate">
                     <i class="material-icons">menu</i>
                 </button>
                 <div class="spacer"></div>

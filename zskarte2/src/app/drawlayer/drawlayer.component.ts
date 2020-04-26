@@ -26,7 +26,7 @@ import GeoJSON from 'ol/format/GeoJSON';
 import Draw from 'ol/interaction/Draw';
 import OlMap from 'ol/Map';
 import DrawHole from 'ol-ext/interaction/DrawHole';
-import {never} from 'ol/events/condition';
+import Overlay from 'ol/Overlay'
 import {SharedStateService} from '../shared-state.service';
 import {DrawStyle} from './draw-style';
 import {Sign} from "../entity/sign";
@@ -34,8 +34,9 @@ import {I18NService} from "../i18n.service";
 import {MapStoreService} from "../map-store.service";
 import Circle from "ol/geom/Circle";
 import {SessionsService} from "../sessions.service";
+import CENTER_LEFT from "ol/OverlayPositioning";
 
-export const DRAW_LAYER_ZINDEX=100000;
+export const DRAW_LAYER_ZINDEX = 100000;
 
 @Component({
     selector: 'app-drawlayer',
@@ -52,15 +53,6 @@ export class DrawlayerComponent implements OnInit {
     currentSessionId: string;
     recordChanges: boolean = false;
 
-    select = new Select({
-        toggleCondition: never,
-        style: DrawStyle.styleFunctionSelect,
-        condition: never
-    });
-
-    modify = new Modify({
-        features: this.select.getFeatures()
-    });
     source = new Vector({
         format: new GeoJSON()
     });
@@ -69,6 +61,31 @@ export class DrawlayerComponent implements OnInit {
         style: DrawStyle.styleFunction,
         className: 'drawLayer'
     });
+    select = new Select({
+        //toggleCondition: never,
+        style: DrawStyle.styleFunctionSelect,
+        //condition: never
+        layers: [this.layer],
+        hitTolerance: 10
+
+    });
+
+    lastModificationPointCoordinates = null;
+
+    modify = new Modify({
+            features: this.select.getFeatures(),
+            condition: (event) => {
+                if (this.isModifyPointInteraction()) {
+                    this.lastModificationPointCoordinates = this.modify["vertexFeature_"].getGeometry().getCoordinates();
+                    this.toggleRemoveButton(true);
+                    this.removeButton.setPosition(event.coordinate);
+                }
+                return true;
+            },
+            hitTolerance: 10
+        }
+    );
+    removeButton: Overlay = null;
 
     historyMode = false;
     firstLoad = true;
@@ -80,16 +97,95 @@ export class DrawlayerComponent implements OnInit {
     constructor(private sharedState: SharedStateService, private mapStore: MapStoreService, public i18n: I18NService, private sessions: SessionsService) {
     }
 
+    private isModifyPointInteraction() {
+        return this.modify["lastPointerEvent_"] && this.modify["vertexFeature_"] && this.select.getFeatures();
+    }
+
+    private indexOfPointInCoordinateGroup(coordinateGroup:number[][], compareCoordinate: number[]){
+        for(let i=0; i<coordinateGroup.length; i++){
+            let coordinate = coordinateGroup[i];
+            if(coordinate[0] === compareCoordinate[0] && coordinate[1] === compareCoordinate[1]){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private getCoordinationGroupOfLastPoint(){
+        //Since we're working with single select, this should be only one - we iterate it nevertheless for being defensive
+        for (let feature of this.select.getFeatures().getArray()) {
+            let geometry = feature.getGeometry();
+            switch (geometry.getType()) {
+                case "Polygon":
+                    for (let i=0; i<geometry.getCoordinates().length; i++) {
+                        let coordinateGroup = geometry.getCoordinates()[i];
+                        if(this.indexOfPointInCoordinateGroup(coordinateGroup, this.lastModificationPointCoordinates)!=-1){
+                            return {feature: feature, coordinateGroupIndex: i, otherCoordinationGroupCount: geometry.getCoordinates().length-1, minimalAmountOfPoints: coordinateGroup.length<=4};
+                        }
+                    }
+                    return null;
+                case "LineString":
+                    return {feature: feature, coordinateGroupIndex: null, otherCoordinationGroupCount: 0, minimalAmountOfPoints: geometry.getCoordinates().length<=2};
+            }
+        }
+        return null;
+    }
 
     private drawingManipulated() {
         this.status = "Save changes";
         this.save().then(this.status = null);
     }
 
+    toggleRemoveButton(show: boolean) {
+        this.removeButton.getElement().style.display = show ? "block" : "none";
+    }
+
     ngOnInit() {
+        this.removeButton = new Overlay({
+            element: document.getElementById('removePoint'),
+            positioning: CENTER_LEFT,
+            offset: [10, 0]
+        });
+        this.modify.addEventListener('modifystart', e => {
+            this.toggleRemoveButton(false);
+        });
+        this.modify.addEventListener('modifyend', e => {
+            if (this.isModifyPointInteraction()) {
+                this.lastModificationPointCoordinates = this.modify["vertexFeature_"].getGeometry().getCoordinates();
+                this.removeButton.setPosition(e.mapBrowserEvent.coordinate);
+                this.toggleRemoveButton(true);
+            }
+        });
+        this.removeButton.getElement().addEventListener('click', e => {
+            let coordinationGroup = this.getCoordinationGroupOfLastPoint()
+            if(coordinationGroup){
+                if(!coordinationGroup.minimalAmountOfPoints){
+                    this.modify.removePoint();
+                }
+                else if(coordinationGroup.otherCoordinationGroupCount==0){
+                    //It's the last coordination group - we can remove the feature.
+                    this.removeFeature(coordinationGroup.feature);
+                    this.sharedState.selectFeature(null);
+                }
+                else if(coordinationGroup.coordinateGroupIndex){
+                    //It's not the last coordination group - so we need to get rid of the coordination group inside the feature
+                    let oldCoordinates = coordinationGroup.feature.getGeometry().getCoordinates();
+                    let newCoordinates = [];
+                    for(let i=0; i<oldCoordinates.length; i++){
+                        if(i!=coordinationGroup.coordinateGroupIndex){
+                            newCoordinates.push(oldCoordinates[i]);
+                        }
+                    }
+                    coordinationGroup.feature.getGeometry().setCoordinates(newCoordinates);
+                }
+            }
+            this.toggleRemoveButton(false);
+        });
         this.layer.setZIndex(DRAW_LAYER_ZINDEX);
         this.map = this.inputMap;
+        this.map.addOverlay(this.removeButton);
         this.source.drawLayer = this;
+        this.select.drawLayer = this;
         this.map.drawLayer = this;
         this.modify.drawLayer = this;
         this.map.addInteraction(this.select);
@@ -97,6 +193,9 @@ export class DrawlayerComponent implements OnInit {
         this.map.addInteraction(this.drawHole);
         this.drawHole.setActive(true);
         this.drawHole.drawLayer = this;
+        this.select.addEventListener('select', function (e) {
+            this.drawLayer.selectionChanged();
+        })
         this.source.addEventListener('addfeature', function (e) {
             this.drawLayer.drawingManipulated();
         });
@@ -114,8 +213,8 @@ export class DrawlayerComponent implements OnInit {
         this.sharedState.drawHoleMode.subscribe(drawHole => this.doDrawHole(drawHole));
         this.sharedState.historyDate.subscribe(historyDate => this.toggleHistory(historyDate));
         this.sharedState.session.subscribe(s => {
-            if(s){
-                if(this.currentSessionId !== s.uuid){
+            if (s) {
+                if (this.currentSessionId !== s.uuid) {
                     this.currentSessionId = s.uuid;
                     //The session has changed - we need to reload
                     this.status = "Now loading the map...";
@@ -125,8 +224,7 @@ export class DrawlayerComponent implements OnInit {
                         //this.startAutoSave();
                     });
                 }
-            }
-            else {
+            } else {
                 this.currentSessionId = null;
                 //this.removeAll();
             }
@@ -143,16 +241,6 @@ export class DrawlayerComponent implements OnInit {
             }
         );
 
-        this
-            .map
-            .on(
-                'click'
-                ,
-
-                function (event) {
-                    this.drawLayer.selectHandler(event);
-                }
-            );
         this
             .source
             .on(
@@ -187,47 +275,8 @@ export class DrawlayerComponent implements OnInit {
         this.mapStore.getHistoricalState(this.currentSessionId, date).then(historicalMap => this.loadElements(historicalMap));
     }
 
-    selectHandler(event): void {
-        if (!
-            this.historyMode
-        ) {
-            this.select.getFeatures().clear();
-            const f = this.source.getClosestFeatureToCoordinate(event.coordinate);
-            let select = false;
-            if (f != null) {
-                const threshold = 40;
-                const ext = f.getGeometry().getExtent();
-                const vmax = Math.max(ext[1], ext[3]);
-                const vmin = Math.min(ext[1], ext[3]);
-                const hmax = Math.max(ext[0], ext[2]);
-                const hmin = Math.min(ext[0], ext[2]);
-
-                // Is inside?
-                const vdist = vmax - event.coordinate[1];
-                const hdist = hmax - event.coordinate[0];
-
-                if (vdist > 0 && hdist > 0 && vdist < vmax - vmin && hdist < hmax - hmin) {
-                    select = true;
-                } else {
-                    const vdiff = Math.min(Math.abs(vmax - event.coordinate[1]), Math.abs(vmin - event.coordinate[1]));
-                    const hdiff = Math.min(Math.abs(hmax - event.coordinate[0]), Math.abs(hmin - event.coordinate[0]));
-                    if (hdiff < threshold && vdiff < threshold) {
-                        select = true;
-                    }
-                }
-
-            }
-            if (select) {
-                this.select.getFeatures().push(f);
-            } else {
-                this.select.getFeatures().clear();
-            }
-            this.selectionChanged();
-        }
-    }
-
-
     selectionChanged() {
+        this.toggleRemoveButton(false);
         if (this.select.getFeatures().getLength() === 1) {
             this.sharedState.selectFeature(this.select.getFeatures().item(0));
         } else if (this.select.getFeatures().getLength() === 0) {
@@ -357,6 +406,7 @@ export class DrawlayerComponent implements OnInit {
 
     removeFeature(feature) {
         if (feature != null) {
+            this.toggleRemoveButton(false);
             this.source.removeFeature(feature);
             this.select.getFeatures().clear();
         }
