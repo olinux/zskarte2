@@ -73,6 +73,13 @@ export class SharedStateService {
     private splitSource = new BehaviorSubject<boolean>(false);
     splitMode = this.splitSource.asObservable();
 
+    private reorderFeatureSource = new BehaviorSubject<boolean>(null);
+    reorder = this.reorderFeatureSource.asObservable();
+
+    reorderFeature(top:boolean){
+        this.reorderFeatureSource.next(top);
+    }
+
     setSplitMode(splitMode:boolean){
         this.splitSource.next(splitMode);
     }

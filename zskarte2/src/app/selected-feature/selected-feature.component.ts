@@ -72,4 +72,12 @@ export class SelectedFeatureComponent implements OnInit {
         this.sharedState.setSplitMode(true);
     }
 
+    bringToFront(){
+        this.sharedState.reorderFeature(true);
+    }
+
+    sendToBack(){
+        this.sharedState.reorderFeature(false);
+    }
+
 }

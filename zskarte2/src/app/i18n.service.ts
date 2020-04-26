@@ -284,6 +284,16 @@ export class I18NService {
             en: "Draw a hole"
         }
         ,
+        moveToTop: {
+            de: "In den Vordergrund",
+            en: "Send to front",
+            fr: "Passer au premier plan"
+        },
+        moveToBottom: {
+            de: "In den Hintergrund",
+            en: "Send to back",
+            fr: "Passer au fond"
+        },
         ungroup: {
             de: "Gruppierung aufheben",
             fr: "Dégrouper",

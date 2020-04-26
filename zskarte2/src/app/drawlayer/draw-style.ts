@@ -128,11 +128,12 @@ export class DrawStyle {
             rotation: feature.rotation,
             selected: selected,
             signatureSrc: signature.src,
-            signaturePayload: signature.dataUrl ? signature.dataUrl.src : null
+            signaturePayload: signature.dataUrl ? signature.dataUrl.src : null,
+            zindex: this.getZIndex(feature)
         })).toString();
     }
 
-    private static calculateCacheHashForVector(signature, resolution, selected): string {
+    private static calculateCacheHashForVector(signature, feature, resolution, selected): string {
         return Md5.hashStr(JSON.stringify({
             kat: signature.kat,
             color: signature.color,
@@ -140,7 +141,8 @@ export class DrawStyle {
             opacity: signature.fillOpacity,
             resolution: resolution,
             lineStyle: signature.style,
-            strokeWidth: signature.strokeWidth
+            strokeWidth: signature.strokeWidth,
+            zindex: this.getZIndex(feature)
         })).toString();
     }
 
@@ -152,6 +154,7 @@ export class DrawStyle {
             symbol = new Image();
             symbol.src = signature.dataUrl.src;
         }
+        const zIndex = this.getZIndex(feature)
         const symbolCacheHash = DrawStyle.calculateCacheHashForSymbol(signature, feature, resolution, selected);
         let iconStyles = this.symbolStyleCache[symbolCacheHash];
         if (!iconStyles && (signature.src || signature.dataUrl) && feature.getGeometry()) {
@@ -168,7 +171,8 @@ export class DrawStyle {
                         }),
                         geometry: function (feature) {
                             return new Point(feature.getGeometry().getCoordinates()[0][0]);
-                        }
+                        },
+                        zIndex: zIndex
                     }), new Style({
                         image: new Icon(({
                             anchor: [0.5, 0.5],
@@ -183,7 +187,8 @@ export class DrawStyle {
                         })),
                         geometry: function (feature) {
                             return new Point(feature.getGeometry().getCoordinates()[0][0]);
-                        }
+                        },
+                        zIndex: zIndex
                     })];
                 case "Point":
                     return this.symbolStyleCache[symbolCacheHash] = [new Style({
@@ -192,7 +197,8 @@ export class DrawStyle {
                             fill: new Fill({
                                 color: [255, 255, 255, selected ? 0.9 : 0.6]
                             })
-                        })
+                        }),
+                        zIndex: zIndex
                     }), new Style({
                         image: new Icon(({
                             anchor: [0.5, 0.5],
@@ -204,15 +210,20 @@ export class DrawStyle {
                             src: isCustomSignature ? undefined : this.getImageUrl(signature.src),
                             img: isCustomSignature ? symbol : undefined,
                             imgSize: isCustomSignature ? [signature.dataUrl.nativeWidth, signature.dataUrl.nativeHeight] : undefined
-                        }))
+                        })),
+                        zIndex: zIndex
                     })]
             }
         }
         return iconStyles;
     }
 
+    private static getZIndex(feature){
+        return feature.get('zindex') ? feature.get('zindex') : 0
+    }
+
     private static getVectorStyle(feature, resolution, signature, selected, scale): Style {
-        const vectorCacheHash = DrawStyle.calculateCacheHashForVector(signature, resolution, selected);
+        const vectorCacheHash = DrawStyle.calculateCacheHashForVector(signature, feature, resolution, selected);
         let vectorStyle = this.vectorStyleCache[vectorCacheHash];
         if (!vectorStyle) {
             return this.vectorStyleCache[vectorCacheHash] = new Style({
@@ -224,7 +235,8 @@ export class DrawStyle {
                 }),
                 fill: new Fill({
                     color: DrawStyle.colorFunction(signature.kat, signature.color, selected ? 'highlight' : 'default', selected ? Math.min(1, signature.fillOpacity + 0.1) : Math.min(1, signature.fillOpacity))
-                })
+                }),
+                zIndex: this.getZIndex(feature)
             });
         }
         return vectorStyle;
@@ -260,7 +272,8 @@ export class DrawStyle {
                     }),
                     geometry: function (feature) {
                         return new MultiPoint(coordinatesFunction(feature));
-                    }
+                    },
+                    zIndex: this.getZIndex(feature)
                 })
             }
         }
@@ -294,6 +307,7 @@ export class DrawStyle {
                 lineDash: DrawStyle.getDash(signature.style, resolution),
                 lineDashOffset: DrawStyle.getDashOffset(signature.style, resolution)
             }),
+            zIndex: this.getZIndex(feature)
         }), new Style({
             text: new Text({
                 text: signature.text,
@@ -314,7 +328,8 @@ export class DrawStyle {
             }),
             geometry: function (feature) {
                 return new Point(feature.getGeometry().getCoordinates()[feature.getGeometry().getCoordinates().length - 1])
-            }
+            },
+            zIndex: this.getZIndex(feature)
         }), new Style({
             image: new Circle({
                 radius: defaultScale * 50,
@@ -324,7 +339,8 @@ export class DrawStyle {
             }),
             geometry: function (feature) {
                 return new Point(feature.getGeometry().getCoordinates()[0])
-            }
+            },
+            zIndex: this.getZIndex(feature)
         })
         ]
         let highlightPoints = this.getHighlightPointsWhenSelectedStyle(feature, defaultScale, selected)
@@ -334,8 +350,7 @@ export class DrawStyle {
         return textStyles;
     }
 
-    static
-    colorFunction = function (signatureKat, signatureColor, style, alpha) {
+    static colorFunction = function (signatureKat, signatureColor, style, alpha) {
         if (signatureKat == null) {
             if (signatureColor !== undefined && signatureColor !== null) {
                 let hexAlpha = (Math.floor(255 * (alpha !== undefined ? alpha : 1))).toString(16);

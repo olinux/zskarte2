@@ -54,6 +54,8 @@ export class DrawlayerComponent implements OnInit {
     status = "Loading data...";
     currentSessionId: string;
     recordChanges: boolean = false;
+    maxZIndex = 0;
+    minZIndex = 0;
 
     source = new Vector({
         format: new GeoJSON()
@@ -232,6 +234,17 @@ export class DrawlayerComponent implements OnInit {
         this.sharedState.historyDate.subscribe(historyDate => this.toggleHistory(historyDate));
         this.sharedState.mergeMode.subscribe(mergeMode => this.mergeMode(mergeMode));
         this.sharedState.splitMode.subscribe(splitMode => this.splitMode(splitMode));
+        this.sharedState.reorder.subscribe(toTop => {
+                if(toTop!==null){
+                    if(toTop){
+                        this.toFront(this.select.getFeatures().item(0));
+                    }
+                    else{
+                        this.toBack(this.select.getFeatures().item(0));
+                    }
+                }
+            }
+        )
         this.sharedState.session.subscribe(s => {
             if (s) {
                 if (this.currentSessionId !== s.uuid) {
@@ -297,7 +310,7 @@ export class DrawlayerComponent implements OnInit {
 
     mergeMode(merge: boolean) {
         if (merge) {
-            this.mergeSource = this.select.getFeatures() ? this.select.getFeatures().item(0) : null;
+            this.mergeSource = this.select.getFeatures().getLength() == 1 ? this.select.getFeatures().item(0) : null;
         } else {
             this.mergeSource = null;
         }
@@ -341,7 +354,7 @@ export class DrawlayerComponent implements OnInit {
     }
 
     selectionChanged() {
-        this.toggleRemoveButton(false);
+        this.toggleRemoveButton(false)
         if (this.select.getFeatures().getLength() === 1) {
             if (this.mergeSource) {
                 this.mergeFeatures(this.mergeSource, this.select.getFeatures().item(0))
@@ -375,8 +388,9 @@ export class DrawlayerComponent implements OnInit {
         return 'data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(result));
     }
 
-    handleCustomSignatures(features: object[], signatureHandler) {
+    handleCustomSignatures(features: object[], featureHandler, signatureHandler) {
         for (let f of features) {
+            featureHandler(f);
             // @ts-ignore
             let properties = f.properties;
             if (properties !== null) {
@@ -393,6 +407,8 @@ export class DrawlayerComponent implements OnInit {
             this.mapStore.removeMap(this.currentSessionId, false).then(() => {
             });
             this.recordChanges = false;
+            this.minZIndex = 0;
+            this.maxZIndex = 0;
             this.source.clear();
             this.select.getFeatures().clear();
             this.save();
@@ -419,7 +435,17 @@ export class DrawlayerComponent implements OnInit {
                 return;
             }
             if (elements.features) {
-                this.handleCustomSignatures(elements.features, () => {
+                this.handleCustomSignatures(elements.features, feature=>{
+                    let zindex = feature.properties.zindex
+                    if(zindex){
+                        if(zindex > this.maxZIndex){
+                            this.maxZIndex = zindex;
+                        }
+                        if(zindex < this.minZIndex){
+                            this.minZIndex = zindex
+                        }
+                    }
+                }, sig => {
                     //TODO load dataUrls
                 });
                 this.source.addFeatures(new GeoJSON({defaultDataProjection: 'EPSG:3857'}).readFeatures(elements));
@@ -469,10 +495,6 @@ export class DrawlayerComponent implements OnInit {
         //this.drawingManipulated();
     }
 
-    addFeatures(features) {
-        this.source.addFeatures(features);
-    }
-
     removeFeature(feature) {
         if (feature != null) {
             this.toggleRemoveButton(false);
@@ -490,6 +512,18 @@ export class DrawlayerComponent implements OnInit {
             this.drawHole.setActive(false)
         }
     }
+
+    private toFront(feature:Feature){
+        feature.set('zindex', ++this.maxZIndex);
+        this.layer.changed();
+    }
+
+    private toBack(feature:Feature){
+        feature.set('zindex', --this.minZIndex);
+        this.layer.changed();
+    }
+
+
 
     // startAutoSave() {
     //     const saveInterval: number = 10000;
