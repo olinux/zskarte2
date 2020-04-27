@@ -353,9 +353,10 @@ export class DrawlayerComponent implements OnInit {
         if(this.currentSessionId) {
             this.load().then(() => {
                 this.select.setActive(true);
-                this.select.setActive(true);
+                this.modify.setActive(true);
             });
         }
+
     }
 
     loadFromHistory(history) {
