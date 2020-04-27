@@ -18,16 +18,29 @@
   ~
   -->
 
-<mat-card id="history" *ngIf="historyDate">
-  <mat-card-content>
-    <div class="dateDisplay">{{historyDate | date:'dd.MM.yyyy HH:mm'}}</div>
-    <mat-slider
-            [max]="100"
-            [min]="0"
-            [step]="1"
-            [ngModel]="historyPerc"
-            (ngModelChange)="setHistoryDateByPercentage($event)">
-    </mat-slider>
-    <button mat-raised-button color="primary" (click)="toggleHistoryMode()" >{{i18n.get("endHistoryMode")}}</button>
-  </mat-card-content>
+<mat-card id="history" *ngIf="showHistory">
+    <mat-card-content>
+
+        <mat-checkbox [(ngModel)]="filtered" class="filter">{{i18n.get('filterHistory')}}</mat-checkbox>
+        <div class="selector">
+            <div #indicator [class]="historyDatesLocale ? 'visible indicator' : 'hidden indicator'"><i
+                    class="material-icons">chevron_right</i></div>
+            <div class="timeline" (scroll)="handleScroll($event)" #timeline>
+                <div class="startSpacer" #startSpacer></div>
+                <div *ngFor="let historyDate of historyDatesLocale;  index as i"
+                     (click)="goToIndex(i, 0)" class="event"><span class="date">{{historyDate}}</span><span class="tag">{{getTag(i)}}<i [title]="i18n.get('removeTag')" class="material-icons" (click)="removeTag(i)" *ngIf="getTag(i)">delete</i></span></div>
+                <div class="endSpacer"></div>
+            </div>
+            <div class="loader" *ngIf="loading">
+                <mat-progress-spinner
+                        color="primary"
+                        mode="indeterminate">
+                </mat-progress-spinner>
+            </div>
+        </div>
+        <div class="buttons">
+            <button mat-raised-button color="primary"
+                    (click)="toggleHistoryMode()">{{i18n.get("endHistoryMode")}}</button>
+        </div>
+    </mat-card-content>
 </mat-card>

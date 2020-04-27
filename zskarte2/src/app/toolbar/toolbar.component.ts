@@ -120,7 +120,6 @@ export class ToolbarComponent implements OnInit {
     }
 
     toggleHistory(): void {
-        this.drawLayer.save();
         this.history.toggleHistoryMode();
     }
 }

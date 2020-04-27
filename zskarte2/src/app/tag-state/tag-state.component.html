@@ -18,13 +18,12 @@
   ~
   -->
 
-<span class="tools">
-  <button mat-stroked-button [matMenuTriggerFor]="mapMenu"><i class="material-icons">photo</i> {{i18n.get("currentDrawing")}}</button>
-<mat-menu #mapMenu="matMenu">
-  <button mat-menu-item (click)="importData()"><i class="material-icons">open_in_browser</i> {{i18n.get("importDrawing")}}</button>
-  <a mat-menu-item [download]="getDownloadFileName()" id="export" (click)="download(false)" [href]="downloadData"><i class="material-icons">save</i> {{i18n.get("download")}}</a>
-  <button mat-menu-item (click)="tagState()"><i class="material-icons">note</i><span> {{i18n.get("tagState")}}</span></button>
-  <button mat-menu-item (click)="clear()"><i class="material-icons" >delete</i> {{i18n.get("delete")}}</button>
-</mat-menu>
-
-</span>
+<div mat-dialog-content>
+    <mat-form-field>
+        <input type="text" matInput placeholder="{{i18n.get('yourTag')}}" [(ngModel)]="tag">
+    </mat-form-field>
+</div>
+<mat-dialog-actions align="end">
+    <button mat-stroked-button (click)="cancel()">{{i18n.get("cancel")}}</button>
+    <button mat-raised-button color="primary" (click)="submit()">{{i18n.get("ok")}}</button>
+</mat-dialog-actions>

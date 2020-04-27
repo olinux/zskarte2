@@ -46,8 +46,8 @@ export class SharedStateService {
     private coordinateSource = new BehaviorSubject<Coordinate>(null);
     currentCoordinate = this.coordinateSource.asObservable();
 
-    private historyDateSource = new BehaviorSubject<Date>(null);
-    historyDate = this.historyDateSource.asObservable();
+    private historySource = new BehaviorSubject<string>(null);
+    history = this.historySource.asObservable();
 
     private downloadSource = new BehaviorSubject<string>(null);
     downloadData = this.downloadSource.asObservable();
@@ -75,6 +75,13 @@ export class SharedStateService {
 
     private reorderFeatureSource = new BehaviorSubject<boolean>(null);
     reorder = this.reorderFeatureSource.asObservable();
+
+    private tagStateSource = new BehaviorSubject<string>(null);
+    tagState = this.tagStateSource.asObservable();
+
+    doTagState(label:string){
+        this.tagStateSource.next(label);
+    }
 
     reorderFeature(top:boolean){
         this.reorderFeatureSource.next(top);
@@ -120,8 +127,8 @@ export class SharedStateService {
         }
     }
 
-    gotoHistoryDate(date: Date) {
-        this.historyDateSource.next(date);
+    gotoHistory(key: string) {
+        this.historySource.next(key);
     }
 
     gotoCoordinate(coordinate: Coordinate) {

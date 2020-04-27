@@ -20,22 +20,100 @@
 
 #history {
     position: absolute;
-    bottom: 2em;
+    bottom: 0;
     background-color: white;
-    width:80%;
-    margin-left: 10%;
-    margin-right:10%;
     left:0;
-    right:0;
 }
 
-mat-card-content{
-    text-align:center;
-}
-.mat-slider-horizontal {
+.selector{
+    height: 20em;
     width: 100%;
+    position: relative;
 }
 
-.dateDisplay{
+.timeline{
+    scroll-behavior: smooth;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+.timeline .event {
+    margin-top: 1em;
+    line-height: 1.5em;
+    margin-left:2em;
+    margin-bottom: 1em;
+    border: 0;
+    cursor: pointer;
+}
+
+.timeline .startSpacer{
+    //padding-top: 8.75em;
+}
+
+.loader{
+    position:absolute;
+    top:0;
+    left:0;
+    right: 0;
+    bottom:0;
+    text-align: center;
+    background: rgba(90, 90, 90, 0.4);
+
+}
+.loader mat-progress-spinner{
+    margin:2em auto;
+}
+
+.date{
+    font-style: italic;
+}
+
+.tag{
+    font-weight: bold;
+    margin-left: 3em;
+    margin-right: 3em;
+}
+
+
+
+.timeline .endSpacer{
+    //padding-top: 7.5em;
+    padding-top: 16.25em;
+}
+.indicator{
+    position:absolute;
+    //top: 8.75em;
+    display:block;
+    width: 100%;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    background: rgba(198, 198, 198, 0.3);
+}
+
+.hidden{
+    visibility: hidden;
+}
+
+.tag i{
+    margin-left: 1em;
+    margin-right: 1em;
+}
+
+.indicator i, .tag i{
+    font-size: 1em;
+    line-height: 1.5em;
+
+}
+
+.filter{
+    margin-bottom: 1em;
+}
+
+.buttons{
     text-align:center;
 }

@@ -18,7 +18,7 @@
  *
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {SharedStateService} from '../shared-state.service';
 import {NgxIndexedDBService} from "ngx-indexed-db";
 import {I18NService} from "../i18n.service";
@@ -31,54 +31,149 @@ import {MapStoreService} from "../map-store.service";
 })
 export class HistoryComponent implements OnInit {
 
-    historyDate = null;
-    historyPerc = 100;
+    @ViewChild('indicator') indicator;
+    @ViewChild('timeline') timeline;
+    @ViewChild('startSpacer') startSpacer;
     currentSessionId = null;
+    history = null;
+    private _historyDatesAll = null;
+    private _historyDatesAllLocale = null
+    private _historyDatesFiltered = null;
+    private _historyDatesFilteredLocale = null;
+    tagSource = null;
+    public showHistory = false;
+    itemHeight = null;
+    filtered: boolean = true
 
-    constructor(private sharedState: SharedStateService, private mapStore:MapStoreService, public i18n:I18NService) {
+
+    get historyDates(): string[] {
+        if (this.filtered) {
+            return this._historyDatesFiltered;
+        }
+        return this._historyDatesAll;
+    }
+
+    get historyDatesLocale(): string[] {
+        if (this.filtered) {
+            return this._historyDatesFilteredLocale;
+        }
+        return this._historyDatesAllLocale;
+    }
+
+    constructor(private sharedState: SharedStateService, private mapStore: MapStoreService, public i18n: I18NService) {
         this.currentSessionId = this.sharedState.getCurrentSession();
-        this.sharedState.session.subscribe(s => {this.currentSessionId = s != null ? s.uuid : null});
+        this.sharedState.session.subscribe(s => {
+            this.currentSessionId = s != null ? s.uuid : null
+        });
     }
-
-    getDateByPerc(perc): Promise<Date> {
-        return this.mapStore.getFirstDateInHistory(this.currentSessionId).then(firstDateInHistory => this.findDateByPerc(firstDateInHistory, perc));
-    }
-
-    findDateByPerc(firstDateInHistory, perc): Date {
-        if (firstDateInHistory === null) {
-            firstDateInHistory = new Date();
-        }
-        const now = new Date();
-        const diff = now.getTime() - firstDateInHistory.getTime();
-        const diffToNow = Math.floor(diff / 100 * (100 - perc));
-        return new Date(now.getTime() - diffToNow);
-    }
-
-    selectHistoryDate(history): Date {
-        if (history !== undefined && history !== null && history.elements.length > 0) {
-            return new Date(history.elements[0].time);
-        }
-        return new Date();
-    }
-
 
     ngOnInit(): void {
     }
 
-    toggleHistoryMode() {
-        if (this.historyDate == null) {
-            this.historyDate = new Date();
-            this.sharedState.gotoHistoryDate(this.historyDate);
-        } else {
-            this.historyDate = null;
-            this.sharedState.gotoHistoryDate(null);
+    getTag(index: number): string {
+        let key = this.historyDates[index];
+        return this.tagSource && this.tagSource[key] ? this.tagSource[key] : null;
+    }
+
+    getLabel(index: number): string {
+        let key = this.historyDates[index];
+        if (this.tagSource && this.tagSource[key]) {
+            return this.tagSource[key] + " (" + this.historyDatesLocale[index] + ")";
+        }
+        return this.historyDatesLocale[index];
+    }
+
+
+    loadHistory(history) {
+        const TIME_DIFF_BETWEEN_EVENTS = 30 * 60 * 1000;
+        this.history = history;
+        this.tagSource = history.tags;
+        this._historyDatesAll = Object.keys(history.states).sort().reverse();
+        this._historyDatesAllLocale = this._historyDatesAll.map(h => new Date(JSON.parse(h)).toLocaleString());
+        let lastDate: Date = null;
+        this._historyDatesFiltered = [];
+        for (let historyDate of this._historyDatesAll) {
+            let realDate = new Date(JSON.parse(historyDate));
+            if (!lastDate || historyDate === this._historyDatesAll[this._historyDatesAll.length - 1] || lastDate.getTime() - realDate.getTime() > TIME_DIFF_BETWEEN_EVENTS || historyDate in this.tagSource) {
+                this._historyDatesFiltered.push(historyDate);
+                lastDate = realDate;
+            }
+        }
+        this._historyDatesFilteredLocale = this._historyDatesFiltered.map(h => new Date(JSON.parse(h)).toLocaleString());
+        this.loading = false;
+        if (this.historyDates.length > 0) {
+            this.goToIndex(0, 0);
         }
     }
 
-    setHistoryDateByPercentage(perc) {
-        this.getDateByPerc(perc).then(historyDate => {
-            this.historyDate = historyDate;
-            this.sharedState.gotoHistoryDate(this.historyDate);
+
+    private loadHistoryFromDB() {
+        this.loading = true;
+        this.mapStore.getHistory(this.currentSessionId).then(history => this.loadHistory(history));
+    }
+
+    toggleHistoryMode() {
+        this.showHistory = !this.showHistory;
+        this.sharedState.gotoHistory(null);
+        if (this.showHistory) {
+            this.loadHistoryFromDB();
+        }
+    }
+
+
+    targetScroll = null;
+    lastHandledScrollPosition = null;
+    targetIndex = null;
+    lastShownIndex = null;
+    loading = false;
+
+    goToIndex(index, delay) {
+        this.ensureItemHeightCalc();
+        let expectedPosition = index * this.itemHeight;
+        if (this.timeline.nativeElement.scrollTop != expectedPosition) {
+            //It's not a precise scroll - so we programmatically scroll to the correct position (we do this deferred to reduce the load)
+            this.targetScroll = expectedPosition
+            setTimeout(() => {
+                if (this.timeline.nativeElement.scrollTop !== this.targetScroll) {
+                    this.timeline.nativeElement.scrollTo(0, this.targetScroll);
+                }
+            }, delay);
+
+        }
+        this.targetIndex = index;
+        this.loading = true;
+        setTimeout(() => {
+            if (this.targetIndex !== this.lastShownIndex) {
+                this.lastShownIndex = this.targetIndex;
+                this.sharedState.gotoHistory(this.historyDates[this.targetIndex])
+            }
+            this.loading = false;
+        }, 500)
+    }
+
+    ensureItemHeightCalc() {
+        if (!this.itemHeight) {
+            this.itemHeight = this.indicator.nativeElement.clientHeight;
+        }
+    }
+
+    handleScrollDeferred() {
+        let scrollTop = this.timeline.nativeElement.scrollTop;
+        if (!this.lastHandledScrollPosition || this.lastHandledScrollPosition !== scrollTop) {
+            this.lastHandledScrollPosition = scrollTop;
+            this.ensureItemHeightCalc();
+            this.goToIndex(Math.round(scrollTop / this.itemHeight), 200);
+        }
+    }
+
+    handleScroll(event) {
+        setTimeout(() => this.handleScrollDeferred(), 200);
+    }
+
+    removeTag(index) {
+        this.mapStore.removeTag(this.currentSessionId, this.historyDates[index]).then(() => {
+            this.loadHistoryFromDB();
+
         });
     }
 

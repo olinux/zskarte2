@@ -29,7 +29,7 @@
         <div class="tools">
             <div class="flexContainer">
                 <mat-card-title class="title">{{session.title}}</mat-card-title>
-                <button mat-mini-fab color="primary" class="edit" [matMenuTriggerFor]="mainMenu" *ngIf="!history.historyDate">
+                <button mat-mini-fab color="primary" class="edit" [matMenuTriggerFor]="mainMenu" *ngIf="!history.showHistory">
                     <i class="material-icons">menu</i>
                 </button>
                 <div class="spacer"></div>
@@ -39,9 +39,9 @@
             </div>
             <mat-card-content class="flexContainer">
                 <app-geocoder style="flex:1"></app-geocoder>
-                <app-drawingtools *ngIf="!history.historyDate"></app-drawingtools>
+                <app-drawingtools *ngIf="!history.showHistory"></app-drawingtools>
                 <!--<a class="mat-stroked-button" download="map.jpg"><span class="mat-button-wrapper"><i class="material-icons">photo_camera</i> Screenshot</span></a>-->
-                <app-tools [drawLayer]="drawLayer" [history]="history" *ngIf="!history.historyDate"></app-tools>
+                <app-tools [drawLayer]="drawLayer" [history]="history" *ngIf="!history.showHistory"></app-tools>
                 <app-layers></app-layers>
             </mat-card-content>
 

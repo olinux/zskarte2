@@ -60,6 +60,8 @@ import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-
 import { ExportDialogComponent } from './export-dialog/export-dialog.component';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import { MapLegendDisplayComponent } from './map-legend-display/map-legend-display.component';
+import { TagStateComponent } from './tag-state/tag-state.component';
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 const dbConfig: DBConfig = {
     name: 'ZSKarte2-DB1.0',
@@ -98,7 +100,8 @@ const dbConfig: DBConfig = {
         LanguageChooserComponent,
         ConfirmationDialogComponent,
         ExportDialogComponent,
-        MapLegendDisplayComponent
+        MapLegendDisplayComponent,
+        TagStateComponent
     ],
     imports: [
         BrowserModule,
@@ -120,7 +123,8 @@ const dbConfig: DBConfig = {
         MatListModule,
         NgxIndexedDBModule.forRoot(dbConfig),
         NgxMdModule.forRoot(),
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        MatCheckboxModule
     ],
     entryComponents: [
         DrawingDialogComponent,
@@ -128,7 +132,8 @@ const dbConfig: DBConfig = {
         TextDialogComponent,
         ConfirmationDialogComponent,
         ExportDialogComponent,
-        MapLegendDisplayComponent
+        MapLegendDisplayComponent,
+        TagStateComponent
     ],
     providers: [],
     bootstrap: [AppComponent]

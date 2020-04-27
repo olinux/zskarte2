@@ -265,7 +265,7 @@ export class DrawStyle {
             if(coordinatesFunction) {
                 return new Style({
                     image: new Circle({
-                        radius: scale*30,
+                        radius: scale * 20,
                         fill: new Fill({
                             color: 'orange'
                         })

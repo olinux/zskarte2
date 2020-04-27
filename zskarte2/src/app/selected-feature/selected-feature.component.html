@@ -80,12 +80,10 @@
         </div>
         <mat-menu #signatureMenu="matMenu">
 
-            <button mat-menu-item (click)="bringToFront()"
-                    *ngIf="(selectedSignature.type==='Polygon' || selectedSignature.type==='MultiPolygon')">
+            <button mat-menu-item (click)="bringToFront()">
                 <i
                         class="material-icons">arrow_upward</i><span>{{i18n.get("moveToTop")}}</span></button>
-            <button mat-menu-item (click)="sendToBack()"
-                    *ngIf="(selectedSignature.type==='Polygon' || selectedSignature.type==='MultiPolygon')">
+            <button mat-menu-item (click)="sendToBack()">
                 <i
                         class="material-icons">arrow_downward</i><span>{{i18n.get("moveToBottom")}}</span></button>
             <button mat-menu-item (click)="split()"

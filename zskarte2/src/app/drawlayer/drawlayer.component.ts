@@ -153,8 +153,10 @@ export class DrawlayerComponent implements OnInit {
     }
 
     private drawingManipulated() {
-        this.status = "Save changes";
-        this.save().then(this.status = null);
+        if(this.recordChanges) {
+            this.status = "Save changes";
+            this.save().then(this.status = null);
+        }
     }
 
     toggleRemoveButton(show: boolean) {
@@ -231,9 +233,10 @@ export class DrawlayerComponent implements OnInit {
         this.sharedState.deletedFeature.subscribe(feature => this.removeFeature(feature))
         this.sharedState.currentSign.subscribe(sign => this.startDrawing(sign));
         this.sharedState.drawHoleMode.subscribe(drawHole => this.doDrawHole(drawHole));
-        this.sharedState.historyDate.subscribe(historyDate => this.toggleHistory(historyDate));
+        this.sharedState.history.subscribe(history => this.toggleHistory(history));
         this.sharedState.mergeMode.subscribe(mergeMode => this.mergeMode(mergeMode));
         this.sharedState.splitMode.subscribe(splitMode => this.splitMode(splitMode));
+        this.sharedState.tagState.subscribe(tag  => this.tagState(tag) );
         this.sharedState.reorder.subscribe(toTop => {
                 if(toTop!==null){
                     if(toTop){
@@ -259,7 +262,7 @@ export class DrawlayerComponent implements OnInit {
                 }
             } else {
                 this.currentSessionId = null;
-                //this.removeAll();
+                this.clearDrawingArea();
             }
         })
         // Because of the closure, we end up inside the map -> let's just add an
@@ -286,6 +289,10 @@ export class DrawlayerComponent implements OnInit {
     }
 
     mergeSource: any = null;
+
+    tagState(tag:string){
+
+    }
 
     splitMode(split: boolean) {
         if (split) {
@@ -330,27 +337,33 @@ export class DrawlayerComponent implements OnInit {
         this.sharedState.setMergeMode(false);
     }
 
-    toggleHistory(date: Date) {
-        if (date === null && this.historyMode) {
+    toggleHistory(history: string) {
+        this.historyMode = true;
+        this.select.getFeatures().clear();
+        this.sharedState.selectFeature(null);
+        if (history === null && this.historyMode) {
             this.historyMode = false;
             this.endHistoryMode();
-        } else if (date !== null) {
-            this.historyMode = true;
-            this.loadFromHistory(date);
+        } else if (history !== null) {
+            this.loadFromHistory(history);
         }
     }
 
     endHistoryMode() {
-        this.load().then(() => {
-            this.select.setActive(true);
-            this.select.setActive(true);
-        });
+        if(this.currentSessionId) {
+            this.load().then(() => {
+                this.select.setActive(true);
+                this.select.setActive(true);
+            });
+        }
     }
 
-    loadFromHistory(date) {
+    loadFromHistory(history) {
         this.modify.setActive(false);
         this.select.setActive(false);
-        this.mapStore.getHistoricalState(this.currentSessionId, date).then(historicalMap => this.loadElements(historicalMap));
+        this.mapStore.getHistoricalStateByKey(this.currentSessionId, history).then(h => {
+            this.loadElements(h);
+        });
     }
 
     selectionChanged() {
@@ -366,14 +379,6 @@ export class DrawlayerComponent implements OnInit {
         } else {
             window.alert('too many items selected at once!');
         }
-    }
-
-    private handleFeatureBeforeSaving(feature) {
-        switch (feature.type) {
-            case "Circle":
-                console.log("The feature " + JSON.stringify(feature) + " is a circle!!!");
-        }
-
     }
 
     writeFeatures(): GeoJSON {
@@ -402,17 +407,21 @@ export class DrawlayerComponent implements OnInit {
         }
     }
 
-    removeAll() {
-        if (!this.historyMode) {
-            this.mapStore.removeMap(this.currentSessionId, false).then(() => {
-            });
+    clearDrawingArea(){
             this.recordChanges = false;
             this.minZIndex = 0;
             this.maxZIndex = 0;
             this.source.clear();
             this.select.getFeatures().clear();
-            this.save();
             this.recordChanges = true;
+    }
+
+    removeAll() {
+        if (!this.historyMode) {
+            this.mapStore.removeMap(this.currentSessionId, false).then(() => {
+            });
+            this.clearDrawingArea();
+            this.save();
         }
     }
 
@@ -451,7 +460,6 @@ export class DrawlayerComponent implements OnInit {
                 this.source.addFeatures(new GeoJSON({defaultDataProjection: 'EPSG:3857'}).readFeatures(elements));
             }
         }
-        this.save();
         this.recordChanges = true;
     }
 
@@ -464,8 +472,11 @@ export class DrawlayerComponent implements OnInit {
         })
     }
 
-    loadFromString(text) {
+    loadFromString(text, save:boolean) {
         this.loadElements(JSON.parse(text));
+        if(save){
+            this.save();
+        }
     }
 
     private drawers: { [key: string]: Draw; } = {}
@@ -522,21 +533,6 @@ export class DrawlayerComponent implements OnInit {
         feature.set('zindex', --this.minZIndex);
         this.layer.changed();
     }
-
-
-
-    // startAutoSave() {
-    //     const saveInterval: number = 10000;
-    //     setTimeout(() => {
-    //         this.status = 'auto save...';
-    //         this.save().then(() => {
-    //             setTimeout(() => {
-    //                 this.status = null;
-    //             }, 1000);
-    //             this.startAutoSave();
-    //         });
-    //     }, saveInterval);
-    // }
 
 }
 

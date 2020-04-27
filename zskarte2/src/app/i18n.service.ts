@@ -379,6 +379,26 @@ export class I18NService {
             de: "Schriftgrösse",
             fr: "Taille de police",
             en: "Font size"
+        },
+        yourTag:{
+            de: "Ihr Tag",
+            fr: "Votre tag",
+            en: "Your tag"
+        },
+        tagState:{
+            de: "Taggen",
+            en: "Tag",
+            fr: "Taguer"
+        },
+        filterHistory:{
+            de: "Gefiltert (nur markierte / alle 30 min)",
+            fr: "Filtré (uniquement marqué / toutes les 30 min)",
+            en: "Filtered (tagged / every 30 mins only)"
+        },
+        removeTag: {
+            de: "Tag entfernen",
+            fr: "Supprimer le tag",
+            en: "Remove tag"
         }
     }
     ;

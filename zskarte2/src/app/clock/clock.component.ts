@@ -29,17 +29,26 @@ import {I18NService} from "../i18n.service";
 })
 export class ClockComponent implements OnInit {
 
-    constructor(public i18n:I18NService) {
-    }
+    historyDate = null;
+    constructor(public i18n:I18NService, private sharedState: SharedStateService) {
+        this.sharedState.history.subscribe(s => {
+            this.historyDate = s ? new Date(JSON.parse(s)) : null;
+            this.redefine();
+        })
 
+    }
     now: Date;
 
     ngOnInit() {
         this.update();
     }
 
+    redefine(){
+        this.now = this.historyDate ? this.historyDate : new Date();
+    }
+
     update() {
-        this.now = new Date();
+       this.redefine();
         setTimeout(() => this.update(), 1000);
     }
 
