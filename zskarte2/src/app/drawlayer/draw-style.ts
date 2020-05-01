@@ -153,7 +153,7 @@ export class DrawStyle {
 
 
     private static getIconStyle(feature, resolution, signature, selected, scale): Style[] {
-        if(signature.hideIcon){
+        if (signature.hideIcon) {
             return null;
         }
         const isCustomSignature = signature.dataUrl !== undefined && signature.dataUrl !== null;
@@ -226,24 +226,23 @@ export class DrawStyle {
         return iconStyles;
     }
 
-    private static getZIndex(feature){
+    private static getZIndex(feature) {
         return feature.get('zindex') ? feature.get('zindex') : 0
     }
 
-    private static getFill(color, scale, fillStyle){
-        if(fillStyle && fillStyle.name && fillStyle.name != "filled"){
+    private static getFill(color, scale, fillStyle) {
+        if (fillStyle && fillStyle.name && fillStyle.name != "filled") {
             return new FillPattern({
                 pattern: fillStyle.name,
                 ratio: 1,
                 color: color,
-                offset:0,
-                scale: scale*10,
+                offset: 0,
+                scale: scale * 10,
                 size: fillStyle.size,
                 spacing: fillStyle.spacing,
                 angle: fillStyle.angle
             })
-        }
-        else{
+        } else {
             return new Fill({
                 color: color
             })
@@ -257,19 +256,44 @@ export class DrawStyle {
             return this.vectorStyleCache[vectorCacheHash] = new Style({
                 stroke: new Stroke({
                     color: DrawStyle.colorFunction(signature.kat, signature.color, 'default', 1.0),
-                    width: selected ? scale * 20 * signature.strokeWidth * 1.2 : scale * 20 * signature.strokeWidth,
+                    width: this.calculateStrokeWidth(scale, signature),
                     lineDash: DrawStyle.getDash(signature.style, resolution),
                     lineDashOffset: DrawStyle.getDashOffset(signature.style, resolution)
                 }),
-                fill: this.getFill(DrawStyle.colorFunction(signature.kat, signature.color,  'default', signature.fillOpacity), scale, signature.fillStyle),
+                fill: this.getFill(DrawStyle.colorFunction(signature.kat, signature.color, 'default', signature.fillOpacity), scale, signature.fillStyle),
                 zIndex: this.getZIndex(feature)
             });
         }
         return vectorStyle;
     }
 
-    private static getHighlightPointsWhenSelectedStyle(feature, scale, selected): Style {
-        if(selected) {
+    private static calculateStrokeWidth(scale, signature){
+        return scale * 20 * signature.strokeWidth;
+    }
+
+    private static getHighlightLineWhenSelectedStyle(feature, scale, selected): Style {
+        if (selected) {
+            let signature = feature.get('sig');
+            switch (feature.getGeometry().getType()) {
+                case "Polygon":
+                case "MultiPolygon":
+                case "LineString":
+                    return new Style({
+                        stroke: new Stroke({
+                            color: "#fff5cb",
+                            width: this.calculateStrokeWidth(scale, signature)+scale*30,
+                        })
+                    });
+            }
+        }
+        return null;
+    }
+
+
+    private static getHighlightPointsWhenSelectedStyle(feature, scale, selected)
+        :
+        Style {
+        if (selected) {
             let coordinatesFunction = null;
             switch (feature.getGeometry().getType()) {
                 case "Polygon":
@@ -288,7 +312,7 @@ export class DrawStyle {
                     }
                     break;
             }
-            if(coordinatesFunction) {
+            if (coordinatesFunction) {
                 return new Style({
                     image: new Circle({
                         radius: scale * 20,
@@ -312,11 +336,16 @@ export class DrawStyle {
         let vectorStyle = this.getVectorStyle(feature, resolution, signature, selected, scale);
         let iconStyles = this.getIconStyle(feature, resolution, signature, selected, scale);
         let highlightPointsWhenSelectedStyle = this.getHighlightPointsWhenSelectedStyle(feature, scale, selected);
-        let styles = [vectorStyle];
+        let highlightLineWhenSelectedStyle = this.getHighlightLineWhenSelectedStyle(feature, scale, selected);
+        let styles = [];
+        if (highlightLineWhenSelectedStyle) {
+            styles.push(highlightLineWhenSelectedStyle);
+        }
+        styles.push(vectorStyle);
         if (iconStyles) {
             iconStyles.forEach(i => styles.push(i));
         }
-        if(highlightPointsWhenSelectedStyle){
+        if (highlightPointsWhenSelectedStyle) {
             styles.push(highlightPointsWhenSelectedStyle)
         }
         return styles;
@@ -340,7 +369,7 @@ export class DrawStyle {
                 backgroundFill: new Fill({
                     color: [255, 255, 255, 1]
                 }),
-                font: signature.fontSize*30+'px sans-serif',
+                font: signature.fontSize * 30 + 'px sans-serif',
                 rotation: feature.rotation !== undefined ? feature.rotation * Math.PI / 180 : 0,
                 scale: DrawStyle.scale(resolution, DrawStyle.textScaleFactor, 0.4),
                 fill: new Fill({
@@ -370,7 +399,7 @@ export class DrawStyle {
         })
         ]
         let highlightPoints = this.getHighlightPointsWhenSelectedStyle(feature, defaultScale, selected)
-        if(highlightPoints){
+        if (highlightPoints) {
             textStyles.push(highlightPoints);
         }
         return textStyles;
