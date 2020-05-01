@@ -63,6 +63,7 @@ import { MapLegendDisplayComponent } from './map-legend-display/map-legend-displ
 import { TagStateComponent } from './tag-state/tag-state.component';
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatExpansionModule} from "@angular/material/expansion";
+import { CustomImagesComponent } from './custom-images/custom-images.component';
 
 const dbConfig: DBConfig = {
     name: 'ZSKarte2-DB1.0',
@@ -102,7 +103,8 @@ const dbConfig: DBConfig = {
         ConfirmationDialogComponent,
         ExportDialogComponent,
         MapLegendDisplayComponent,
-        TagStateComponent
+        TagStateComponent,
+        CustomImagesComponent
     ],
     imports: [
         BrowserModule,

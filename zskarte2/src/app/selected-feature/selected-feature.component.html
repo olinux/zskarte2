@@ -171,7 +171,7 @@
         </div>
     </mat-card-content>
     <mat-card-content *ngIf="mergeMode">
-        <div>Zu gruppierende Fläche auswählen</div>
+        <div>{{i18n.get('chooseGroupingArea')}}</div>
         <button mat-raised-button (click)="merge(false)" [disabled]="drawHoleMode"
                 *ngIf="selectedSignature.type==='Polygon' || selectedSignature.type==='MultiPolygon'"><i
                 class="material-icons">cancel</i><span> {{i18n.get("cancelGrouping")}}</span></button>

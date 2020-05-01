@@ -294,6 +294,11 @@ export class I18NService {
             en: "Send to back",
             fr: "Passer au fond"
         },
+        chooseGroupingArea:{
+            de: "Zu gruppierende Fläche auswählen",
+            en: "Choose the element to group with",
+            fr: "Sélectionnez la zone à grouper"
+        },
         ungroup: {
             de: "Gruppierung aufheben",
             fr: "Dégrouper",
