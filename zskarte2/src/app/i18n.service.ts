@@ -13,13 +13,13 @@ export class I18NService {
     private localeSource = new BehaviorSubject<string>(null);
     public currentLocale = this.localeSource.asObservable();
 
-    constructor(private preferences:PreferencesService) {
+    constructor(private preferences: PreferencesService) {
         this.locale = preferences.getLocale();
     }
 
     set locale(newLocale: string) {
         this._locale = newLocale ? newLocale : DEFAULT_LOCALE;
-        if(this._locale) {
+        if (this._locale) {
             this.preferences.setLocale(this._locale);
         }
         this.localeSource.next(this._locale);
@@ -118,12 +118,12 @@ export class I18NService {
             en: "Export map",
             fr: "Exporter la carte"
         },
-        withHistory:{
+        withHistory: {
             de: "Mit History",
             en: "With history",
             fr: "Avec historique"
         },
-        withoutHistory:{
+        withoutHistory: {
             de: "Ohne History",
             en: "Without history",
             fr: "Sans historique"
@@ -198,12 +198,12 @@ export class I18NService {
             fr: "Remplacer par un dessin importé",
             en: "Replace with imported drawing"
         },
-        import:{
+        import: {
             de: "Importieren",
             fr: "Importer",
             en: "Import"
         },
-        drawLayer:{
+        drawLayer: {
             de: "Zeichnungsebene",
             fr: "Couche de dessin",
             en: "Drawing layer"
@@ -320,11 +320,11 @@ export class I18NService {
             fr: "Remarque : les données sont uniquement conservées sur votre navigateur - elles ne sont pas partagées avec un serveur ! Si vous souhaitez enregistrer ou partager la carte avec d'autres personnes, vous pouvez exporter (et réimporter) la carte. <br/><br/>**Important**: Si vous supprimez les données de votre navigateur, les cartes enregistrées seront également supprimées.",
             en: "Please note: The data is only kept on your browser - it is not shared with a server! If you would like to additionally save or share the map with others, you can export (and re-import) the map.<br/><br/> **Important**: If you delete your browser data, the saved maps will also be removed"
         },
-        zso:{
+        zso: {
             de: "ZSO",
             fr: "PCi",
             en: "CPO"
-        } ,
+        },
         sessionLoaderInstructions: {
             de: "Bitte beachten Sie: Wenn Sie eine Karte laden wird die bestehende nicht gelöscht - Sie können diese jederzeit hier wieder laden.",
             fr: "Remarque : lorsque vous chargez une carte, la carte existante n'est pas supprimée - vous pouvez la recharger ici à tout moment.",
@@ -355,42 +355,42 @@ export class I18NService {
             en: "Selected layers",
             fr: "Couches cartographiques sélectionnées"
         },
-        currentMap:{
+        currentMap: {
             de: "Aktuelle Karte",
             fr: "Carte actuelle",
             en: "Current map"
         },
-        otherMaps:{
+        otherMaps: {
             de: "Andere Karten",
             fr: "Autre cartes",
             en: "Other map"
         },
-        map:{
+        map: {
             de: "Karte",
             fr: "Carte",
             en: "Map"
         },
-        legendNotLoaded:{
+        legendNotLoaded: {
             de: "Die Legende für diese Karte konnte leider nicht geladen werden",
             fr: "La légende de cette carte n'a pas pu être chargée",
             en: "The legend for this map could not be loaded"
         },
-        fontSize:{
+        fontSize: {
             de: "Schriftgrösse",
             fr: "Taille de police",
             en: "Font size"
         },
-        yourTag:{
+        yourTag: {
             de: "Ihr Tag",
             fr: "Votre tag",
             en: "Your tag"
         },
-        tagState:{
+        tagState: {
             de: "Taggen",
             en: "Tag",
             fr: "Taguer"
         },
-        filterHistory:{
+        filterHistory: {
             de: "Gefiltert (nur markierte / alle 30 min)",
             fr: "Filtré (uniquement marqué / toutes les 30 min)",
             en: "Filtered (tagged / every 30 mins only)"
@@ -399,6 +399,56 @@ export class I18NService {
             de: "Tag entfernen",
             fr: "Supprimer le tag",
             en: "Remove tag"
+        },
+        fillPattern: {
+            de: "Muster",
+            en: "Pattern",
+            fr: "Modèle"
+        },
+        filled: {
+            de: "Gefüllt",
+            en: "Filled",
+            fr: "Rempli"
+        },
+        hatched: {
+            de: "Schraffiert",
+            en: "Hatched",
+            fr: "Hachuré"
+        },
+        crossed: {
+            de: "Gekreuzt",
+            en: "Crossed",
+            fr: "Croisé"
+        },
+        spacing: {
+            de: "Abstand",
+            en: "Spacing",
+            fr: "Espacement"
+        },
+        angle: {
+            de: "Winkel",
+            en: "Angle",
+            fr: "Angle"
+        },
+        type: {
+            de: "Typ",
+            en: "Type",
+            fr: "Type"
+        },
+        font: {
+            de: "Schrift",
+            en: "Font",
+            fr: "Police"
+        },
+        width: {
+            de: "Dicke",
+            en: "Width",
+            fr: "Largeur"
+        },
+        functions: {
+            de: "Funktionen",
+            en: "Functions",
+            fr: "Fonctions"
         }
     }
     ;

@@ -30,10 +30,7 @@ export class Signs {
             src: "ABC Dekontaminationsstelle.png",
             de: "ABC Dekontaminationsstelle",
             en: "ABC Dekontaminationsstelle",
-            fr: "Place de décontamination",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Place de décontamination"
         },
         {
             type: "Polygon",
@@ -41,10 +38,7 @@ export class Signs {
             src: "Absperrung Einsatzraum.png",
             de: "Absperrung Einsatzraum",
             en: "Absperrung Einsatzraum",
-            fr: "Barrage du secteur d’engagement",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Barrage du secteur d’engagement"
         },
         {
             type: "Point",
@@ -52,10 +46,7 @@ export class Signs {
             src: "Absperrung Verkehrswege.png",
             de: "Absperrung Verkehrswege",
             en: "Absperrung Verkehrswege",
-            fr: "Fermeture de la route",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Fermeture de la route"
         },
         {
             type: "LineString",
@@ -64,9 +55,7 @@ export class Signs {
             de: "Achse fuer Ei, Rttg, Vsg",
             en: "Achse fuer Ei, Rttg, Vsg",
             fr: "Axe d’engagement pour le sauvetage, l’approvisionnement, etc.",
-            style: "dash",
-            text: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            style: "dash"
         },
         {
             type: "Point",
@@ -74,10 +63,7 @@ export class Signs {
             src: "Angehoerigensammelstelle.png",
             de: "Angehoerigensammelstelle",
             en: "Angehoerigensammelstelle",
-            fr: "Poste collecteur pour les proches",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Poste collecteur pour les proches"
         },
         {
             type: "Point",
@@ -85,10 +71,7 @@ export class Signs {
             src: "Atomunfall.png",
             de: "Atomunfall",
             en: "Atomunfall",
-            fr: "Accident nucléaire",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Accident nucléaire"
         },
         {
             type: "Point",
@@ -96,10 +79,7 @@ export class Signs {
             src: "Autounfall_2.png",
             de: "Autounfall",
             en: "Autounfall",
-            fr: "Accident de circulation automobile",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Accident de circulation automobile"
         },
         {
             type: "LineString",
@@ -107,10 +87,7 @@ export class Signs {
             src: "Beabsichtigte Erkundung.png",
             de: "Beabsichtigte Erkundung",
             en: "Beabsichtigte Erkundung",
-            fr: "Exploration / Reconnaissances prévues",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Exploration / Reconnaissances prévues"
         },
         {
             type: "LineString",
@@ -120,8 +97,6 @@ export class Signs {
             en: "Beabsichtigter Einsatz",
             fr: "Engagements prévus",
             style: "dash",
-            text: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
         },
         {
             type: "LineString",
@@ -130,9 +105,7 @@ export class Signs {
             de: "Beabsichtigte Verschiebung",
             en: "Beabsichtigte Verschiebung",
             fr: "Mouvements prévus",
-            style: "dash",
-            text: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            style: "dash"
         },
         {
             type: "Point",
@@ -140,21 +113,15 @@ export class Signs {
             src: "Beobachtung.png",
             de: "Beobachtung",
             en: "Beobachtung",
-            fr: "Observation",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Observation"
         },
         {
             type: "Point",
             kat: "red",
             src: "Beschaedigung.png",
             de: "Beschädigung",
-            en: "Beschäigung",
-            fr: "Dégât",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            en: "Beschädigung",
+            fr: "Dégât"
         },
         {
             type: "Point",
@@ -162,10 +129,7 @@ export class Signs {
             src: "Betreuungsstelle.png",
             de: "Betreuungsstelle",
             en: "Betreuungsstelle",
-            fr: "Poste d’assistance",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Poste d’assistance"
         },
         {
             type: "Point",
@@ -173,10 +137,7 @@ export class Signs {
             src: "Betriebsstoffabgabestelle.png",
             de: "Betriebsstoffabgabestelle",
             en: "Betriebsstoffabgabestelle",
-            fr: "Station de carburant",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Station de carburant"
         },
         {
             type: "Point",
@@ -184,10 +145,7 @@ export class Signs {
             src: "Bezirksfuehrungsorgan.png",
             de: "Bezirksfuehrungsorgan",
             en: "Bezirksfuehrungsorgan",
-            fr: "Organe de conduite de district",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Organe de conduite de district"
         },
         {
             type: "Polygon",
@@ -195,10 +153,7 @@ export class Signs {
             src: "Biologisch verseuchtes Gebiet.png",
             de: "Biologisch verseuchtes Gebiet",
             en: "Biologisch verseuchtes Gebiet",
-            fr: "Zone biologiquement contaminée",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Zone biologiquement contaminée"
         },
         {
             type: "Point",
@@ -206,10 +161,7 @@ export class Signs {
             src: "Biounfall.png",
             de: "Biounfall",
             en: "Biounfall",
-            fr: "Accident biologique",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Accident biologique"
         },
         {
             type: "Point",
@@ -217,10 +169,7 @@ export class Signs {
             src: "B Laboratorium.png",
             de: "B Laboratorium",
             en: "B Laboratorium",
-            fr: "Laboratoire B",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Laboratoire B"
         },
         {
             type: "Point",
@@ -228,10 +177,7 @@ export class Signs {
             src: "Bombenanschlag.png",
             de: "Bombenanschlag",
             en: "Bombenanschlag",
-            fr: "Attentat à la bombe",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Attentat à la bombe"
         },
         {
             type: "Point",
@@ -239,10 +185,7 @@ export class Signs {
             src: "Bombendrohung.png",
             de: "Bombendrohung",
             en: "Bombendrohung",
-            fr: "Menace à la bombe",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Menace à la bombe"
         },
         {
             type: "Point",
@@ -250,10 +193,7 @@ export class Signs {
             src: "Brandanschlag.png",
             de: "Brandanschlag",
             en: "Brandanschlag",
-            fr: "Incendie criminel",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Incendie criminel"
         },
         {
             type: "Point",
@@ -261,10 +201,7 @@ export class Signs {
             src: "Brand einzelnes Gebaeude Flamme.png",
             de: "Brand einzelnes Gebaeude Flamme",
             en: "Brand einzelnes Gebaeude Flamme",
-            fr: "Incendie isolé",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Incendie isolé"
         },
         {
             type: "Point",
@@ -272,10 +209,7 @@ export class Signs {
             src: "Brand.png",
             de: "Brand",
             en: "Brand",
-            fr: "Incendie",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Incendie"
         },
         {
             type: "LineString",
@@ -284,10 +218,7 @@ export class Signs {
             de: "Brandübergriff erfolgt",
             en: "Brandübergriff erfolgt",
             fr: "Extension du feu",
-            example: "Branduebergriff erfolgt - Beispiel.png",
-            text: null,
-            style: null,
-            fillOpacity: null, color: null, dataUrl: null
+            example: "Branduebergriff erfolgt - Beispiel.png"
         },
         {
             type: "LineString",
@@ -297,8 +228,7 @@ export class Signs {
             en: "Brandübergriffsgefahr",
             fr: "Danger d'extension",
             example: "Branduebergriffsgefahr - Beispiel.png",
-            style: "dash",
-            text: null, fillOpacity: null, color: null, dataUrl: null
+            style: "dash"
         },
         {
             type: "Polygon",
@@ -307,9 +237,13 @@ export class Signs {
             de: "Brandzone Flächenbrand",
             en: "Brandzone Flächenbrand",
             fr: "Zone en feu",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            hideIcon: true,
+            fillStyle: {
+                name: "hatch",
+                size: 1,
+                spacing: 8
+            },
+            fillOpacity: 1
         },
         {
             type: "Point",
@@ -317,10 +251,7 @@ export class Signs {
             src: "Chemieunfall.png",
             de: "Chemieunfall",
             en: "Chemieunfall",
-            fr: "Accident chimique",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Accident chimique"
         },
         {
             type: "Polygon",
@@ -328,10 +259,7 @@ export class Signs {
             src: "Chemievergiftetes Gebiet gasfoermig - fluechtig.png",
             de: "Chemievergiftetes Gebiet gasförmig - flüchtig",
             en: "Chemievergiftetes Gebiet gasförmig - flüchtig",
-            fr: "Zone chimiquement contaminée gazeux - volatil",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Zone chimiquement contaminée gazeux - volatil"
         },
         {
             type: "Polygon",
@@ -339,10 +267,7 @@ export class Signs {
             src: "Chemievergiftete Zone fluessig - sesshaft.png",
             de: "Chemievergiftete Zone flüssig - sesshaft",
             en: "Chemievergiftete Zone flüssig - sesshaft",
-            fr: "Zone chimiquement contaminée liquide",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Zone chimiquement contaminée liquide"
         },
         {
             type: "Point",
@@ -350,10 +275,7 @@ export class Signs {
             src: "Chemikalien.png",
             de: "Chemikalien",
             en: "Chemikalien",
-            fr: "Chimique",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Chimique"
         },
         {
             type: "Point",
@@ -361,10 +283,7 @@ export class Signs {
             src: "Debriefingstelle.png",
             de: "Debriefingstelle",
             en: "Debriefingstelle",
-            fr: "Poste de débriefing",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Poste de débriefing"
         },
         {
             type: "Point",
@@ -372,10 +291,7 @@ export class Signs {
             src: "Demo gewaltlos.png",
             de: "Demo gewaltlos",
             en: "Demo gewaltlos",
-            fr: "Manifestation",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Manifestation"
         },
         {
             type: "Point",
@@ -383,10 +299,7 @@ export class Signs {
             src: "Demo gewaltsam.png",
             de: "Demo gewaltsam",
             en: "Demo gewaltsam",
-            fr: "Manifestation avec exactions",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Manifestation avec exactions"
         },
         {
             type: "Point",
@@ -394,10 +307,7 @@ export class Signs {
             src: "Drohung.png",
             de: "Drohung",
             en: "Drohung",
-            fr: "Menace",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Menace"
         },
         {
             type: "Point",
@@ -405,10 +315,7 @@ export class Signs {
             src: "Duerre.png",
             de: "Dürre",
             en: "Dürre",
-            fr: "Sécheresse",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Sécheresse"
         },
         {
             type: "LineString",
@@ -416,10 +323,7 @@ export class Signs {
             src: "Durchgefuehrte Erkundung.png",
             de: "Durchgeführte Erkundung",
             en: "Durchgeführte Erkundung",
-            fr: "Exploration / Reconnaissances exécutées",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Exploration / Reconnaissances exécutées"
         },
         {
             type: "LineString",
@@ -427,10 +331,7 @@ export class Signs {
             src: "Durchgefuehrter Einsatz.png",
             de: "Durchgeführter Einsatz",
             en: "Durchgeführter Einsatz",
-            fr: "Engagements exécutés",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Engagements exécutés"
         },
         {
             type: "LineString",
@@ -438,10 +339,7 @@ export class Signs {
             src: "Durchgefuehrte Verschiebung.png",
             de: "Durchgeführte Verschiebung",
             en: "Durchgeführte Verschiebung",
-            fr: "Mouvements exécutés",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Mouvements exécutés"
         },
         {
             type: "Polygon",
@@ -449,10 +347,7 @@ export class Signs {
             src: "Eingesperrte - Abgeschnittene.png",
             de: "Eingesperrte - Abgeschnittene",
             en: "Eingesperrte - Abgeschnittene",
-            fr: "Personnes enfermées ou retranchées",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Personnes enfermées ou retranchées"
         },
         {
             type: "Point",
@@ -460,10 +355,7 @@ export class Signs {
             src: "Einsatzleiter.png",
             de: "Einsatzleiter",
             en: "Einsatzleiter",
-            fr: "Chef d’intervention",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Chef d’intervention"
         },
         {
             type: "Point",
@@ -471,10 +363,7 @@ export class Signs {
             src: "Einsatzleitung.png",
             de: "Einsatzleitung",
             en: "Einsatzleitung",
-            fr: "Direction d’intervention",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Direction d’intervention"
         },
         {
             type: "Point",
@@ -482,10 +371,7 @@ export class Signs {
             src: "Einsatzzentrale.png",
             de: "Einsatzzentrale",
             en: "Einsatzzentrale",
-            fr: "Centrale d‘engagement",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Centrale d‘engagement"
         },
         {
             type: "Point",
@@ -493,10 +379,7 @@ export class Signs {
             src: "Eisenbahnunglueck.png",
             de: "Eisenbahnunglück",
             en: "Eisenbahnunglück",
-            fr: "Accident ferroviaire",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Accident ferroviaire"
         },
         {
             type: "Point",
@@ -504,10 +387,7 @@ export class Signs {
             src: "Elektrizitaet.png",
             de: "Elektrizität",
             en: "Elektrizität",
-            fr: "Electricité",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Electricité"
         },
         {
             type: "Polygon",
@@ -515,10 +395,7 @@ export class Signs {
             src: "Energieausfall.png",
             de: "Energieausfall",
             en: "Energieausfall",
-            fr: "Panne énergétique",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Panne énergétique"
         },
         {
             type: "Point",
@@ -526,10 +403,7 @@ export class Signs {
             src: "Epidemie.png",
             de: "Epidemie",
             en: "Epidemie",
-            fr: "Epidemie",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Epidemie"
         },
         {
             type: "Polygon",
@@ -537,10 +411,7 @@ export class Signs {
             src: "Erdbeben.png",
             de: "Erdbeben",
             en: "Erdbeben",
-            fr: "Tremblement de terre",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Tremblement de terre"
         },
         {
             type: "Polygon",
@@ -548,10 +419,7 @@ export class Signs {
             src: "Erdrutsch.png",
             de: "Erdrutsch",
             en: "Erdrutsch",
-            fr: "Glissement de terrain",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Glissement de terrain"
         },
         {
             type: "Point",
@@ -559,10 +427,7 @@ export class Signs {
             src: "Explosion.png",
             de: "Explosion",
             en: "Explosion",
-            fr: "Explosion",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Explosion"
         },
         {
             type: "Polygon",
@@ -571,9 +436,7 @@ export class Signs {
             de: "Explosionsherd",
             en: "Explosionsherd",
             fr: "Foyer d’explosion",
-            example: "Explosionsherd - Beispiel.png",
-            text: null,
-            style: null, fillOpacity: null, color: null, dataUrl: null
+            example: "Explosionsherd - Beispiel.png"
         },
         {
             type: "Point",
@@ -581,10 +444,7 @@ export class Signs {
             src: "Fahrzeugplatz.png",
             de: "Fahrzeugplatz",
             en: "Fahrzeugplatz",
-            fr: "Place pour véhicules",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Place pour véhicules"
         },
         {
             type: "Point",
@@ -592,10 +452,7 @@ export class Signs {
             src: "Fluechtlinge.png",
             de: "Flüchtlinge",
             en: "Flüchtlinge",
-            fr: "Réfugiés",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Réfugiés"
         },
         {
             type: "Point",
@@ -603,10 +460,7 @@ export class Signs {
             src: "Flugzeugabsturz.png",
             de: "Flugzeugabsturz",
             en: "Flugzeugabsturz",
-            fr: "Catastrophe aérienne",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Catastrophe aérienne"
         },
         {
             type: "Point",
@@ -614,10 +468,7 @@ export class Signs {
             src: "Gas.png",
             de: "Gas",
             en: "Gas",
-            fr: "Gaz",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Gaz"
         },
         {
             type: "Point",
@@ -625,10 +476,7 @@ export class Signs {
             src: "Gebaeudeeinsturz.png",
             de: "Gebäudeeinsturz",
             en: "Gebäudeeinsturz",
-            fr: "Immeuble effondré",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Immeuble effondré"
         },
         {
             type: "Point",
@@ -636,10 +484,7 @@ export class Signs {
             src: "Gefahr durch Loeschen mit Wasser.png",
             de: "Gefahr durch Löschen mit Wasser",
             en: "Gefahr durch Löschen mit Wasser",
-            fr: "Danger en cas d'extinction avec de l'eau",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Danger en cas d'extinction avec de l'eau"
         },
         {
             type: "Point",
@@ -647,10 +492,7 @@ export class Signs {
             src: "Gefahrentafel mit UN-Nummer.png",
             de: "Gefahrentafel mit UN-Nummer",
             en: "Gefahrentafel mit UN-Nummer",
-            fr: "Plaque de danger avec numéro ONU",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Plaque de danger avec numéro ONU"
         },
         {
             type: "Point",
@@ -658,10 +500,7 @@ export class Signs {
             src: "Gefahr fuer Grundwasser.png",
             de: "Gefahr fuer Grundwasser",
             en: "Gefahr fuer Grundwasser",
-            fr: "Danger pour les eaux de surface et/ou nappes souterraines",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Danger pour les eaux de surface et/ou nappes souterraines"
         },
         {
             type: "Point",
@@ -669,10 +508,7 @@ export class Signs {
             src: "Gemeindefuehrungsorgan.png",
             de: "Gemeindeführungsorgan",
             en: "Gemeindeführungsorgan",
-            fr: "Organe de conduite communal",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Organe de conduite communal"
         },
         {
             type: "Point",
@@ -680,10 +516,7 @@ export class Signs {
             src: "Gruppenfuehrer.png",
             de: "Gruppenführer",
             en: "Gruppenführer",
-            fr: "Chef de groupe",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Chef de groupe"
         },
         {
             type: "Point",
@@ -691,10 +524,7 @@ export class Signs {
             src: "Gruppe.png",
             de: "Gruppe",
             en: "Gruppe",
-            fr: "Groupe",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Groupe"
         },
         {
             type: "Point",
@@ -702,10 +532,7 @@ export class Signs {
             src: "Helikopterlandeplatz.png",
             de: "Helikopterlandeplatz",
             en: "Helikopterlandeplatz",
-            fr: "Place d’atterrissage pour hélicoptère",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Place d’atterrissage pour hélicoptère"
         },
         {
             type: "Point",
@@ -713,10 +540,7 @@ export class Signs {
             src: "Informationsstelle.png",
             de: "Informationsstelle",
             en: "Informationsstelle",
-            fr: "Point d’information",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Point d’information"
         },
         {
             type: "Point",
@@ -724,10 +548,7 @@ export class Signs {
             src: "Informationszentrum.png",
             de: "Informationszentrum",
             en: "Informationszentrum",
-            fr: "Centre de presse",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Centre de presse"
         },
         {
             type: "Point",
@@ -735,10 +556,7 @@ export class Signs {
             src: "Infrastrukturschaden.png",
             de: "Infrastrukturschaden",
             en: "Infrastrukturschaden",
-            fr: "Dommages aux infrastructures",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Dommages aux infrastructures"
         },
         {
             type: "Point",
@@ -746,10 +564,7 @@ export class Signs {
             src: "Kadaversammelstelle.png",
             de: "Kadaversammelstelle",
             en: "Kadaversammelstelle",
-            fr: "Poste collecteur de cadavres d’animaux",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Poste collecteur de cadavres d’animaux"
         },
         {
             type: "Point",
@@ -757,10 +572,7 @@ export class Signs {
             src: "Kanalisationsausfall.png",
             de: "Kanalisationsausfall",
             en: "Kanalisationsausfall",
-            fr: "Egoûts défectueux",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Egoûts défectueux"
         },
         {
             type: "Point",
@@ -768,10 +580,7 @@ export class Signs {
             src: "Kantonales Fuehrungsorgan.png",
             de: "Kantonales Führungsorgan",
             en: "Kantonales Führungsorgan",
-            fr: "Organe de conduite cantonal",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Organe de conduite cantonal"
         },
         {
             type: "Point",
@@ -779,10 +588,7 @@ export class Signs {
             src: "KGS Sammelpunkt.png",
             de: "KGS Sammelpunkt",
             en: "KGS Sammelpunkt",
-            fr: "Point de collecte PBC",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Point de collecte PBC"
         },
         {
             type: "Point",
@@ -790,10 +596,7 @@ export class Signs {
             src: "Kommandoposten Front.png",
             de: "Kommandoposten Front",
             en: "Kommandoposten Front",
-            fr: "PC engagement",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "PC engagement"
         },
         {
             type: "Point",
@@ -801,10 +604,7 @@ export class Signs {
             src: "Kommandoposten Rueckwaertiges.png",
             de: "Kommandoposten Rückwärtiges",
             en: "Kommandoposten Rückwärtiges",
-            fr: "PC opérations",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "PC opérations"
         },
         {
             type: "Polygon",
@@ -812,10 +612,7 @@ export class Signs {
             src: "Kommunikationsstoerung.png",
             de: "Kommunikationsstörung",
             en: "Kommunikationsstörung",
-            fr: "Perturbation de la communication",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Perturbation de la communication"
         },
         {
             type: "Point",
@@ -823,10 +620,7 @@ export class Signs {
             src: "Kompanie.png",
             de: "Kompanie",
             en: "Kompanie",
-            fr: "Compagnie",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Compagnie"
         },
         {
             type: "Point",
@@ -834,10 +628,7 @@ export class Signs {
             src: "Kontrollstelle.png",
             de: "Kontrollstelle",
             en: "Kontrollstelle",
-            fr: "Point de contrôle",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Point de contrôle"
         },
         {
             type: "Point",
@@ -845,10 +636,7 @@ export class Signs {
             src: "Kontrollzentrum.png",
             de: "Kontrollzentrum",
             en: "Kontrollzentrum",
-            fr: "Centre de contrôle",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Centre de contrôle"
         },
         {
             type: "Polygon",
@@ -856,10 +644,7 @@ export class Signs {
             src: "Lawine.png",
             de: "Lawine",
             en: "Lawine",
-            fr: "Avalanche",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Avalanche"
         },
         {
             type: "Point",
@@ -867,10 +652,7 @@ export class Signs {
             src: "Massenpanik.png",
             de: "Massenpanik",
             en: "Massenpanik",
-            fr: "Effets de panique",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Effets de panique"
         },
         {
             type: "Point",
@@ -878,10 +660,7 @@ export class Signs {
             src: "Materialdepot.png",
             de: "Materialdepot",
             en: "Materialdepot",
-            fr: "Dépôt de matériel",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Dépôt de matériel"
         },
         {
             type: "Point",
@@ -889,10 +668,7 @@ export class Signs {
             src: "Mobile Einsatzzentrale.png",
             de: "Mobile Einsatzzentrale",
             en: "Mobile Einsatzzentrale",
-            fr: "Centrale d’engagement mobile",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Centrale d’engagement mobile"
         },
         {
             type: "Point",
@@ -900,10 +676,7 @@ export class Signs {
             src: "Obdachlose.png",
             de: "Obdachlose",
             en: "Obdachlose",
-            fr: "Sans-abri",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Sans-abri"
         },
         {
             type: "Polygon",
@@ -911,10 +684,7 @@ export class Signs {
             src: "Oelverschmutzung.png",
             de: "Ölverschmutzung",
             en: "Ölverschmutzung",
-            fr: "Pollution aux hydrocarbures",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Pollution aux hydrocarbures"
         },
         {
             type: "Point",
@@ -922,10 +692,7 @@ export class Signs {
             src: "Offizier - Zugfuehrer.png",
             de: "Offizier - Zugführer",
             en: "Offizier - Zugführer",
-            fr: "Officier",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Officier"
         },
         {
             type: "Point",
@@ -933,10 +700,7 @@ export class Signs {
             src: "Patientensammelstelle.png",
             de: "Patientensammelstelle",
             en: "Patientensammelstelle",
-            fr: "Poste collecteur de patients",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Poste collecteur de patients"
         },
         {
             type: "Point",
@@ -944,10 +708,7 @@ export class Signs {
             src: "Pforte.png",
             de: "Pforte",
             en: "Pforte",
-            fr: "Porte",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Porte"
         },
         {
             type: "Point",
@@ -955,10 +716,7 @@ export class Signs {
             src: "Pluenderung.png",
             de: "Plünderung",
             en: "Plünderung",
-            fr: "Pillage",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Pillage"
         },
         {
             type: "Polygon",
@@ -966,10 +724,7 @@ export class Signs {
             src: "Radioaktives Gebiet.png",
             de: "Radioaktives Gebiet",
             en: "Radioaktives Gebiet",
-            fr: "Zone radioactive",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Zone radioactive"
         },
         {
             type: "Point",
@@ -977,10 +732,7 @@ export class Signs {
             src: "Radioaktive Stoffe.png",
             de: "Radioaktive Stoffe",
             en: "Radioaktive Stoffe",
-            fr: "Substances radioactives",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Substances radioactives"
         },
         {
             type: "Point",
@@ -988,10 +740,7 @@ export class Signs {
             src: "Regionales Fuehrungsorgan.png",
             de: "Regionales Führungsorgan",
             en: "Regionales Führungsorgan",
-            fr: "Organe de conduite régional",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Organe de conduite régional"
         },
         {
             type: "Polygon",
@@ -999,10 +748,7 @@ export class Signs {
             src: "Rutschgebiet.png",
             de: "Rutschgebiet",
             en: "Rutschgebiet",
-            fr: "Glissement de terrain",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Glissement de terrain"
         },
         {
             type: "Point",
@@ -1010,10 +756,7 @@ export class Signs {
             src: "Sabotage.png",
             de: "Sabotage",
             en: "Sabotage",
-            fr: "Sabotage",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Sabotage"
         },
         {
             type: "Point",
@@ -1021,10 +764,7 @@ export class Signs {
             src: "Sammelstelle.png",
             de: "Sammelstelle",
             en: "Sammelstelle",
-            fr: "Poste collecteur",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Poste collecteur"
         },
         {
             type: "Point",
@@ -1032,10 +772,7 @@ export class Signs {
             src: "Sanitaetshilfsstelle.png",
             de: "Sanitätshilfsstelle",
             en: "Sanitätshilfsstelle",
-            fr: "Poste médical avancé",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Poste médical avancé"
         },
         {
             type: "Point",
@@ -1043,10 +780,7 @@ export class Signs {
             src: "Sanitaetsumladestelle.png",
             de: "Sanitätsumladestelle",
             en: "Sanitätsumladestelle",
-            fr: "Poste sanitaire de transfert",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Poste sanitaire de transfert"
         },
         {
             type: "LineString",
@@ -1054,10 +788,7 @@ export class Signs {
             src: "Sperre.png",
             de: "Sperre",
             en: "Sperre",
-            fr: "Barrage",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Barrage"
         },
         {
             type: "Point",
@@ -1065,10 +796,7 @@ export class Signs {
             src: "Standort mobile Fuehrungsstelle.png",
             de: "Standort mobile Führungsstelle",
             en: "Standort mobile Führungsstelle",
-            fr: "Poste de conduite",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Poste de conduite"
         },
         {
             type: "Point",
@@ -1076,10 +804,7 @@ export class Signs {
             src: "Starkniederschlag.png",
             de: "Starkniederschlag",
             en: "Starkniederschlag",
-            fr: "Fortes précipitations",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Fortes précipitations"
         },
         {
             type: "Polygon",
@@ -1087,10 +812,7 @@ export class Signs {
             src: "Stau.png",
             de: "Stau",
             en: "Stau",
-            fr: "Embouteillage",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Embouteillage"
         },
         {
             type: "LineString",
@@ -1099,9 +821,7 @@ export class Signs {
             de: "Strasse erschwert befahrbar - begehbar",
             en: "Strasse erschwert befahrbar - begehbar",
             fr: "Route difficilement praticable pour les vhc, possible pour les piétons",
-            style: "dash",
-            text: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            style: "dash"
         },
         {
             type: "Point",
@@ -1109,10 +829,7 @@ export class Signs {
             src: "Streugutsammelstelle.png",
             de: "Streugutsammelstelle",
             en: "Streugutsammelstelle",
-            fr: "Poste collecteur des objets trouvés",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Poste collecteur des objets trouvés"
         },
         {
             type: "LineString",
@@ -1120,10 +837,7 @@ export class Signs {
             src: "Str nicht befahrbar - schwer begehbar.png",
             de: "Strasse nicht befahrbar - schwer begehbar",
             en: "Strasse nicht befahrbar - schwer begehbar",
-            fr: "Route impraticable pour les vhc et difficile pour les piétons",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Route impraticable pour les vhc et difficile pour les piétons"
         },
         {
             type: "LineString",
@@ -1131,10 +845,7 @@ export class Signs {
             src: "Str unpassierbar - gesperrt.png",
             de: "Strasse unpassierbar - gesperrt",
             en: "Strasse unpassierbar - gesperrt",
-            fr: "Route impraticable / barrée",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Route impraticable / barrée"
         },
         {
             type: "Point",
@@ -1142,10 +853,7 @@ export class Signs {
             src: "Stuetzpunkt.png",
             de: "Stützpunkt",
             en: "Stützpunkt",
-            fr: "Point de sécurité",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Point de sécurité"
         },
         {
             type: "Point",
@@ -1153,10 +861,7 @@ export class Signs {
             src: "Sturm.png",
             de: "Sturm",
             en: "Sturm",
-            fr: "Tempête",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Tempête"
         },
         {
             type: "Point",
@@ -1164,10 +869,7 @@ export class Signs {
             src: "Tankloeschfahrzeug.png",
             de: "Tanklöschfahrzeug",
             en: "Tanklöschfahrzeug",
-            fr: "Tonne-pompe",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Tonne-pompe"
         },
         {
             type: "Polygon",
@@ -1175,10 +877,7 @@ export class Signs {
             src: "Teilzerstoerung.png",
             de: "Teilzerstörung",
             en: "Teilzerstörung",
-            fr: "Destruction partielle",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Destruction partielle"
         },
         {
             type: "Point",
@@ -1186,10 +885,7 @@ export class Signs {
             src: "Terroranschlag.png",
             de: "Terroranschlag",
             en: "Terroranschlag",
-            fr: "Acte de terrorisme",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Acte de terrorisme"
         },
         {
             type: "Point",
@@ -1197,10 +893,7 @@ export class Signs {
             src: "Tierseuche.png",
             de: "Tierseuche",
             en: "Tierseuche",
-            fr: "Epizootie",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Epizootie"
         },
         {
             type: "Polygon",
@@ -1208,10 +901,7 @@ export class Signs {
             src: "Totalzerstoerung.png",
             de: "Totalzerstörung",
             en: "Totalzerstörung",
-            fr: "Destruction totale",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Destruction totale"
         },
         {
             type: "Point",
@@ -1219,10 +909,7 @@ export class Signs {
             src: "Totensammelstelle.png",
             de: "Totensammelstelle",
             en: "Totensammelstelle",
-            fr: "Poste collecteur de cadavres",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Poste collecteur de cadavres"
         },
         {
             type: "Point",
@@ -1230,10 +917,7 @@ export class Signs {
             src: "Tote.png",
             de: "Tote",
             en: "Tote",
-            fr: "Morts",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Morts"
         },
         {
             type: "Point",
@@ -1241,10 +925,7 @@ export class Signs {
             src: "Trinkwasserabgabestelle.png",
             de: "Trinkwasserabgabestelle",
             en: "Trinkwasserabgabestelle",
-            fr: "Poste de distribution d’eau potable",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Poste de distribution d’eau potable"
         },
         {
             type: "Point",
@@ -1252,10 +933,7 @@ export class Signs {
             src: "Trupp.png",
             de: "Trupp",
             en: "Trupp",
-            fr: "Patrouille",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Patrouille"
         },
         {
             type: "Polygon",
@@ -1263,10 +941,7 @@ export class Signs {
             src: "Ueberschwemmtes Gebiet.png",
             de: "Überschwemmtes Gebiet",
             en: "Überschwemmtes Gebiet",
-            fr: "Zone inondée ou submergée",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Zone inondée ou submergée"
         },
         {
             type: "Polygon",
@@ -1274,10 +949,7 @@ export class Signs {
             src: "Ueberschwemmung.png",
             de: "Überschwemmung",
             en: "Überschwemmung",
-            fr: "Inondation",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Inondation"
         },
         {
             type: "Point",
@@ -1285,10 +957,7 @@ export class Signs {
             src: "Ueberwachung.png",
             de: "Überwachung",
             en: "Überwachung",
-            fr: "Surveillance",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Surveillance"
         },
         {
             type: "LineString",
@@ -1296,10 +965,7 @@ export class Signs {
             src: "Umleitung.png",
             de: "Umleitung",
             en: "Umleitung",
-            fr: "Déviations",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Déviations"
         },
         {
             type: "Point",
@@ -1307,10 +973,7 @@ export class Signs {
             src: "Unfall.png",
             de: "Unfall",
             en: "Unfall",
-            fr: "Accident",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Accident"
         },
         {
             type: "Point",
@@ -1318,10 +981,7 @@ export class Signs {
             src: "Verkehrsposten.png",
             de: "Verkehrsposten",
             en: "Verkehrsposten",
-            fr: "Poste de circulation",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Poste de circulation"
         },
         {
             type: "Point",
@@ -1329,10 +989,7 @@ export class Signs {
             src: "Verletztennest.png",
             de: "Verletztennest",
             en: "Verletztennest",
-            fr: "Nid de blessés",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Nid de blessés"
         },
         {
             type: "Point",
@@ -1340,10 +997,7 @@ export class Signs {
             src: "Verletzte.png",
             de: "Verletzte",
             en: "Verletzte",
-            fr: "Patients (blessés)",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Patients (blessés)"
         },
         {
             type: "Point",
@@ -1351,10 +1005,7 @@ export class Signs {
             src: "Vermisste.png",
             de: "Vermisste",
             en: "Vermisste",
-            fr: "Disparus",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Disparus"
         },
         {
             type: "Point",
@@ -1362,10 +1013,7 @@ export class Signs {
             src: "Verpflegungsabgabestelle.png",
             de: "Verpflegungsabgabestelle",
             en: "Verpflegungsabgabestelle",
-            fr: "Poste de distribution de subsistance",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Poste de distribution de subsistance"
         },
         {
             type: "Point",
@@ -1373,10 +1021,7 @@ export class Signs {
             src: "Wasservsgausfall.png",
             de: "Wasserversorgungsausfall",
             en: "Wasserversorgungsausfall",
-            fr: "Interruption de l’approvisionnement en eau",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Interruption de l’approvisionnement en eau"
         },
         {
             type: "Point",
@@ -1384,10 +1029,7 @@ export class Signs {
             src: "Wasserwerfer.png",
             de: "Wasserwerfer",
             en: "Wasserwerfer",
-            fr: "Canon à eau",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Canon à eau"
         },
         {
             type: "Polygon",
@@ -1396,9 +1038,13 @@ export class Signs {
             de: "Zerstörte Zone einer Ortschaft",
             en: "Zerstörte Zone einer Ortschaft",
             fr: "Zone sinistrée, impraticable à l’intérieur d’une localité",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            hideIcon: true,
+            fillStyle: {
+                name: "cross",
+                size: 1,
+                spacing: 8
+            },
+            fillOpacity: 1
         },
         {
             type: "Point",
@@ -1406,10 +1052,7 @@ export class Signs {
             src: "Zug.png",
             de: "Zug",
             en: "Zug",
-            fr: "Section",
-            text: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl: null
+            fr: "Section"
         }
     ]
 }

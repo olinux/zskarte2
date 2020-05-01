@@ -21,6 +21,7 @@
 import Style from 'ol/style/Style';
 import Stroke from 'ol/style/Stroke';
 import Fill from 'ol/style/Fill';
+import FillPattern from 'ol-ext/style/FillPattern';
 import Icon from 'ol/style/Icon';
 import Text from 'ol/style/Text';
 import Point from 'ol/geom/Point';
@@ -142,12 +143,19 @@ export class DrawStyle {
             resolution: resolution,
             lineStyle: signature.style,
             strokeWidth: signature.strokeWidth,
-            zindex: this.getZIndex(feature)
+            zindex: this.getZIndex(feature),
+            fillStyle: signature.fillStyle ? signature.fillStyle.name : null,
+            fillStyleSize: signature.fillStyle ? signature.fillStyle.size : null,
+            fillStyleAngle: signature.fillStyle ? signature.fillStyle.angle : null,
+            fillStyleSpacing: signature.fillStyle ? signature.fillStyle.spacing : null
         })).toString();
     }
 
 
     private static getIconStyle(feature, resolution, signature, selected, scale): Style[] {
+        if(signature.hideIcon){
+            return null;
+        }
         const isCustomSignature = signature.dataUrl !== undefined && signature.dataUrl !== null;
         let symbol = null;
         if (isCustomSignature) {
@@ -222,20 +230,38 @@ export class DrawStyle {
         return feature.get('zindex') ? feature.get('zindex') : 0
     }
 
+    private static getFill(color, scale, fillStyle){
+        if(fillStyle && fillStyle.name && fillStyle.name != "filled"){
+            return new FillPattern({
+                pattern: fillStyle.name,
+                ratio: 1,
+                color: color,
+                offset:0,
+                scale: scale*10,
+                size: fillStyle.size,
+                spacing: fillStyle.spacing,
+                angle: fillStyle.angle
+            })
+        }
+        else{
+            return new Fill({
+                color: color
+            })
+        }
+    }
+
     private static getVectorStyle(feature, resolution, signature, selected, scale): Style {
         const vectorCacheHash = DrawStyle.calculateCacheHashForVector(signature, feature, resolution, selected);
         let vectorStyle = this.vectorStyleCache[vectorCacheHash];
         if (!vectorStyle) {
             return this.vectorStyleCache[vectorCacheHash] = new Style({
                 stroke: new Stroke({
-                    color: DrawStyle.colorFunction(signature.kat, signature.color, selected ? 'highlight' : 'default', 1.0),
-                    width: scale * 20 * signature.strokeWidth,
+                    color: DrawStyle.colorFunction(signature.kat, signature.color, 'default', 1.0),
+                    width: selected ? scale * 20 * signature.strokeWidth * 1.2 : scale * 20 * signature.strokeWidth,
                     lineDash: DrawStyle.getDash(signature.style, resolution),
                     lineDashOffset: DrawStyle.getDashOffset(signature.style, resolution)
                 }),
-                fill: new Fill({
-                    color: DrawStyle.colorFunction(signature.kat, signature.color, selected ? 'highlight' : 'default', selected ? Math.min(1, signature.fillOpacity + 0.1) : Math.min(1, signature.fillOpacity))
-                }),
+                fill: this.getFill(DrawStyle.colorFunction(signature.kat, signature.color,  'default', signature.fillOpacity), scale, signature.fillStyle),
                 zIndex: this.getZIndex(feature)
             });
         }
@@ -303,7 +329,7 @@ export class DrawStyle {
         let textStyles = [new Style({
             stroke: new Stroke({
                 color: signature.color,
-                width: defaultScale * 20,
+                width: defaultScale * 20 * feature.strokeWidth,
                 lineDash: DrawStyle.getDash(signature.style, resolution),
                 lineDashOffset: DrawStyle.getDashOffset(signature.style, resolution)
             }),

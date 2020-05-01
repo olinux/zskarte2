@@ -20,6 +20,15 @@
 
 import {CustomImage} from "./customImage";
 
+
+export interface FillStyle {
+    name: string;
+    size?: number;
+    angle?: number;
+    spacing?: number;
+}
+
+
 export interface Sign {
     type: string;
     kat: string;
@@ -27,32 +36,48 @@ export interface Sign {
     de?: string;
     fr?: string;
     en?: string;
-    text?:string;
-    label?:string;
+    text?: string;
+    label?: string;
     fontSize?: number;
-    style?:string;
-    example?:string;
-    fillOpacity?:number;
-    color?:string;
-    dataUrl?:CustomImage;
-    strokeWidth?:number;
+    style?: string;
+    fillStyle?: FillStyle;
+    example?: string;
+    fillOpacity?: number;
+    color?: string;
+    dataUrl?: CustomImage;
+    strokeWidth?: number;
+    hideIcon?: boolean;
     iconOffset?: number[];
 }
 
-export function defineDefaultValuesForSignature(signature:Sign){
-    if(!signature.style){
-        signature.style="solid";
+export function defineDefaultValuesForSignature(signature: Sign) {
+    if (!signature.style) {
+        signature.style = "solid";
     }
-    if(!signature.color){
+    if (!signature.color) {
         signature.color = "#535353";
     }
-    if(!signature.fillOpacity){
+    if (!signature.fillOpacity) {
         signature.fillOpacity = 0.2;
     }
-    if(!signature.strokeWidth){
+    if (!signature.strokeWidth) {
         signature.strokeWidth = 1;
     }
-    if(!signature.fontSize){
+    if (!signature.fontSize) {
         signature.fontSize = 1;
+    }
+    if (!signature.fillStyle) {
+        signature.fillStyle = {
+            name: "filled"
+        }
+    }
+    if (!signature.fillStyle.angle) {
+        signature.fillStyle.angle = 45;
+    }
+    if (!signature.fillStyle.size) {
+        signature.fillStyle.size = 4;
+    }
+    if (!signature.fillStyle.spacing) {
+        signature.fillStyle.spacing = 10;
     }
 }

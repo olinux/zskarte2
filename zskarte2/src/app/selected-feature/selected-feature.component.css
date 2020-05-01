@@ -1,9 +1,13 @@
-.selection{
+mat-card.selection{
     position:absolute;
     bottom:0;
     left:0;
-    background-color: white;
+    background-color: #f1f1f1;
+    margin-bottom: 0;
+}
 
+mat-card, mat-expansion-panel {
+    margin-bottom: 1em;
 }
 
 mat-form-field{
@@ -47,4 +51,25 @@ mat-slider{
 
 .menu{
     transform: scale(0.6);
+}
+
+#functionsPanel .mat-expansion-panel-header {
+    background-color: #3f51b5;
+}
+
+#functionsPanel .mat-expansion-panel-header * {
+    color: white;
+}
+
+
+
+#functionsPanel button{
+    display: block;
+    width: 100%;
+    text-align: left;
+}
+
+#functionsPanel button i{
+    margin-right: 1em;
+
 }

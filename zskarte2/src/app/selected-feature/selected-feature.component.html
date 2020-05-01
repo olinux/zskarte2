@@ -1,104 +1,174 @@
 <mat-card class="selection" *ngIf="selectedSignature!=null">
     <mat-card-content *ngIf="!mergeMode">
-        <div class="menu-wrapper">
-            <button mat-mini-fab class="menu" [matMenuTriggerFor]="signatureMenu">
-                <i class="material-icons">menu</i>
-            </button>
-        </div>
-        <div class="imgwrapper" *ngIf="selectedSignature.src!=null"><img [src]="getImageUrl(selectedSignature.src)"/>
-        </div>
-        <div class="imgcustomwrapper" *ngIf="selectedSignature.dataUrl!=null"><img [src]="selectedSignature.dataUrl"/>
-        </div>
 
-        <div *ngIf="selectedSignature[i18n.locale]!=null" class="label">{{selectedSignature[i18n.locale]}}</div>
+
         <div>
-            <mat-form-field *ngIf="!selectedSignature.text">
-                <mat-label>{{i18n.get("name")}}</mat-label>
-                <input type="text" matInput [(ngModel)]="selectedSignature.label"/>
-            </mat-form-field>
-            <mat-form-field *ngIf="selectedSignature.text">
-                <mat-label>{{i18n.get("name")}}</mat-label>
-                <textarea matInput [(ngModel)]="selectedSignature.text" (ngModelChange)="redraw()"></textarea>
-            </mat-form-field>
-            <mat-form-field *ngIf="selectedSignature.kat!==null">
-                <mat-label>{{i18n.get("rotate")}}</mat-label>
-                <mat-slider
-                        [max]="180"
-                        [min]="-180"
-                        [step]="1"
-                        [ngModel]="rotationPercent"
-                        (ngModelChange)="setRotation($event)">
-                </mat-slider>
-                <input type="text" matInput hidden value="-"/>
-            </mat-form-field>
-            <mat-form-field *ngIf="selectedSignature.type==='Polygon' || selectedSignature.type==='Circle'">
-                <mat-label>{{i18n.get("opacity")}}:</mat-label>
-                <mat-slider #ctrl="ngModel"
-                            [max]="1"
-                            [min]="0"
-                            [step]="0.05"
-                            [(ngModel)]="selectedSignature.fillOpacity" (ngModelChange)="redraw()">
-                </mat-slider>
-                <input type="text" matInput hidden value="-"/>
-            </mat-form-field>
+            <mat-card *ngIf="selectedSignature.src || selectedSignature.dataUrl || selectedSignature[i18n.locale]">
+                <mat-card-content>
+                    <div class="imgwrapper" *ngIf="selectedSignature.src"><img
+                            [src]="getImageUrl(selectedSignature.src)"/></div>
+                    <div class="imgcustomwrapper" *ngIf="selectedSignature.dataUrl"><img
+                            [src]="selectedSignature.dataUrl"/></div>
+                    <div *ngIf="selectedSignature[i18n.locale]"
+                         class="label">{{selectedSignature[i18n.locale]}}</div>
+                </mat-card-content>
+            </mat-card>
+            <mat-card>
+                <mat-card-content>
+                    <mat-form-field>
+                        <mat-label>{{i18n.get('name')}}</mat-label>
+                        <input type="text" matInput [(ngModel)]="selectedSignature.label"
+                               *ngIf="!selectedSignature.text"/>
+                        <textarea matInput [(ngModel)]="selectedSignature.text" (ngModelChange)="redraw()"
+                                  *ngIf="selectedSignature.text"></textarea>
+                    </mat-form-field>
+                    <mat-panel-description>
+                        <mat-form-field *ngIf="selectedSignature.kat===null">
+                            <mat-label>{{i18n.get("color")}}:</mat-label>
+                            <input matInput type="color" name="color" [(ngModel)]="selectedSignature.color"
+                                   (ngModelChange)="redraw()"/>
+                        </mat-form-field>
+                    </mat-panel-description>
+                </mat-card-content>
+            </mat-card>
+            <mat-expansion-panel *ngIf="selectedSignature.type!=='Point'">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>Linie</mat-panel-title>
+                </mat-expansion-panel-header>
 
-            <mat-form-field *ngIf="selectedSignature.type==='Polygon' || selectedSignature.type==='Circle'">
-                <mat-label>{{i18n.get("lineWidth")}}</mat-label>
-                <mat-slider [max]="4"
-                            [min]="0.1"
-                            [step]="0.1"
-                            [(ngModel)]="selectedSignature.strokeWidth" (ngModelChange)="redraw()">
-                </mat-slider>
-                <input type="text" matInput hidden value="-"/>
-            </mat-form-field>
+                <mat-form-field>
+                    <mat-label>{{i18n.get("type")}}:</mat-label>
+                    <select #ctrl="ngModel" matNativeControl [(ngModel)]="selectedSignature.style"
+                            (ngModelChange)="redraw()">
+                        <option value="solid">{{i18n.get("solidLine")}}</option>
+                        <option value="dash">{{i18n.get("dashedLine")}}</option>
+                    </select>
+                </mat-form-field>
 
-            <mat-form-field *ngIf="selectedSignature.text">
-                <mat-label>{{i18n.get("fontSize")}}</mat-label>
-                <mat-slider [max]="4"
-                            [min]="0.1"
-                            [step]="0.1"
-                            [(ngModel)]="selectedSignature.fontSize" (ngModelChange)="redraw()">
-                </mat-slider>
-                <input type="text" matInput hidden value="-"/>
-            </mat-form-field>
-            <mat-form-field *ngIf="selectedSignature.type!=='Point'">
-                <mat-label>{{i18n.get("line")}}:</mat-label>
-                <select #ctrl="ngModel" matNativeControl [(ngModel)]="selectedSignature.style"
-                        (ngModelChange)="redraw()">
-                    <option value="solid">{{i18n.get("solidLine")}}</option>
-                    <option value="dash">{{i18n.get("dashedLine")}}</option>
-                </select>
-            </mat-form-field>
+                <mat-form-field>
+                    <mat-label>{{i18n.get("width")}}</mat-label>
+                    <mat-slider [max]="4"
+                                [min]="0.1"
+                                [step]="0.1"
+                                [(ngModel)]="selectedSignature.strokeWidth" (ngModelChange)="redraw()">
+                    </mat-slider>
+                    <input type="text" matInput hidden value="-"/>
+                </mat-form-field>
+            </mat-expansion-panel>
 
-            <mat-form-field *ngIf="selectedSignature.kat===null">
-                <mat-label>{{i18n.get("color")}}:</mat-label>
-                <input matInput type="color" name="color" [(ngModel)]="selectedSignature.color"
-                       (ngModelChange)="redraw()"/>
-            </mat-form-field>
+            <mat-expansion-panel *ngIf="selectedSignature.type==='Polygon'">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>{{i18n.get("fillPattern")}}</mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-form-field>
+                    <mat-label>{{i18n.get("type")}}:</mat-label>
+                    <select #ctrl="ngModel" matNativeControl [(ngModel)]="selectedSignature.fillStyle.name"
+                            (ngModelChange)="redraw()">
+                        <option value="filled">{{i18n.get("filled")}}</option>
+                        <option value="hatch">{{i18n.get("hatched")}}</option>
+                        <option value="cross">{{i18n.get("crossed")}}</option>
+                    </select>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>{{i18n.get("opacity")}}:</mat-label>
+                    <mat-slider #ctrl="ngModel"
+                                [max]="1"
+                                [min]="0.01"
+                                [step]="0.05"
+                                [(ngModel)]="selectedSignature.fillOpacity" (ngModelChange)="redraw()">
+                    </mat-slider>
+                    <input type="text" matInput hidden value="-"/>
+                </mat-form-field>
+                <mat-form-field
+                        *ngIf="selectedSignature.fillStyle && selectedSignature.fillStyle.name && selectedSignature.fillStyle.name !== 'filled'">
+                    <mat-label>{{i18n.get("width")}}</mat-label>
+                    <mat-slider [max]="10"
+                                [min]="1"
+                                [step]="0.1"
+                                [(ngModel)]="selectedSignature.fillStyle.size" (ngModelChange)="redraw()">
+                    </mat-slider>
+                    <input type="text" matInput hidden value="-"/>
+                </mat-form-field>
 
+                <mat-form-field
+                        *ngIf="selectedSignature.fillStyle && selectedSignature.fillStyle.name && selectedSignature.fillStyle.name !== 'filled'">
+                    <mat-label>{{i18n.get("spacing")}}</mat-label>
+                    <mat-slider [max]="20"
+                                [min]="5"
+                                [step]="0.1"
+                                [(ngModel)]="selectedSignature.fillStyle.spacing" (ngModelChange)="redraw()">
+                    </mat-slider>
+                    <input type="text" matInput hidden value="-"/>
+                </mat-form-field>
 
+                <mat-form-field
+                        *ngIf="selectedSignature.fillStyle && selectedSignature.fillStyle.name && selectedSignature.fillStyle.name === 'hatch'">
+                    <mat-label>{{i18n.get("angle")}}</mat-label>
+                    <mat-slider [max]="180"
+                                [min]="0.1"
+                                [step]="0.1"
+                                [(ngModel)]="selectedSignature.fillStyle.angle" (ngModelChange)="redraw()">
+                    </mat-slider>
+                    <input type="text" matInput hidden value="-"/>
+                </mat-form-field>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel *ngIf="selectedSignature.kat!==null && !selectedSignature.hideIcon">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>{{i18n.get('symbol')}}</mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-form-field>
+                    <mat-label>{{i18n.get("rotate")}}</mat-label>
+                    <mat-slider
+                            [max]="180"
+                            [min]="-180"
+                            [step]="1"
+                            [ngModel]="rotationPercent"
+                            (ngModelChange)="setRotation($event)">
+                    </mat-slider>
+                    <input type="text" matInput hidden value="-"/>
+                </mat-form-field>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel *ngIf="selectedSignature.text">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>{{i18n.get('font')}}</mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-form-field>
+                    <mat-label>{{i18n.get("fontSize")}}</mat-label>
+                    <mat-slider [max]="4"
+                                [min]="0.1"
+                                [step]="0.1"
+                                [(ngModel)]="selectedSignature.fontSize" (ngModelChange)="redraw()">
+                    </mat-slider>
+                    <input type="text" matInput hidden value="-"/>
+                </mat-form-field>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel id="functionsPanel">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>{{i18n.get('functions')}}</mat-panel-title>
+                </mat-expansion-panel-header>
+                <button mat-flat-button (click)="bringToFront()">
+                    <i
+                            class="material-icons">arrow_upward</i><span>{{i18n.get("moveToTop")}}</span></button>
+                <button mat-flat-button (click)="sendToBack()">
+                    <i
+                            class="material-icons">arrow_downward</i><span>{{i18n.get("moveToBottom")}}</span></button>
+                <button mat-flat-button (click)="delete()"><i
+                        class="material-icons">delete</i><span>{{i18n.get("delete")}}</span></button>
+                <button mat-flat-button (click)="split()"
+                        *ngIf="(selectedSignature.type==='Polygon' || selectedSignature.type==='MultiPolygon') && canSplit">
+                    <i
+                            class="material-icons">call_split</i><span>{{i18n.get("ungroup")}}</span></button>
+                <button mat-flat-button (click)="merge(true)"
+                        *ngIf="selectedSignature.type==='Polygon' || selectedSignature.type==='MultiPolygon'"><i
+                        class="material-icons">call_merge</i><span>{{i18n.get("group")}}</span></button>
+                <button mat-flat-button (click)="drawHole()" [disabled]="drawHoleMode"
+                        *ngIf="selectedSignature.type==='Polygon' || selectedSignature.type==='MultiPolygon'"><i
+                        class="material-icons">vignette</i><span>{{i18n.get("drawHole")}}</span></button>
+            </mat-expansion-panel>
         </div>
-        <mat-menu #signatureMenu="matMenu">
-
-            <button mat-menu-item (click)="bringToFront()">
-                <i
-                        class="material-icons">arrow_upward</i><span>{{i18n.get("moveToTop")}}</span></button>
-            <button mat-menu-item (click)="sendToBack()">
-                <i
-                        class="material-icons">arrow_downward</i><span>{{i18n.get("moveToBottom")}}</span></button>
-            <button mat-menu-item (click)="split()"
-                    *ngIf="(selectedSignature.type==='Polygon' || selectedSignature.type==='MultiPolygon') && canSplit">
-                <i
-                        class="material-icons">call_split</i><span>{{i18n.get("ungroup")}}</span></button>
-            <button mat-menu-item (click)="merge(true)"
-                    *ngIf="selectedSignature.type==='Polygon' || selectedSignature.type==='MultiPolygon'"><i
-                    class="material-icons">call_merge</i><span> {{i18n.get("group")}}</span></button>
-            <button mat-menu-item (click)="drawHole()" [disabled]="drawHoleMode"
-                    *ngIf="selectedSignature.type==='Polygon' || selectedSignature.type==='MultiPolygon'"><i
-                    class="material-icons">vignette</i><span> {{i18n.get("drawHole")}}</span></button>
-            <button mat-menu-item color="primary" (click)="delete()"><i
-                    class="material-icons">delete</i><span>{{i18n.get("delete")}}</span></button>
-        </mat-menu>
     </mat-card-content>
     <mat-card-content *ngIf="mergeMode">
         <div>Zu gruppierende Fläche auswählen</div>

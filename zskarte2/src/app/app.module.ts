@@ -62,6 +62,7 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import { MapLegendDisplayComponent } from './map-legend-display/map-legend-display.component';
 import { TagStateComponent } from './tag-state/tag-state.component';
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatExpansionModule} from "@angular/material/expansion";
 
 const dbConfig: DBConfig = {
     name: 'ZSKarte2-DB1.0',
@@ -124,7 +125,8 @@ const dbConfig: DBConfig = {
         NgxIndexedDBModule.forRoot(dbConfig),
         NgxMdModule.forRoot(),
         MatProgressSpinnerModule,
-        MatCheckboxModule
+        MatCheckboxModule,
+        MatExpansionModule
     ],
     entryComponents: [
         DrawingDialogComponent,
