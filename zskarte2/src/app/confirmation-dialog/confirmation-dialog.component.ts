@@ -1,7 +1,5 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {DrawingData} from "../drawing-dialog/drawing-dialog.component";
-import {SharedStateService} from "../shared-state.service";
 import {I18NService} from "../i18n.service";
 
 @Component({

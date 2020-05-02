@@ -2,7 +2,6 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MapStoreService} from "../map-store.service";
 import {SharedStateService} from "../shared-state.service";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {DrawingData, DrawingDialogComponent} from "../drawing-dialog/drawing-dialog.component";
 import {I18NService} from "../i18n.service";
 import {DomSanitizer} from "@angular/platform-browser";
 import GeoJSON from 'ol/format/GeoJSON';
