@@ -28,10 +28,6 @@ import {DrawStyle} from "../drawlayer/draw-style";
 import {Signs} from "../signs/signs";
 import {I18NService} from "../i18n.service";
 
-export interface DrawingData {
-    name: string;
-}
-
 @Component({
     selector: 'app-drawing-dialog',
     templateUrl: './drawing-dialog.component.html',
@@ -46,8 +42,7 @@ export class DrawingDialogComponent implements OnInit {
         this.dataSource.filter = filterValue.trim().toLowerCase();
     }
 
-    constructor(public dialogRef: MatDialogRef<DrawingDialogComponent>,
-                @Inject(MAT_DIALOG_DATA) public data: DrawingData, private sharedState: SharedStateService, public i18n:I18NService) {
+    constructor(public dialogRef: MatDialogRef<DrawingDialogComponent>, public i18n:I18NService) {
     }
 
     getImageUrl(file: string) {
@@ -57,74 +52,8 @@ export class DrawingDialogComponent implements OnInit {
     ngOnInit(): void {
     }
 
-    onNoClick(): void {
-        this.dialogRef.close();
-    }
-
     select(sign: Sign) {
-        this.sharedState.selectSign(sign);
-        this.dialogRef.close();
+        this.dialogRef.close(sign);
     }
-    //
-    // freeForm() {
-    //     if(this.freeFormSign.dataUrl!==null){
-    //         let img = document.getElementById("imagePreview") as HTMLImageElement;
-    //         this.freeFormSign.dataUrl.nativeHeight=img.naturalHeight;
-    //         this.freeFormSign.dataUrl.nativeWidth=img.naturalWidth;
-    //         this.freeFormSign.dataUrl.md5 = new Md5().appendStr(this.freeFormSign.dataUrl.src).end().toString();
-    //         this.ngf.setItem(this.freeFormSign.dataUrl.md5, this.freeFormSign.dataUrl).then(x => {
-    //             this.sharedState.selectSign(this.freeFormSign);
-    //             this.dialogRef.close();
-    //         });
-    //     }
-    //     else{
-    //         this.sharedState.selectSign(this.freeFormSign);
-    //         this.dialogRef.close();
-    //     }
-    //
-    //
-    // }
-    //
-    // drop(ev) {
-    //     ev.preventDefault();
-    //     let file = null;
-    //     if (ev.dataTransfer.items) {
-    //         // Use DataTransferItemList interface to access the file(s)
-    //         for (let i = 0; i < ev.dataTransfer.items.length; i++) {
-    //             // If dropped items aren't files, reject them
-    //             if (ev.dataTransfer.items[i].kind === 'file') {
-    //                 file = ev.dataTransfer.items[i].getAsFile();
-    //                 break;
-    //             }
-    //         }
-    //     } else {
-    //         // Use DataTransfer interface to access the file(s)
-    //         for (let i = 0; i < ev.dataTransfer.files.length; i++) {
-    //             file = ev.dataTransfer.files[i];
-    //             break;
-    //         }
-    //     }
-    //     if (file != null) {
-    //         if(file.size>1000000){
-    //             window.alert("Diese Datei ist leider zu gross - bitte reduziere das Bild (<1MB)");
-    //         }
-    //         else {
-    //             let reader = new FileReader();
-    //             reader.onload = e => {
-    //                 this.freeFormSign.dataUrl = {nativeHeight: null, nativeWidth: null, md5:null, src:  e.target.result};
-    //             };
-    //             reader.readAsDataURL(file);
-    //         }
-    //     }
-    // }
-    //
-    // setDataUrl(dataUrl){
-    //     this.freeFormSign.dataUrl = dataUrl;
-    // }
-    //
-    // allowDrop(ev) {
-    //     ev.preventDefault();
-    // }
-
 
 }

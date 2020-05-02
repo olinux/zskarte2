@@ -19,13 +19,10 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import {DrawingData, DrawingDialogComponent} from '../drawing-dialog/drawing-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import {DrawingDialogComponent} from '../drawing-dialog/drawing-dialog.component';
 import {SharedStateService} from "../shared-state.service";
-import {HttpClient} from "@angular/common/http";
-import {Sign} from "../entity/sign";
 import {TextDialogComponent} from "../text-dialog/text-dialog.component";
-import {Md5} from "ts-md5";
 import {I18NService} from "../i18n.service";
 
 export interface Filter {
@@ -43,8 +40,6 @@ export interface Filter {
 export class DrawingtoolsComponent implements OnInit {
 
     text: string = null;
-    draw: DrawingData = null;
-    sourceUrl = './assets/img/signs/signaturen.json';
 
     constructor(public drawDialog: MatDialog, public textDialog: MatDialog, private sharedState: SharedStateService, public i18n:I18NService) {
     }
@@ -53,13 +48,10 @@ export class DrawingtoolsComponent implements OnInit {
     }
 
     openDrawDialog(): void {
-        const dialogRef = this.drawDialog.open(DrawingDialogComponent, {
-            maxWidth: '80vw',
-            maxHeight: '70vh'
-        });
+        const dialogRef = this.drawDialog.open(DrawingDialogComponent);
 
         dialogRef.afterClosed().subscribe(result => {
-            this.draw = result;
+            this.sharedState.selectSign(result);
         });
     }
 
@@ -77,7 +69,6 @@ export class DrawingtoolsComponent implements OnInit {
     polygon(): void {
             this.sharedState.selectSign({
                 type: "Polygon",
-                kat: null,
                 src: null
             });
     }
@@ -85,7 +76,6 @@ export class DrawingtoolsComponent implements OnInit {
     line(): void {
         this.sharedState.selectSign({
             type: "LineString",
-            kat: null,
             src: null
         });
     }
@@ -94,7 +84,6 @@ export class DrawingtoolsComponent implements OnInit {
     circle(): void {
         this.sharedState.selectSign({
             type: "Circle",
-            kat: null,
             src: null
         });
     }

@@ -49,11 +49,7 @@ export class TextDialogComponent implements OnInit {
         const textSign:Sign = {
             type: 'LineString',
             text: this.text,
-            kat: null,
-            de: null,
-            src: null,
-            style: null,
-            example: null, fillOpacity: null, color: null, dataUrl:null
+            src: null
         };
         this.sharedState.selectSign(textSign);
         this.dialogRef.close(this.text);

@@ -454,7 +454,38 @@ export class I18NService {
             de: "Funktionen",
             en: "Functions",
             fr: "Fonctions"
+        },
+        hideSymbol: {
+            de: "Symbol auf Karte verstecken",
+            en: "Hide symbol on map",
+            fr: "Cacher le symbole sur la carte"
+        },
+        replaceSymbol:{
+            de: "Ersetzen",
+            en: "Replace",
+            fr: "Remplacer"
+        },
+        selectSymbol:{
+            de: "Auswählen",
+            en: "Select",
+            fr: "Sélectionner"
+        },
+        removeSymbol:{
+            de: "Entfernen",
+            en: "Remove",
+            fr: "Supprimer"
+        },
+        symbolOffset:{
+            de: "Versatz",
+            en: "Offset",
+            fr: "Décalage"
+        },
+        symbolAlignRight:{
+            de: "Rechts ausrichten",
+            en: "Align right",
+            fr: "Aligner à droite"
         }
+
     }
     ;
 }

@@ -18,42 +18,48 @@
  *
  */
 
-.imgwrapper img{
+.signSelect {
+    max-width: 80vw;
+    max-height: 60vh;
+}
+
+.imgwrapper img {
     max-height: 1.8em;
     max-width: 1.8em;
 }
 
-.imgwrapper{
-    display:inline-block;
+.imgwrapper {
+    display: inline-block;
     width: 2em;
-    height:3em;
-    text-align:center;
+    height: 3em;
+    text-align: center;
 }
 
-.signSelect{
+.signSelect {
+
     min-width: 150px;
     max-width: 500px;
     width: 100%;
 }
 
-.selectionTable{
+.selectionTable {
     width: 100%;
 }
 
-.symbolCol{
+.symbolCol {
     width: 7em;
 }
 
 .selectRow {
-    cursor:pointer;
+    cursor: pointer;
 }
 
-.selectRow:hover{
+.selectRow:hover {
     background-color: lightgray;
 }
 
-.imgdrop{
+.imgdrop {
     height: 10em;
     border: 1px dashed black;
-    text-align:center;
+    text-align: center;
 }

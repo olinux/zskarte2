@@ -31,7 +31,6 @@ export interface FillStyle {
 
 export interface Sign {
     type: string;
-    kat: string;
     src: string;
     de?: string;
     fr?: string;
@@ -47,7 +46,52 @@ export interface Sign {
     dataUrl?: CustomImage;
     strokeWidth?: number;
     hideIcon?: boolean;
-    iconOffset?: number[];
+    iconOffset?: number;
+    flipIcon?: boolean;
+    topCoord?:number[];
+    kat?: string; //deprecated - kept for compatibility reasons (is translated directly to color)
+}
+
+
+export function isMoreOptimalIconCoordinate(coordinateToTest, currentCoordinate){
+    if(currentCoordinate===undefined || currentCoordinate===null){
+        return true;
+    }
+    else if(coordinateToTest[1]>currentCoordinate[1]){
+        return true;
+    }
+    else if(coordinateToTest[1]===currentCoordinate[1]){
+        return coordinateToTest[0]<currentCoordinate[0];
+    }
+    return false;
+}
+
+
+export function getMostTopCoordinate(feature){
+    let symbolAnchorCoordinate = null;
+    switch (feature.getGeometry().getType()) {
+        case "Polygon":
+        case "MultiPolygon":
+            for(let coordinateGroup of feature.getGeometry().getCoordinates()){
+                for(let coordinate of coordinateGroup   ){
+                    if(isMoreOptimalIconCoordinate(coordinate, symbolAnchorCoordinate)){
+                        symbolAnchorCoordinate = coordinate;
+                    }
+                }
+            }
+            break;
+        case "LineString":
+            for(let coordinate of feature.getGeometry().getCoordinates()){
+                if(this.isMoreOptimalIconCoordinate(coordinate, symbolAnchorCoordinate)){
+                    symbolAnchorCoordinate = coordinate;
+                }
+            }
+            break;
+        case "Point":
+            symbolAnchorCoordinate = feature.getGeometry().getCoordinates();
+            break;
+    }
+    return symbolAnchorCoordinate;
 }
 
 export function defineDefaultValuesForSignature(signature: Sign) {
@@ -55,7 +99,25 @@ export function defineDefaultValuesForSignature(signature: Sign) {
         signature.style = "solid";
     }
     if (!signature.color) {
-        signature.color = "#535353";
+        if(signature.kat) {
+            switch (signature.kat) {
+                case "blue":
+                    signature.color = '#0000FF';
+                    break;
+                case "red":
+                    signature.color = '#FF0000';
+                    break;
+                case "orange":
+                    signature.color = '#FF9100'
+                    break;
+                case "other":
+                    signature.color = '#948B68'
+                    break;
+            }
+        }
+        else {
+            signature.color = "#535353";
+        }
     }
     if (!signature.fillOpacity) {
         signature.fillOpacity = 0.2;
@@ -79,5 +141,8 @@ export function defineDefaultValuesForSignature(signature: Sign) {
     }
     if (!signature.fillStyle.spacing) {
         signature.fillStyle.spacing = 10;
+    }
+    if(!signature.iconOffset){
+        signature.iconOffset = 0.1;
     }
 }

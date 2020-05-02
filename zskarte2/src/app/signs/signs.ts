@@ -26,7 +26,7 @@ export class Signs {
     public static SIGNS: Sign[] = [
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "ABC Dekontaminationsstelle.png",
             de: "ABC Dekontaminationsstelle",
             en: "ABC Dekontaminationsstelle",
@@ -34,7 +34,7 @@ export class Signs {
         },
         {
             type: "Polygon",
-            kat: "blue",
+            color: "#0000FF",
             src: "Absperrung Einsatzraum.png",
             de: "Absperrung Einsatzraum",
             en: "Absperrung Einsatzraum",
@@ -42,7 +42,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Absperrung Verkehrswege.png",
             de: "Absperrung Verkehrswege",
             en: "Absperrung Verkehrswege",
@@ -50,7 +50,7 @@ export class Signs {
         },
         {
             type: "LineString",
-            kat: "blue",
+            color: "#0000FF",
             src: "Achse fuer Ei, Rttg, Vsg.png",
             de: "Achse fuer Ei, Rttg, Vsg",
             en: "Achse fuer Ei, Rttg, Vsg",
@@ -59,7 +59,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Angehoerigensammelstelle.png",
             de: "Angehoerigensammelstelle",
             en: "Angehoerigensammelstelle",
@@ -67,7 +67,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "red",
+            color: "#FF0000",
             src: "Atomunfall.png",
             de: "Atomunfall",
             en: "Atomunfall",
@@ -75,7 +75,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "red",
+            color: "#FF0000",
             src: "Autounfall_2.png",
             de: "Autounfall",
             en: "Autounfall",
@@ -83,7 +83,7 @@ export class Signs {
         },
         {
             type: "LineString",
-            kat: "blue",
+            color: "#0000FF",
             src: "Beabsichtigte Erkundung.png",
             de: "Beabsichtigte Erkundung",
             en: "Beabsichtigte Erkundung",
@@ -91,7 +91,7 @@ export class Signs {
         },
         {
             type: "LineString",
-            kat: "blue",
+            color: "#0000FF",
             src: "Beabsichtigter Einsatz.png",
             de: "Beabsichtigter Einsatz",
             en: "Beabsichtigter Einsatz",
@@ -100,7 +100,7 @@ export class Signs {
         },
         {
             type: "LineString",
-            kat: "blue",
+            color: "#0000FF",
             src: "Beabsichtigte Verschiebung.png",
             de: "Beabsichtigte Verschiebung",
             en: "Beabsichtigte Verschiebung",
@@ -109,7 +109,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Beobachtung.png",
             de: "Beobachtung",
             en: "Beobachtung",
@@ -117,7 +117,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "red",
+            color: "#FF0000",
             src: "Beschaedigung.png",
             de: "Beschädigung",
             en: "Beschädigung",
@@ -125,7 +125,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Betreuungsstelle.png",
             de: "Betreuungsstelle",
             en: "Betreuungsstelle",
@@ -133,7 +133,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Betriebsstoffabgabestelle.png",
             de: "Betriebsstoffabgabestelle",
             en: "Betriebsstoffabgabestelle",
@@ -141,7 +141,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Bezirksfuehrungsorgan.png",
             de: "Bezirksfuehrungsorgan",
             en: "Bezirksfuehrungsorgan",
@@ -149,7 +149,7 @@ export class Signs {
         },
         {
             type: "Polygon",
-            kat: "other",
+            color: "#948B68",
             src: "Biologisch verseuchtes Gebiet.png",
             de: "Biologisch verseuchtes Gebiet",
             en: "Biologisch verseuchtes Gebiet",
@@ -157,7 +157,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "red",
+            color: "#FF0000",
             src: "Biounfall.png",
             de: "Biounfall",
             en: "Biounfall",
@@ -165,7 +165,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "B Laboratorium.png",
             de: "B Laboratorium",
             en: "B Laboratorium",
@@ -173,7 +173,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "red",
+            color: "#FF0000",
             src: "Bombenanschlag.png",
             de: "Bombenanschlag",
             en: "Bombenanschlag",
@@ -181,7 +181,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "red",
+            color: "#FF0000",
             src: "Bombendrohung.png",
             de: "Bombendrohung",
             en: "Bombendrohung",
@@ -189,7 +189,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "red",
+            color: "#FF0000",
             src: "Brandanschlag.png",
             de: "Brandanschlag",
             en: "Brandanschlag",
@@ -197,7 +197,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "red",
+            color: "#FF0000",
             src: "Brand einzelnes Gebaeude Flamme.png",
             de: "Brand einzelnes Gebaeude Flamme",
             en: "Brand einzelnes Gebaeude Flamme",
@@ -205,7 +205,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "red",
+            color: "#FF0000",
             src: "Brand.png",
             de: "Brand",
             en: "Brand",
@@ -213,7 +213,7 @@ export class Signs {
         },
         {
             type: "LineString",
-            kat: "red",
+            color: "#FF0000",
             src: "Branduebergriff erfolgt - Signatur.png",
             de: "Brandübergriff erfolgt",
             en: "Brandübergriff erfolgt",
@@ -222,7 +222,7 @@ export class Signs {
         },
         {
             type: "LineString",
-            kat: "red",
+            color: "#FF0000",
             src: "Branduebergriffsgefahr - Signatur.png",
             de: "Brandübergriffsgefahr",
             en: "Brandübergriffsgefahr",
@@ -232,7 +232,7 @@ export class Signs {
         },
         {
             type: "Polygon",
-            kat: "red",
+            color: "#FF0000",
             src: "Brandzone Flaechenbrand.png",
             de: "Brandzone Flächenbrand",
             en: "Brandzone Flächenbrand",
@@ -247,7 +247,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "red",
+            color: "#FF0000",
             src: "Chemieunfall.png",
             de: "Chemieunfall",
             en: "Chemieunfall",
@@ -255,7 +255,7 @@ export class Signs {
         },
         {
             type: "Polygon",
-            kat: "other",
+            color: "#948B68",
             src: "Chemievergiftetes Gebiet gasfoermig - fluechtig.png",
             de: "Chemievergiftetes Gebiet gasförmig - flüchtig",
             en: "Chemievergiftetes Gebiet gasförmig - flüchtig",
@@ -263,7 +263,7 @@ export class Signs {
         },
         {
             type: "Polygon",
-            kat: "other",
+            color: "#948B68",
             src: "Chemievergiftete Zone fluessig - sesshaft.png",
             de: "Chemievergiftete Zone flüssig - sesshaft",
             en: "Chemievergiftete Zone flüssig - sesshaft",
@@ -271,7 +271,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "orange",
+            color: "#FF9100",
             src: "Chemikalien.png",
             de: "Chemikalien",
             en: "Chemikalien",
@@ -279,7 +279,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Debriefingstelle.png",
             de: "Debriefingstelle",
             en: "Debriefingstelle",
@@ -287,7 +287,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "red",
+            color: "#FF0000",
             src: "Demo gewaltlos.png",
             de: "Demo gewaltlos",
             en: "Demo gewaltlos",
@@ -295,7 +295,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "red",
+            color: "#FF0000",
             src: "Demo gewaltsam.png",
             de: "Demo gewaltsam",
             en: "Demo gewaltsam",
@@ -303,7 +303,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "red",
+            color: "#FF0000",
             src: "Drohung.png",
             de: "Drohung",
             en: "Drohung",
@@ -311,7 +311,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "red",
+            color: "#FF0000",
             src: "Duerre.png",
             de: "Dürre",
             en: "Dürre",
@@ -319,7 +319,7 @@ export class Signs {
         },
         {
             type: "LineString",
-            kat: "blue",
+            color: "#0000FF",
             src: "Durchgefuehrte Erkundung.png",
             de: "Durchgeführte Erkundung",
             en: "Durchgeführte Erkundung",
@@ -327,7 +327,7 @@ export class Signs {
         },
         {
             type: "LineString",
-            kat: "blue",
+            color: "#0000FF",
             src: "Durchgefuehrter Einsatz.png",
             de: "Durchgeführter Einsatz",
             en: "Durchgeführter Einsatz",
@@ -335,7 +335,7 @@ export class Signs {
         },
         {
             type: "LineString",
-            kat: "blue",
+            color: "#0000FF",
             src: "Durchgefuehrte Verschiebung.png",
             de: "Durchgeführte Verschiebung",
             en: "Durchgeführte Verschiebung",
@@ -343,7 +343,7 @@ export class Signs {
         },
         {
             type: "Polygon",
-            kat: "red",
+            color: "#FF0000",
             src: "Eingesperrte - Abgeschnittene.png",
             de: "Eingesperrte - Abgeschnittene",
             en: "Eingesperrte - Abgeschnittene",
@@ -351,7 +351,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Einsatzleiter.png",
             de: "Einsatzleiter",
             en: "Einsatzleiter",
@@ -359,7 +359,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Einsatzleitung.png",
             de: "Einsatzleitung",
             en: "Einsatzleitung",
@@ -367,7 +367,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Einsatzzentrale.png",
             de: "Einsatzzentrale",
             en: "Einsatzzentrale",
@@ -375,7 +375,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "red",
+            color: "#FF0000",
             src: "Eisenbahnunglueck.png",
             de: "Eisenbahnunglück",
             en: "Eisenbahnunglück",
@@ -383,7 +383,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "orange",
+            color: "#FF9100",
             src: "Elektrizitaet.png",
             de: "Elektrizität",
             en: "Elektrizität",
@@ -391,7 +391,7 @@ export class Signs {
         },
         {
             type: "Polygon",
-            kat: "red",
+            color: "#FF0000",
             src: "Energieausfall.png",
             de: "Energieausfall",
             en: "Energieausfall",
@@ -399,7 +399,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "red",
+            color: "#FF0000",
             src: "Epidemie.png",
             de: "Epidemie",
             en: "Epidemie",
@@ -407,7 +407,7 @@ export class Signs {
         },
         {
             type: "Polygon",
-            kat: "red",
+            color: "#FF0000",
             src: "Erdbeben.png",
             de: "Erdbeben",
             en: "Erdbeben",
@@ -415,7 +415,7 @@ export class Signs {
         },
         {
             type: "Polygon",
-            kat: "red",
+            color: "#FF0000",
             src: "Erdrutsch.png",
             de: "Erdrutsch",
             en: "Erdrutsch",
@@ -423,7 +423,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "orange",
+            color: "#FF9100",
             src: "Explosion.png",
             de: "Explosion",
             en: "Explosion",
@@ -431,7 +431,7 @@ export class Signs {
         },
         {
             type: "Polygon",
-            kat: "red",
+            color: "#FF0000",
             src: "Explosionsherd - Signatur.png",
             de: "Explosionsherd",
             en: "Explosionsherd",
@@ -440,7 +440,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Fahrzeugplatz.png",
             de: "Fahrzeugplatz",
             en: "Fahrzeugplatz",
@@ -448,7 +448,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "red",
+            color: "#FF0000",
             src: "Fluechtlinge.png",
             de: "Flüchtlinge",
             en: "Flüchtlinge",
@@ -456,7 +456,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "red",
+            color: "#FF0000",
             src: "Flugzeugabsturz.png",
             de: "Flugzeugabsturz",
             en: "Flugzeugabsturz",
@@ -464,7 +464,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "orange",
+            color: "#FF9100",
             src: "Gas.png",
             de: "Gas",
             en: "Gas",
@@ -472,7 +472,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "red",
+            color: "#FF0000",
             src: "Gebaeudeeinsturz.png",
             de: "Gebäudeeinsturz",
             en: "Gebäudeeinsturz",
@@ -480,7 +480,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "orange",
+            color: "#FF9100",
             src: "Gefahr durch Loeschen mit Wasser.png",
             de: "Gefahr durch Löschen mit Wasser",
             en: "Gefahr durch Löschen mit Wasser",
@@ -488,7 +488,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "orange",
+            color: "#FF9100",
             src: "Gefahrentafel mit UN-Nummer.png",
             de: "Gefahrentafel mit UN-Nummer",
             en: "Gefahrentafel mit UN-Nummer",
@@ -496,7 +496,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "orange",
+            color: "#FF9100",
             src: "Gefahr fuer Grundwasser.png",
             de: "Gefahr fuer Grundwasser",
             en: "Gefahr fuer Grundwasser",
@@ -504,7 +504,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Gemeindefuehrungsorgan.png",
             de: "Gemeindeführungsorgan",
             en: "Gemeindeführungsorgan",
@@ -512,7 +512,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Gruppenfuehrer.png",
             de: "Gruppenführer",
             en: "Gruppenführer",
@@ -520,7 +520,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Gruppe.png",
             de: "Gruppe",
             en: "Gruppe",
@@ -528,7 +528,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Helikopterlandeplatz.png",
             de: "Helikopterlandeplatz",
             en: "Helikopterlandeplatz",
@@ -536,7 +536,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Informationsstelle.png",
             de: "Informationsstelle",
             en: "Informationsstelle",
@@ -544,7 +544,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Informationszentrum.png",
             de: "Informationszentrum",
             en: "Informationszentrum",
@@ -552,7 +552,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "red",
+            color: "#FF0000",
             src: "Infrastrukturschaden.png",
             de: "Infrastrukturschaden",
             en: "Infrastrukturschaden",
@@ -560,7 +560,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Kadaversammelstelle.png",
             de: "Kadaversammelstelle",
             en: "Kadaversammelstelle",
@@ -568,7 +568,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "red",
+            color: "#FF0000",
             src: "Kanalisationsausfall.png",
             de: "Kanalisationsausfall",
             en: "Kanalisationsausfall",
@@ -576,7 +576,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Kantonales Fuehrungsorgan.png",
             de: "Kantonales Führungsorgan",
             en: "Kantonales Führungsorgan",
@@ -584,7 +584,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "KGS Sammelpunkt.png",
             de: "KGS Sammelpunkt",
             en: "KGS Sammelpunkt",
@@ -592,7 +592,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Kommandoposten Front.png",
             de: "Kommandoposten Front",
             en: "Kommandoposten Front",
@@ -600,7 +600,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Kommandoposten Rueckwaertiges.png",
             de: "Kommandoposten Rückwärtiges",
             en: "Kommandoposten Rückwärtiges",
@@ -608,7 +608,7 @@ export class Signs {
         },
         {
             type: "Polygon",
-            kat: "red",
+            color: "#FF0000",
             src: "Kommunikationsstoerung.png",
             de: "Kommunikationsstörung",
             en: "Kommunikationsstörung",
@@ -616,7 +616,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Kompanie.png",
             de: "Kompanie",
             en: "Kompanie",
@@ -624,7 +624,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Kontrollstelle.png",
             de: "Kontrollstelle",
             en: "Kontrollstelle",
@@ -632,7 +632,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Kontrollzentrum.png",
             de: "Kontrollzentrum",
             en: "Kontrollzentrum",
@@ -640,7 +640,7 @@ export class Signs {
         },
         {
             type: "Polygon",
-            kat: "red",
+            color: "#FF0000",
             src: "Lawine.png",
             de: "Lawine",
             en: "Lawine",
@@ -648,7 +648,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "red",
+            color: "#FF0000",
             src: "Massenpanik.png",
             de: "Massenpanik",
             en: "Massenpanik",
@@ -656,7 +656,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Materialdepot.png",
             de: "Materialdepot",
             en: "Materialdepot",
@@ -664,7 +664,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Mobile Einsatzzentrale.png",
             de: "Mobile Einsatzzentrale",
             en: "Mobile Einsatzzentrale",
@@ -672,7 +672,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "red",
+            color: "#FF0000",
             src: "Obdachlose.png",
             de: "Obdachlose",
             en: "Obdachlose",
@@ -680,7 +680,7 @@ export class Signs {
         },
         {
             type: "Polygon",
-            kat: "red",
+            color: "#FF0000",
             src: "Oelverschmutzung.png",
             de: "Ölverschmutzung",
             en: "Ölverschmutzung",
@@ -688,7 +688,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Offizier - Zugfuehrer.png",
             de: "Offizier - Zugführer",
             en: "Offizier - Zugführer",
@@ -696,7 +696,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Patientensammelstelle.png",
             de: "Patientensammelstelle",
             en: "Patientensammelstelle",
@@ -704,7 +704,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Pforte.png",
             de: "Pforte",
             en: "Pforte",
@@ -712,7 +712,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "red",
+            color: "#FF0000",
             src: "Pluenderung.png",
             de: "Plünderung",
             en: "Plünderung",
@@ -720,7 +720,7 @@ export class Signs {
         },
         {
             type: "Polygon",
-            kat: "other",
+            color: "#948B68",
             src: "Radioaktives Gebiet.png",
             de: "Radioaktives Gebiet",
             en: "Radioaktives Gebiet",
@@ -728,7 +728,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "orange",
+            color: "#FF9100",
             src: "Radioaktive Stoffe.png",
             de: "Radioaktive Stoffe",
             en: "Radioaktive Stoffe",
@@ -736,7 +736,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Regionales Fuehrungsorgan.png",
             de: "Regionales Führungsorgan",
             en: "Regionales Führungsorgan",
@@ -744,7 +744,7 @@ export class Signs {
         },
         {
             type: "Polygon",
-            kat: "red",
+            color: "#FF0000",
             src: "Rutschgebiet.png",
             de: "Rutschgebiet",
             en: "Rutschgebiet",
@@ -752,7 +752,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "red",
+            color: "#FF0000",
             src: "Sabotage.png",
             de: "Sabotage",
             en: "Sabotage",
@@ -760,7 +760,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Sammelstelle.png",
             de: "Sammelstelle",
             en: "Sammelstelle",
@@ -768,7 +768,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Sanitaetshilfsstelle.png",
             de: "Sanitätshilfsstelle",
             en: "Sanitätshilfsstelle",
@@ -776,7 +776,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Sanitaetsumladestelle.png",
             de: "Sanitätsumladestelle",
             en: "Sanitätsumladestelle",
@@ -784,7 +784,7 @@ export class Signs {
         },
         {
             type: "LineString",
-            kat: "blue",
+            color: "#0000FF",
             src: "Sperre.png",
             de: "Sperre",
             en: "Sperre",
@@ -792,7 +792,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Standort mobile Fuehrungsstelle.png",
             de: "Standort mobile Führungsstelle",
             en: "Standort mobile Führungsstelle",
@@ -800,7 +800,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "red",
+            color: "#FF0000",
             src: "Starkniederschlag.png",
             de: "Starkniederschlag",
             en: "Starkniederschlag",
@@ -808,7 +808,7 @@ export class Signs {
         },
         {
             type: "Polygon",
-            kat: "red",
+            color: "#FF0000",
             src: "Stau.png",
             de: "Stau",
             en: "Stau",
@@ -816,7 +816,7 @@ export class Signs {
         },
         {
             type: "LineString",
-            kat: "red",
+            color: "#FF0000",
             src: "Str erschwert befahrbar - begehbar.png",
             de: "Strasse erschwert befahrbar - begehbar",
             en: "Strasse erschwert befahrbar - begehbar",
@@ -825,7 +825,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Streugutsammelstelle.png",
             de: "Streugutsammelstelle",
             en: "Streugutsammelstelle",
@@ -833,7 +833,7 @@ export class Signs {
         },
         {
             type: "LineString",
-            kat: "red",
+            color: "#FF0000",
             src: "Str nicht befahrbar - schwer begehbar.png",
             de: "Strasse nicht befahrbar - schwer begehbar",
             en: "Strasse nicht befahrbar - schwer begehbar",
@@ -841,7 +841,7 @@ export class Signs {
         },
         {
             type: "LineString",
-            kat: "red",
+            color: "#FF0000",
             src: "Str unpassierbar - gesperrt.png",
             de: "Strasse unpassierbar - gesperrt",
             en: "Strasse unpassierbar - gesperrt",
@@ -849,7 +849,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Stuetzpunkt.png",
             de: "Stützpunkt",
             en: "Stützpunkt",
@@ -857,7 +857,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "red",
+            color: "#FF0000",
             src: "Sturm.png",
             de: "Sturm",
             en: "Sturm",
@@ -865,7 +865,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Tankloeschfahrzeug.png",
             de: "Tanklöschfahrzeug",
             en: "Tanklöschfahrzeug",
@@ -873,7 +873,7 @@ export class Signs {
         },
         {
             type: "Polygon",
-            kat: "red",
+            color: "#FF0000",
             src: "Teilzerstoerung.png",
             de: "Teilzerstörung",
             en: "Teilzerstörung",
@@ -881,7 +881,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "red",
+            color: "#FF0000",
             src: "Terroranschlag.png",
             de: "Terroranschlag",
             en: "Terroranschlag",
@@ -889,7 +889,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "red",
+            color: "#FF0000",
             src: "Tierseuche.png",
             de: "Tierseuche",
             en: "Tierseuche",
@@ -897,7 +897,7 @@ export class Signs {
         },
         {
             type: "Polygon",
-            kat: "red",
+            color: "#FF0000",
             src: "Totalzerstoerung.png",
             de: "Totalzerstörung",
             en: "Totalzerstörung",
@@ -905,7 +905,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Totensammelstelle.png",
             de: "Totensammelstelle",
             en: "Totensammelstelle",
@@ -913,7 +913,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "red",
+            color: "#FF0000",
             src: "Tote.png",
             de: "Tote",
             en: "Tote",
@@ -921,7 +921,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Trinkwasserabgabestelle.png",
             de: "Trinkwasserabgabestelle",
             en: "Trinkwasserabgabestelle",
@@ -929,7 +929,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Trupp.png",
             de: "Trupp",
             en: "Trupp",
@@ -937,7 +937,7 @@ export class Signs {
         },
         {
             type: "Polygon",
-            kat: "red",
+            color: "#FF0000",
             src: "Ueberschwemmtes Gebiet.png",
             de: "Überschwemmtes Gebiet",
             en: "Überschwemmtes Gebiet",
@@ -945,7 +945,7 @@ export class Signs {
         },
         {
             type: "Polygon",
-            kat: "red",
+            color: "#FF0000",
             src: "Ueberschwemmung.png",
             de: "Überschwemmung",
             en: "Überschwemmung",
@@ -953,7 +953,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Ueberwachung.png",
             de: "Überwachung",
             en: "Überwachung",
@@ -961,7 +961,7 @@ export class Signs {
         },
         {
             type: "LineString",
-            kat: "blue",
+            color: "#0000FF",
             src: "Umleitung.png",
             de: "Umleitung",
             en: "Umleitung",
@@ -969,7 +969,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "orange",
+            color: "#FF9100",
             src: "Unfall.png",
             de: "Unfall",
             en: "Unfall",
@@ -977,7 +977,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Verkehrsposten.png",
             de: "Verkehrsposten",
             en: "Verkehrsposten",
@@ -985,7 +985,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Verletztennest.png",
             de: "Verletztennest",
             en: "Verletztennest",
@@ -993,7 +993,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "red",
+            color: "#FF0000",
             src: "Verletzte.png",
             de: "Verletzte",
             en: "Verletzte",
@@ -1001,7 +1001,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "red",
+            color: "#FF0000",
             src: "Vermisste.png",
             de: "Vermisste",
             en: "Vermisste",
@@ -1009,7 +1009,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Verpflegungsabgabestelle.png",
             de: "Verpflegungsabgabestelle",
             en: "Verpflegungsabgabestelle",
@@ -1017,7 +1017,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "red",
+            color: "#FF0000",
             src: "Wasservsgausfall.png",
             de: "Wasserversorgungsausfall",
             en: "Wasserversorgungsausfall",
@@ -1025,7 +1025,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Wasserwerfer.png",
             de: "Wasserwerfer",
             en: "Wasserwerfer",
@@ -1033,7 +1033,7 @@ export class Signs {
         },
         {
             type: "Polygon",
-            kat: "red",
+            color: "#FF0000",
             src: "Zerstoerte Zone einer Ortschaft.png",
             de: "Zerstörte Zone einer Ortschaft",
             en: "Zerstörte Zone einer Ortschaft",
@@ -1048,7 +1048,7 @@ export class Signs {
         },
         {
             type: "Point",
-            kat: "blue",
+            color: "#0000FF",
             src: "Zug.png",
             de: "Zug",
             en: "Zug",

@@ -3,6 +3,8 @@ import {SharedStateService} from "../shared-state.service";
 import {defineDefaultValuesForSignature, Sign} from "../entity/sign";
 import {DrawStyle} from "../drawlayer/draw-style";
 import {I18NService} from "../i18n.service";
+import {MatDialog} from "@angular/material/dialog";
+import {DrawingDialogComponent} from "../drawing-dialog/drawing-dialog.component";
 
 @Component({
     selector: 'app-selected-feature',
@@ -11,24 +13,24 @@ import {I18NService} from "../i18n.service";
 })
 export class SelectedFeatureComponent implements OnInit {
 
-    constructor(private sharedState: SharedStateService, public i18n:I18NService) {
+    constructor(public drawDialog: MatDialog, private sharedState: SharedStateService, public i18n: I18NService) {
     }
 
     selectedFeature: any = null;
     selectedSignature: Sign = null;
     rotationPercent: number = 0;
     drawHoleMode: boolean = false;
-    mergeMode:boolean = false;
+    mergeMode: boolean = false;
 
 
     setRotation(perc) {
-        if(this.selectedFeature!=null){
+        if (this.selectedFeature != null) {
             this.selectedFeature.rotation = perc;
             this.selectedFeature.changed();
         }
     }
 
-    redraw(){
+    redraw() {
         this.selectedFeature.changed();
     }
 
@@ -47,6 +49,26 @@ export class SelectedFeatureComponent implements OnInit {
         });
     }
 
+    chooseSymbol() {
+        const dialogRef = this.drawDialog.open(DrawingDialogComponent);
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.selectedSignature.src = result.src;
+                this.selectedSignature.de = result.de;
+                this.selectedSignature.fr = result.fr;
+                this.selectedSignature.en = result.en;
+                this.redraw();
+            }
+        });
+    }
+
+    removeSymbol(){
+        this.selectedSignature.src = null;
+        this.selectedSignature.de = null;
+        this.selectedSignature.fr = null;
+        this.selectedSignature.en = null;
+        this.redraw();
+    }
 
     delete() {
         this.sharedState.deleteFeature(this.selectedFeature);
@@ -60,23 +82,23 @@ export class SelectedFeatureComponent implements OnInit {
         this.sharedState.updateDrawHoleMode(!this.drawHoleMode);
     }
 
-    merge(merge:boolean){
+    merge(merge: boolean) {
         this.sharedState.setMergeMode(merge);
     }
 
-    get canSplit():boolean{
-        return this.selectedFeature!=null && this.selectedFeature.getGeometry().getCoordinates().length>1;
+    get canSplit(): boolean {
+        return this.selectedFeature != null && this.selectedFeature.getGeometry().getCoordinates().length > 1;
     }
 
-    split(){
+    split() {
         this.sharedState.setSplitMode(true);
     }
 
-    bringToFront(){
+    bringToFront() {
         this.sharedState.reorderFeature(true);
     }
 
-    sendToBack(){
+    sendToBack() {
         this.sharedState.reorderFeature(false);
     }
 

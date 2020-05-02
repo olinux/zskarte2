@@ -31,7 +31,7 @@ import DrawHole from 'ol-ext/interaction/DrawHole';
 import Overlay from 'ol/Overlay'
 import {SharedStateService} from '../shared-state.service';
 import {DrawStyle} from './draw-style';
-import {Sign} from "../entity/sign";
+import {getMostTopCoordinate, Sign} from "../entity/sign";
 import {I18NService} from "../i18n.service";
 import {MapStoreService} from "../map-store.service";
 import Circle from "ol/geom/Circle";
@@ -504,7 +504,6 @@ export class DrawlayerComponent implements OnInit {
     endDrawing(event) {
         event.feature.set('sig', this.currentDrawingSign);
         Object.values(this.drawers).forEach(drawer => drawer.setActive(false));
-        //this.drawingManipulated();
     }
 
     removeFeature(feature) {

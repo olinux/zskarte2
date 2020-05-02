@@ -28,6 +28,10 @@ body{
     color:white;
 }
 
-#functionsPanel .mat-expansion-panel-body{
+.noPadding .mat-expansion-panel-body{
     padding: 0;
+}
+
+.noPadding .mat-expansion-panel-body mat-form-field, .noPadding .mat-expansion-panel-body>div{
+    margin: 0 24px 16px;
 }

@@ -62,14 +62,23 @@ mat-slider{
 }
 
 
-
-#functionsPanel button{
+mat-expansion-panel button{
     display: block;
     width: 100%;
     text-align: left;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
 }
 
-#functionsPanel button i{
+mat-expansion-panel .filter{
+    margin-top: 1em;
+}
+
+mat-expansion-panel button i {
     margin-right: 1em;
-
 }
+
+.separator{
+border-bottom: 1px solid ;
+}
+
