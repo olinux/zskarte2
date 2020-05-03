@@ -52,8 +52,8 @@ export class Signs {
             type: "LineString",
             color: "#0000FF",
             src: "Achse fuer Ei, Rttg, Vsg.png",
-            de: "Achse fuer Ei, Rttg, Vsg",
-            en: "Achse fuer Ei, Rttg, Vsg",
+            de: "Achse für Ei, Rttg, Vsg",
+            en: "Achse für Ei, Rttg, Vsg",
             fr: "Axe d’engagement pour le sauvetage, l’approvisionnement, etc.",
             style: "dash"
         },
@@ -61,8 +61,8 @@ export class Signs {
             type: "Point",
             color: "#0000FF",
             src: "Angehoerigensammelstelle.png",
-            de: "Angehoerigensammelstelle",
-            en: "Angehoerigensammelstelle",
+            de: "Angehörigensammelstelle",
+            en: "Angehörigensammelstelle",
             fr: "Poste collecteur pour les proches"
         },
         {
@@ -143,8 +143,8 @@ export class Signs {
             type: "Point",
             color: "#0000FF",
             src: "Bezirksfuehrungsorgan.png",
-            de: "Bezirksfuehrungsorgan",
-            en: "Bezirksfuehrungsorgan",
+            de: "Bezirksführungsorgan",
+            en: "Bezirksführungsorgan",
             fr: "Organe de conduite de district"
         },
         {
@@ -199,8 +199,8 @@ export class Signs {
             type: "Point",
             color: "#FF0000",
             src: "Brand einzelnes Gebaeude Flamme.png",
-            de: "Brand einzelnes Gebaeude Flamme",
-            en: "Brand einzelnes Gebaeude Flamme",
+            de: "Brand einzelnes Gebäude Flamme",
+            en: "Brand einzelnes Gebäude Flamme",
             fr: "Incendie isolé"
         },
         {
@@ -498,8 +498,8 @@ export class Signs {
             type: "Point",
             color: "#FF9100",
             src: "Gefahr fuer Grundwasser.png",
-            de: "Gefahr fuer Grundwasser",
-            en: "Gefahr fuer Grundwasser",
+            de: "Gefahr für Grundwasser",
+            en: "Gefahr für Grundwasser",
             fr: "Danger pour les eaux de surface et/ou nappes souterraines"
         },
         {
@@ -589,6 +589,22 @@ export class Signs {
             de: "KGS Sammelpunkt",
             en: "KGS Sammelpunkt",
             fr: "Point de collecte PBC"
+        },
+        {
+            type: "Point",
+            color: "#0000FF",
+            src: "KGS Notdepot.png",
+            de: "KGS Notdepot",
+            en: "KGS Notdepot",
+            fr: "Dépôt d’urgence PBC"
+        },
+        {
+            type: "Point",
+            color: "#0000FF",
+            src: "KGS Notlager.png",
+            de: "KGS Notlager",
+            en: "KGS Notlager",
+            fr: "Entrepôt d’urgence PBC"
         },
         {
             type: "Point",

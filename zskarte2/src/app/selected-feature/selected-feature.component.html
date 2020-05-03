@@ -1,16 +1,12 @@
 <mat-card class="selection" *ngIf="selectedSignature!=null">
     <mat-card-content *ngIf="!mergeMode">
-
-
         <div>
             <mat-card>
                 <mat-card-content>
                     <div class="imgwrapper" *ngIf="selectedSignature.src"><img
                             [src]="getImageUrl(selectedSignature.src)"/></div>
-                    <div class="imgcustomwrapper" *ngIf="selectedSignature.dataUrl"><img
-                            [src]="selectedSignature.dataUrl"/></div>
-                    <div *ngIf="selectedSignature[i18n.locale]"
-                         class="label">{{selectedSignature[i18n.locale]}}</div>
+                    <div *ngIf="i18n.getLabelForSign(selectedSignature)"
+                         class="label">{{i18n.getLabelForSign(selectedSignature)}}</div>
                     <mat-form-field>
                         <mat-label>{{i18n.get('name')}}</mat-label>
                         <input type="text" matInput [(ngModel)]="selectedSignature.label"
@@ -171,8 +167,6 @@
                 <button mat-flat-button (click)="sendToBack()">
                     <i
                             class="material-icons">arrow_downward</i><span>{{i18n.get("moveToBottom")}}</span></button>
-                <button mat-flat-button (click)="delete()"><i
-                        class="material-icons">delete</i><span>{{i18n.get("delete")}}</span></button>
                 <button mat-flat-button (click)="split()"
                         *ngIf="(selectedSignature.type==='Polygon' || selectedSignature.type==='MultiPolygon') && canSplit">
                     <i
@@ -185,6 +179,8 @@
                         class="material-icons">vignette</i><span>{{i18n.get("drawHole")}}</span></button>
             </mat-expansion-panel>
         </div>
+        <button class="primarybutton" mat-raised-button color="warn" (click)="delete()"><i
+                        class="material-icons">delete</i><span>{{i18n.get("delete")}}</span></button>
     </mat-card-content>
     <mat-card-content *ngIf="mergeMode">
         <div>{{i18n.get('chooseGroupingArea')}}</div>

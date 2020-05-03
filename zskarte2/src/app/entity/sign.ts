@@ -18,8 +18,6 @@
  *
  */
 
-import {CustomImage} from "./customImage";
-
 
 export interface FillStyle {
     name: string;
@@ -43,12 +41,12 @@ export interface Sign {
     example?: string;
     fillOpacity?: number;
     color?: string;
-    dataUrl?: CustomImage;
     strokeWidth?: number;
     hideIcon?: boolean;
     iconOffset?: number;
     flipIcon?: boolean;
     topCoord?:number[];
+    onlyForSessionId?:string;
     kat?: string; //deprecated - kept for compatibility reasons (is translated directly to color)
 }
 
@@ -82,7 +80,7 @@ export function getMostTopCoordinate(feature){
             break;
         case "LineString":
             for(let coordinate of feature.getGeometry().getCoordinates()){
-                if(this.isMoreOptimalIconCoordinate(coordinate, symbolAnchorCoordinate)){
+                if(isMoreOptimalIconCoordinate(coordinate, symbolAnchorCoordinate)){
                     symbolAnchorCoordinate = coordinate;
                 }
             }

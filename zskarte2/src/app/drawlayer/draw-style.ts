@@ -30,6 +30,7 @@ import LineString from 'ol/geom/LineString';
 import Circle from 'ol/style/Circle';
 import {Md5} from "ts-md5";
 import {defineDefaultValuesForSignature, getMostTopCoordinate} from "../entity/sign";
+import {CustomImageStoreService} from "../custom-image-store.service";
 
 
 // This is a helper class which involves the definitions of stylings used to draw on the map
@@ -107,6 +108,7 @@ export class DrawStyle {
             selected: selected,
             signatureColor: signature.color,
             signatureSrc: signature.src,
+            type: feature.getGeometry().getType(),
             signaturePayload: signature.dataUrl ? signature.dataUrl.src : null,
             hideIcon: signature.hideIcon,
             iconOffset: signature.iconOffset,
@@ -121,6 +123,7 @@ export class DrawStyle {
             opacity: signature.fillOpacity,
             resolution: resolution,
             lineStyle: signature.style,
+            type: feature.getGeometry().getType(),
             strokeWidth: signature.strokeWidth,
             zindex: this.getZIndex(feature),
             fillStyle: signature.fillStyle ? signature.fillStyle.name : null,
@@ -185,16 +188,13 @@ export class DrawStyle {
         return stroke;
     }
 
+    private static imageCache = {}
+
     private static getIconStyle(feature, resolution, signature, selected, scale): Style[] {
-        const isCustomSignature = signature.dataUrl !== undefined && signature.dataUrl !== null;
-        let symbol = null;
-        if (isCustomSignature) {
-            symbol = new Image();
-            symbol.src = signature.dataUrl.src;
-        }
         const zIndex = selected ? Infinity: this.getZIndex(feature)
         const symbolCacheHash = DrawStyle.calculateCacheHashForSymbol(signature, feature, resolution, selected);
         let iconStyles = this.symbolStyleCache[symbolCacheHash];
+        let featureId = feature.ol_uid;
         if (!iconStyles && (signature.src || signature.dataUrl) && feature.getGeometry()) {
             iconStyles = this.symbolStyleCache[symbolCacheHash] = []
             let showIcon = this.showIcon(signature);
@@ -223,8 +223,7 @@ export class DrawStyle {
             }
 
             //Draw a circle if it is a geometry with a clear anchor coordinate (e.g. a "point")
-            let anchorCoordinate = DrawStyle.getAnchorCoordinate(feature);
-            if (anchorCoordinate) {
+            if (feature.getGeometry().getType() === "Point") {
                 iconStyles.push(new Style({
                     image: new Circle({
                         radius: scale * 50,
@@ -232,7 +231,7 @@ export class DrawStyle {
                         stroke: highlightStroke
                     }),
                     geometry: function (feature) {
-                        return new Point(anchorCoordinate);
+                        return new Point(DrawStyle.getAnchorCoordinate(feature));
                     },
                     zIndex: zIndex
                 }))
@@ -261,19 +260,34 @@ export class DrawStyle {
                     zIndex: zIndex
                 }));
 
+                let imageFromMemory;
+                let scaledSize = undefined;
+                let naturalDim = null;
+                let imageFromMemoryDataUrl = CustomImageStoreService.getImageDataUrl(signature.src)
+                if(imageFromMemoryDataUrl) {
+                    imageFromMemory = this.imageCache[featureId]
+                    if(!imageFromMemory){
+                        imageFromMemory = this.imageCache[featureId] = new Image();
+                    }
+                    imageFromMemory.src = imageFromMemoryDataUrl;
+                    naturalDim = Math.min.apply(null, CustomImageStoreService.getDimensions(signature.src))
+                    scaledSize = 492 / naturalDim * scale;
+                }
+                let icon = new Icon(({
+                    anchor: [0.5, 0.5],
+                    anchorXUnits: 'fraction',
+                    anchorYUnits: 'fraction',
+                    scale: scaledSize ? scaledSize : scale*2.5,
+                    opacity: 1,
+                    rotation: feature.rotation !== undefined ? feature.rotation * Math.PI / 180 : 0,
+                    src: imageFromMemory ? undefined : this.getImageUrl(signature.src),
+                    img: imageFromMemory ? imageFromMemory : undefined,
+                    imgSize: scaledSize ? [naturalDim, naturalDim]: undefined
+                }))
+
                 //Draw the icon
                 iconStyles.push(new Style({
-                    image: new Icon(({
-                        anchor: [0.5, 0.5],
-                        anchorXUnits: 'fraction',
-                        anchorYUnits: 'fraction',
-                        scale: DrawStyle.scale(resolution, DrawStyle.defaultScaleFactor),
-                        opacity: 1,
-                        rotation: feature.rotation !== undefined ? feature.rotation * Math.PI / 180 : 0,
-                        src: isCustomSignature ? undefined : this.getImageUrl(signature.src),
-                        img: isCustomSignature ? symbol : undefined,
-                        imgSize: isCustomSignature ? [signature.dataUrl.nativeWidth, signature.dataUrl.nativeHeight] : undefined
-                    })),
+                    image: icon,
                     geometry: function (feature) {
                         return new Point(DrawStyle.getIconCoordinates(feature, resolution)[1]);
                     },

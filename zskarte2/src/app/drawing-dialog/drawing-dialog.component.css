@@ -18,12 +18,7 @@
  *
  */
 
-.signSelect {
-    max-width: 80vw;
-    max-height: 60vh;
-}
-
-.imgwrapper img {
+.selectionTable img {
     max-height: 1.8em;
     max-width: 1.8em;
 }
@@ -36,15 +31,35 @@
 }
 
 .signSelect {
-
-    min-width: 150px;
-    max-width: 500px;
+    width: 80vw;
+    height: 70vh;
+    max-width: 90vw;
+    max-height: 60vh;
+}
+.name{
     width: 100%;
 }
 
 .selectionTable {
     width: 100%;
+    border-collapse: collapse;
 }
+
+.selectionTable th{
+    text-align: left;
+    font-size: 0.8em;
+    color: #787878;
+}
+.selectionTable td{
+    vertical-align: middle;
+    line-height: 3em;
+}
+.imageWrapper{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
 
 .symbolCol {
     width: 7em;
@@ -62,4 +77,20 @@
     height: 10em;
     border: 1px dashed black;
     text-align: center;
+}
+.addButton{
+    margin-right: 1em;
+}
+
+.buttonCell{
+    white-space: nowrap;
+}
+
+.buttonCell button{
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+}
+
+.filter mat-form-field {
+    width: 100%;
 }

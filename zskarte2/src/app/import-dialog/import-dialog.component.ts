@@ -19,9 +19,7 @@
  */
 
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {DrawingDialogComponent} from "../drawing-dialog/drawing-dialog.component";
-import { MatDialogRef } from "@angular/material/dialog";
-import {NgxIndexedDBService} from "ngx-indexed-db";
+import {MatDialogRef} from "@angular/material/dialog";
 import {I18NService} from "../i18n.service";
 
 @Component({
@@ -33,7 +31,7 @@ export class ImportDialogComponent implements OnInit {
 
     @ViewChild('fileInput', { static: false }) el: ElementRef;
 
-    constructor(public dialogRef: MatDialogRef<DrawingDialogComponent>, public i18n:I18NService) {
+    constructor(public dialogRef: MatDialogRef<ImportDialogComponent>, public i18n:I18NService) {
     }
 
     ngOnInit() {

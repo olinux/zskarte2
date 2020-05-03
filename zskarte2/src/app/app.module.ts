@@ -56,24 +56,30 @@ import {DBConfig, NgxIndexedDBModule} from 'ngx-indexed-db';
 import {SessionCreatorComponent} from './session-creator/session-creator.component';
 import {NgxMdModule} from "ngx-md";
 import {LanguageChooserComponent} from './language-chooser/language-chooser.component';
-import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
-import { ExportDialogComponent } from './export-dialog/export-dialog.component';
+import {ConfirmationDialogComponent} from './confirmation-dialog/confirmation-dialog.component';
+import {ExportDialogComponent} from './export-dialog/export-dialog.component';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import { MapLegendDisplayComponent } from './map-legend-display/map-legend-display.component';
-import { TagStateComponent } from './tag-state/tag-state.component';
+import {MapLegendDisplayComponent} from './map-legend-display/map-legend-display.component';
+import {TagStateComponent} from './tag-state/tag-state.component';
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatExpansionModule} from "@angular/material/expansion";
-import { CustomImagesComponent } from './custom-images/custom-images.component';
+import {CustomImagesComponent} from './custom-images/custom-images.component';
+import {CustomImageStoreService} from "./custom-image-store.service";
+import {MapStoreService} from "./map-store.service";
 
 const dbConfig: DBConfig = {
     name: 'ZSKarte2-DB1.0',
-    version: 1,
+    version: 2,
     objectStoresMeta: [{
-        store: 'map',
+        store: MapStoreService.STORE_MAP,
         storeConfig: {keyPath: null, autoIncrement: false},
         storeSchema: []
     }, {
-        store: 'history',
+        store: MapStoreService.STORE_HISTORY,
+        storeConfig: {keyPath: null, autoIncrement: false},
+        storeSchema: []
+    }, {
+        store: CustomImageStoreService.STORE_IMAGES,
         storeConfig: {keyPath: null, autoIncrement: false},
         storeSchema: []
     }]
@@ -137,7 +143,8 @@ const dbConfig: DBConfig = {
         ConfirmationDialogComponent,
         ExportDialogComponent,
         MapLegendDisplayComponent,
-        TagStateComponent
+        TagStateComponent,
+        CustomImagesComponent
     ],
     providers: [],
     bootstrap: [AppComponent]

@@ -35,3 +35,7 @@ body{
 .noPadding .mat-expansion-panel-body mat-form-field, .noPadding .mat-expansion-panel-body>div{
     margin: 0 24px 16px;
 }
+
+.customImage{
+    border:1px solid red;
+}

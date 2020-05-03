@@ -19,21 +19,17 @@ mat-slider{
 }
 
 .imgwrapper{
-    height:4em;
     text-align:center;
+    margin-bottom: 1em;
 }
 
 .imgwrapper img{
-    max-height: 3em;
-    max-width: 3em;
+    min-width: 3em;
+    min-height: 3em;
+    max-height: 10em;
+    max-width: 10em;
 }
 
-.imgcustomwrapper{
-    text-align: center;
-}
-.imgcustomwrapper img{
-    width: 6em;
-}
 
 .buttonPanel{
     margin-top:0.5em;
@@ -82,3 +78,6 @@ mat-expansion-panel button i {
 border-bottom: 1px solid ;
 }
 
+.primarybutton{
+    width: 100%;
+}

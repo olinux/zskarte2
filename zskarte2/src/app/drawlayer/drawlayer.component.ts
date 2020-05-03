@@ -31,12 +31,13 @@ import DrawHole from 'ol-ext/interaction/DrawHole';
 import Overlay from 'ol/Overlay'
 import {SharedStateService} from '../shared-state.service';
 import {DrawStyle} from './draw-style';
-import {getMostTopCoordinate, Sign} from "../entity/sign";
 import {I18NService} from "../i18n.service";
 import {MapStoreService} from "../map-store.service";
-import Circle from "ol/geom/Circle";
 import {SessionsService} from "../sessions.service";
 import CENTER_LEFT from "ol/OverlayPositioning";
+import {CustomImageStoreService} from "../custom-image-store.service";
+import {MatDialog} from "@angular/material/dialog";
+import {ConfirmationDialogComponent} from "../confirmation-dialog/confirmation-dialog.component";
 
 export const DRAW_LAYER_ZINDEX = 100000;
 
@@ -98,7 +99,7 @@ export class DrawlayerComponent implements OnInit {
             layers: [this.layer]
         });
 
-    constructor(private sharedState: SharedStateService, private mapStore: MapStoreService, public i18n: I18NService, private sessions: SessionsService) {
+    constructor(private sharedState: SharedStateService, private mapStore: MapStoreService, public i18n: I18NService, private sessions: SessionsService, private customImages: CustomImageStoreService, private dialog: MatDialog) {
     }
 
     private isModifyPointInteraction() {
@@ -153,7 +154,7 @@ export class DrawlayerComponent implements OnInit {
     }
 
     private drawingManipulated() {
-        if(this.recordChanges) {
+        if (this.recordChanges) {
             this.status = "Save changes";
             this.save().then(this.status = null);
         }
@@ -186,8 +187,15 @@ export class DrawlayerComponent implements OnInit {
                     this.modify.removePoint();
                 } else if (coordinationGroup.otherCoordinationGroupCount == 0) {
                     //It's the last coordination group - we can remove the feature.
-                    this.removeFeature(coordinationGroup.feature);
-                    this.sharedState.selectFeature(null);
+                    let confirm = this.dialog.open(ConfirmationDialogComponent, {
+                        data: this.i18n.get('deleteLastPointOnFeature')+" "+this.i18n.get('removeFeatureFromMapConfirm')
+                    })
+                    confirm.afterClosed().subscribe(r => {
+                        if (r) {
+                            this.removeFeature(coordinationGroup.feature);
+                            this.sharedState.selectFeature(null);
+                        }
+                    })
                 } else if (coordinationGroup.coordinateGroupIndex) {
                     //It's not the last coordination group - so we need to get rid of the coordination group inside the feature
                     let oldCoordinates = coordinationGroup.feature.getGeometry().getCoordinates();
@@ -236,13 +244,11 @@ export class DrawlayerComponent implements OnInit {
         this.sharedState.history.subscribe(history => this.toggleHistory(history));
         this.sharedState.mergeMode.subscribe(mergeMode => this.mergeMode(mergeMode));
         this.sharedState.splitMode.subscribe(splitMode => this.splitMode(splitMode));
-        this.sharedState.tagState.subscribe(tag  => this.tagState(tag) );
         this.sharedState.reorder.subscribe(toTop => {
-                if(toTop!==null){
-                    if(toTop){
+                if (toTop !== null) {
+                    if (toTop) {
                         this.toFront(this.select.getFeatures().item(0));
-                    }
-                    else{
+                    } else {
                         this.toBack(this.select.getFeatures().item(0));
                     }
                 }
@@ -289,10 +295,6 @@ export class DrawlayerComponent implements OnInit {
     }
 
     mergeSource: any = null;
-
-    tagState(tag:string){
-
-    }
 
     splitMode(split: boolean) {
         if (split) {
@@ -350,7 +352,7 @@ export class DrawlayerComponent implements OnInit {
     }
 
     endHistoryMode() {
-        if(this.currentSessionId) {
+        if (this.currentSessionId) {
             this.load().then(() => {
                 this.select.setActive(true);
                 this.modify.setActive(true);
@@ -386,35 +388,22 @@ export class DrawlayerComponent implements OnInit {
         return JSON.parse(new GeoJSON({defaultDataProjection: 'EPSG:3857'}).writeFeatures(this.source.getFeatures()));
     }
 
-    toDataUrl(withSession: boolean, withHistory: boolean) {
+
+    toDataUrl() {
         let result = this.writeFeatures();
-        if (withSession) {
-            result.session = this.sharedState.getCurrentSession()
-        }
+        let signatureSources = this.source.getFeatures().map(f => f.get('sig').src)
+        // @ts-ignore
+        result.images = this.customImages.getAllEntriesForCurrentSession().filter(i => signatureSources.includes(i.sign.src));
         return 'data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(result));
     }
 
-    handleCustomSignatures(features: object[], featureHandler, signatureHandler) {
-        for (let f of features) {
-            featureHandler(f);
-            // @ts-ignore
-            let properties = f.properties;
-            if (properties !== null) {
-                let signature = (properties.sig as Sign);
-                if (signature !== null && signature.dataUrl !== null) {
-                    signatureHandler(signature)
-                }
-            }
-        }
-    }
-
-    clearDrawingArea(){
-            this.recordChanges = false;
-            this.minZIndex = 0;
-            this.maxZIndex = 0;
-            this.source.clear();
-            this.select.getFeatures().clear();
-            this.recordChanges = true;
+    clearDrawingArea() {
+        this.recordChanges = false;
+        this.minZIndex = 0;
+        this.maxZIndex = 0;
+        this.source.clear();
+        this.select.getFeatures().clear();
+        this.recordChanges = true;
     }
 
     removeAll() {
@@ -439,43 +428,46 @@ export class DrawlayerComponent implements OnInit {
         this.source.clear();
         this.select.getFeatures().clear();
         if (elements) {
-            if (elements.session) {
-                this.sessions.saveSession(elements.session);
-                this.sharedState.loadSession(elements.session);
-                return;
-            }
-            if (elements.features) {
-                this.handleCustomSignatures(elements.features, feature=>{
-                    let zindex = feature.properties.zindex
-                    if(zindex){
-                        if(zindex > this.maxZIndex){
-                            this.maxZIndex = zindex;
-                        }
-                        if(zindex < this.minZIndex){
-                            this.minZIndex = zindex
+            this.customImages.importImages(elements.images).then(() => {
+                if (elements.session) {
+                    this.sessions.saveSession(elements.session);
+                    this.sharedState.loadSession(elements.session);
+                    return;
+                }
+                if (elements.features) {
+                    for (let feature of elements.features) {
+                        let zindex = feature.properties.zindex
+                        if (zindex) {
+                            if (zindex > this.maxZIndex) {
+                                this.maxZIndex = zindex;
+                            }
+                            if (zindex < this.minZIndex) {
+                                this.minZIndex = zindex
+                            }
                         }
                     }
-                }, sig => {
-                    //TODO load dataUrls
-                });
-                this.source.addFeatures(new GeoJSON({defaultDataProjection: 'EPSG:3857'}).readFeatures(elements));
-            }
+                    this.source.addFeatures(new GeoJSON({defaultDataProjection: 'EPSG:3857'}).readFeatures(elements));
+                }
+            });
         }
         this.recordChanges = true;
     }
 
     load(): Promise<any> {
         return new Promise<any>(resolve => {
-            this.mapStore.getMap(this.currentSessionId).then(map => {
-                this.loadElements(map)
-                resolve("Elements loaded");
+            this.customImages.loadSignsInMemory().then(() => {
+                //We need to make sure the custom images are loaded before we load the map - this is why we set it in sequence.
+                this.mapStore.getMap(this.currentSessionId).then(map => {
+                    this.loadElements(map)
+                    resolve("Elements loaded");
+                });
             });
         })
     }
 
-    loadFromString(text, save:boolean) {
+    loadFromString(text, save: boolean) {
         this.loadElements(JSON.parse(text));
-        if(save){
+        if (save) {
             this.save();
         }
     }
@@ -524,12 +516,12 @@ export class DrawlayerComponent implements OnInit {
         }
     }
 
-    private toFront(feature:Feature){
+    private toFront(feature: Feature) {
         feature.set('zindex', ++this.maxZIndex);
         this.layer.changed();
     }
 
-    private toBack(feature:Feature){
+    private toBack(feature: Feature) {
         feature.set('zindex', --this.minZIndex);
         this.layer.changed();
     }

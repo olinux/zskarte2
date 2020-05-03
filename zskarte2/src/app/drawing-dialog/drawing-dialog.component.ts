@@ -18,15 +18,16 @@
  *
  */
 
-import {Component, OnInit, Inject, Output, EventEmitter} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatTableDataSource } from '@angular/material/table';
-import {SharedStateService} from '../shared-state.service';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {Sign} from '../entity/sign';
 import {DrawStyle} from "../drawlayer/draw-style";
 import {Signs} from "../signs/signs";
 import {I18NService} from "../i18n.service";
+import {CustomImagesComponent} from "../custom-images/custom-images.component";
+import {CustomImageStoreService} from "../custom-image-store.service";
+import {ConfirmationDialogComponent} from "../confirmation-dialog/confirmation-dialog.component";
 
 @Component({
     selector: 'app-drawing-dialog',
@@ -35,25 +36,87 @@ import {I18NService} from "../i18n.service";
 })
 export class DrawingDialogComponent implements OnInit {
 
-    displayedColumns: string[] = ['symbol', 'name'];
-    dataSource = new MatTableDataSource(Signs.SIGNS.sort((a,b) => a[this.i18n.locale]> b[this.i18n.locale] ? 1 : (b[this.i18n.locale] > a[this.i18n.locale] ? -1 : 0)));
+    filter: string = null;
+    allSigns: Sign[] = null;
+    filteredSigns: Sign[] = [];
 
-    applyFilter(filterValue: string) {
-        this.dataSource.filter = filterValue.trim().toLowerCase();
+    isCustomImage(sign: Sign) {
+        return CustomImageStoreService.isCustomImage(sign.src);
     }
 
-    constructor(public dialogRef: MatDialogRef<DrawingDialogComponent>, public i18n:I18NService) {
+    loadSigns() {
+        this.allSigns = Signs.SIGNS.concat(CustomImageStoreService.getAllSigns()).sort((a, b) => {
+            let aValue = a[this.i18n.locale];
+            let bValue = b[this.i18n.locale];
+            aValue = aValue ? aValue.toLowerCase() : "";
+            bValue = bValue ? bValue.toLowerCase() : "";
+            return aValue.localeCompare(bValue);
+        });
+        this.updateAvailableSigns();
+    }
+
+    updateAvailableSigns() {
+        this.filteredSigns = this.allSigns.filter(s => !this.filter || this.i18n.getLabelForSign(s).toLowerCase().includes(this.filter));
+    }
+
+    constructor(public dialogRef: MatDialogRef<DrawingDialogComponent>, public i18n: I18NService, public dialog: MatDialog, private customImage: CustomImageStoreService) {
     }
 
     getImageUrl(file: string) {
-        return DrawStyle.getImageUrl(file);
+        if (file) {
+            let customImageDataUrl = CustomImageStoreService.getImageDataUrl(file)
+            if (customImageDataUrl) {
+                return customImageDataUrl;
+            }
+            return DrawStyle.getImageUrl(file);
+        }
+        return null;
     }
 
     ngOnInit(): void {
+        this.loadSigns();
     }
 
     select(sign: Sign) {
-        this.dialogRef.close(sign);
+        //We need to pass a deep copy of the object
+        this.dialogRef.close(JSON.parse(JSON.stringify(sign)));
+    }
+
+    editSymbol(sign: Sign) {
+        let symbolEdit = this.dialog.open(CustomImagesComponent, {data: sign, disableClose: true});
+        symbolEdit.afterClosed().subscribe(r => {
+            if (r) {
+                this.loadSigns();
+            }
+        });
+    }
+
+    addSymbol() {
+        let symbolAdd = this.dialog.open(CustomImagesComponent, {disableClose: true});
+        symbolAdd.afterClosed().subscribe(r => {
+            if (r) {
+                let label = this.i18n.getLabelForSign(r);
+                if (label) {
+                    this.filter = label;
+                }
+                this.loadSigns();
+
+            }
+        });
+    }
+
+    deleteSymbol(sign: Sign) {
+        let confirm = this.dialog.open(ConfirmationDialogComponent, {
+            data: this.i18n.get("deleteSymbolConfirm")
+        });
+        confirm.afterClosed().subscribe(r => {
+            if (r) {
+                this.customImage.deleteSign(sign.src).then(() => {
+                    this.loadSigns();
+                });
+            }
+        })
+
     }
 
 }

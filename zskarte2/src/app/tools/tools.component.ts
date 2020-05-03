@@ -83,8 +83,8 @@ export class ToolsComponent implements OnInit {
         this.downloadTime = new Date();
     }
 
-    download(withHistory: boolean): void {
-        this.downloadData = this.sanitizer.bypassSecurityTrustUrl(this.drawLayer.toDataUrl(false, withHistory));
+    download(): void {
+        this.downloadData = this.sanitizer.bypassSecurityTrustUrl(this.drawLayer.toDataUrl());
     }
 
     tagState(): void{

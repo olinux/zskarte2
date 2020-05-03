@@ -5,6 +5,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {I18NService} from "../i18n.service";
 import {DomSanitizer} from "@angular/platform-browser";
 import GeoJSON from 'ol/format/GeoJSON';
+import {CustomImageStoreService} from "../custom-image-store.service";
 
 @Component({
     selector: 'app-export-dialog',
@@ -13,11 +14,12 @@ import GeoJSON from 'ol/format/GeoJSON';
 })
 export class ExportDialogComponent implements OnInit {
 
-    constructor(@Inject(MAT_DIALOG_DATA) public data: GeoJSON, private mapStore: MapStoreService, private sharedState: SharedStateService, public dialogRef: MatDialogRef<ExportDialogComponent>, public i18n: I18NService, private sanitizer: DomSanitizer) {
+    constructor(@Inject(MAT_DIALOG_DATA) public data: GeoJSON, private mapStore: MapStoreService, private sharedState: SharedStateService, public dialogRef: MatDialogRef<ExportDialogComponent>, public i18n: I18NService, private sanitizer: DomSanitizer, private imageStore: CustomImageStoreService) {
     }
 
     withHistory = "withHistory";
     history = null;
+    images = null;
     errorMessage = null;
     downloadData = null;
     downloadTime: string = new Date().toISOString();
@@ -43,7 +45,8 @@ export class ExportDialogComponent implements OnInit {
     exportSession(): void {
         this.downloadTime = new Date().toISOString()
         let result = this.data;
-        result.session = this.sharedState.getCurrentSession()
+        result.session = this.sharedState.getCurrentSession();
+        result.images = this.imageStore.getAllEntriesForCurrentSession();
         if(this.withHistory === "withHistory") {
             result.history = this.history;
         }

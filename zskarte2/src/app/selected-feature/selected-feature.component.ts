@@ -5,6 +5,8 @@ import {DrawStyle} from "../drawlayer/draw-style";
 import {I18NService} from "../i18n.service";
 import {MatDialog} from "@angular/material/dialog";
 import {DrawingDialogComponent} from "../drawing-dialog/drawing-dialog.component";
+import {CustomImageStoreService} from "../custom-image-store.service";
+import {ConfirmationDialogComponent} from "../confirmation-dialog/confirmation-dialog.component";
 
 @Component({
     selector: 'app-selected-feature',
@@ -13,7 +15,7 @@ import {DrawingDialogComponent} from "../drawing-dialog/drawing-dialog.component
 })
 export class SelectedFeatureComponent implements OnInit {
 
-    constructor(public drawDialog: MatDialog, private sharedState: SharedStateService, public i18n: I18NService) {
+    constructor(public dialog: MatDialog, private sharedState: SharedStateService, public i18n: I18NService) {
     }
 
     selectedFeature: any = null;
@@ -50,7 +52,7 @@ export class SelectedFeatureComponent implements OnInit {
     }
 
     chooseSymbol() {
-        const dialogRef = this.drawDialog.open(DrawingDialogComponent);
+        const dialogRef = this.dialog.open(DrawingDialogComponent);
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.selectedSignature.src = result.src;
@@ -62,7 +64,7 @@ export class SelectedFeatureComponent implements OnInit {
         });
     }
 
-    removeSymbol(){
+    removeSymbol() {
         this.selectedSignature.src = null;
         this.selectedSignature.de = null;
         this.selectedSignature.fr = null;
@@ -71,10 +73,22 @@ export class SelectedFeatureComponent implements OnInit {
     }
 
     delete() {
-        this.sharedState.deleteFeature(this.selectedFeature);
+        let confirm = this.dialog.open(ConfirmationDialogComponent, {
+            data: this.i18n.get('removeFeatureFromMapConfirm')
+        });
+        confirm.afterClosed().subscribe(r => {
+            if (r) {
+                this.sharedState.deleteFeature(this.selectedFeature);
+            }
+        });
+
     }
 
     getImageUrl(file: string) {
+        let imageFromStore = CustomImageStoreService.getImageDataUrl(file)
+        if (imageFromStore) {
+            return imageFromStore;
+        }
         return DrawStyle.getImageUrl(file);
     }
 

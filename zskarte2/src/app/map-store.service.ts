@@ -1,16 +1,14 @@
 import {Injectable} from '@angular/core';
 import {NgxIndexedDBService} from "ngx-indexed-db";
 import GeoJSON from 'ol/format/GeoJSON';
-import {Md5} from "ts-md5";
-import {unwrapResolvedMetadata} from "@angular/compiler";
 
 @Injectable({
     providedIn: 'root'
 })
 export class MapStoreService {
 
-    static STORE_MAP: string = "map";
-    static STORE_HISTORY: string = "history";
+    public static STORE_MAP: string = "map";
+    public static STORE_HISTORY: string = "history";
 
     constructor(private dbService: NgxIndexedDBService) {
     }

@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from "rxjs";
 import {PreferencesService} from "./preferences.service";
+import {Sign} from "./entity/sign";
 
 export const LOCALES: string[] = ["de", "fr", "en"];
 export const DEFAULT_LOCALE: string = LOCALES[0];
@@ -29,14 +30,33 @@ export class I18NService {
         return this._locale;
     }
 
+    public getLabelForSign(sign:Sign){
+        let chosenLang = sign[this.locale];
+        if(chosenLang){
+            return chosenLang;
+        }
+        else{
+            for(let locale of LOCALES){
+                if(sign[locale]){
+                    return sign[locale];
+                }
+            }
+        }
+        return null;
+    }
+
     public get(key: string): string {
         const element = I18NService.TRANSLATIONS[key];
         if (element) {
             const chosenLang = element[this.locale];
             if (chosenLang) {
                 return chosenLang;
-            } else {
-                return element[DEFAULT_LOCALE];
+            } else{
+                for(let locale of LOCALES){
+                    if(element[locale]){
+                        return element[locale];
+                    }
+                }
             }
         }
         throw new Error("Was not able to find an entry in translation table for key " + key);
@@ -147,6 +167,11 @@ export class I18NService {
             de: "Polygon",
             en: "Polygon",
             fr: "Polygone"
+        },
+        point: {
+          de: "Punkt",
+          en: "Point",
+          fr: "Point"
         },
         circle: {
             de: "Kreis",
@@ -484,8 +509,47 @@ export class I18NService {
             de: "Rechts ausrichten",
             en: "Align right",
             fr: "Aligner à droite"
+        },
+        addSymbol:{
+            de: "Hinzufügen",
+            en: "Add",
+            fr: "Ajouter"
+        },
+        deleteLastPointOnFeature: {
+            de: "Diese Form besteht aus dem Minimum nötiger Punkte.",
+            fr: "Cette forme consiste en un nombre minimum de points.",
+            en: "This shape consists of a minimal number of points."
+        },
+        removeFeatureFromMapConfirm: {
+            de: "Möchten Sie dieses Element wirklich von der Karte entfernen?",
+            fr: "Souhaitez-vous vraiment supprimer cet élément de la carte ?",
+            en: "Do you really want to remove this element from the map?"
+        },
+        shareWithOtherMaps: {
+            de: "Mit anderen Karten teilen",
+            fr: "Partager avec d'autres cartes",
+            en: "Share with other maps"
+        },
+        german:{
+            de: "Deutsch",
+            fr: "Allemand",
+            en: "German"
+        },
+        french: {
+            de: "Französisch",
+            fr: "Français",
+            en: "French"
+        },
+        english: {
+            de: "Englisch",
+            fr: "Anglais",
+            en: "English"
+        },
+        deleteSymbolConfirm:{
+            de: "Wollen Sie dieses Symbol wirklich löschen?",
+            fr: "Voulez-vous vraiment supprimer ce symbole ?",
+            en: "Do you really want to delete this symbol?"
         }
-
     }
     ;
 }

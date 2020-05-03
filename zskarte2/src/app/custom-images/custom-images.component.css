@@ -1,0 +1,12 @@
+img{
+    max-height: 20em;
+    max-width: 20em;
+}
+
+.imageWrapper{
+    text-align: center;
+}
+
+mat-form-field{
+    display: block;
+}
