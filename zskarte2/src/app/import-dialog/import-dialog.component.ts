@@ -21,6 +21,7 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {MatDialogRef} from "@angular/material/dialog";
 import {I18NService} from "../i18n.service";
+import {GeoadminService} from "../geoadmin.service";
 
 @Component({
     selector: 'app-import-dialog',
@@ -29,9 +30,15 @@ import {I18NService} from "../i18n.service";
 })
 export class ImportDialogComponent implements OnInit {
 
-    @ViewChild('fileInput', { static: false }) el: ElementRef;
+    @ViewChild('fileInput', {static: false}) el: ElementRef;
 
-    constructor(public dialogRef: MatDialogRef<ImportDialogComponent>, public i18n:I18NService) {
+    geoadminLayer;
+    geoadminKey;
+    geoadminValue;
+    replace:boolean;
+
+
+    constructor(public dialogRef: MatDialogRef<ImportDialogComponent>, public i18n: I18NService, private geoadminService: GeoadminService) {
     }
 
     ngOnInit() {
@@ -47,10 +54,21 @@ export class ImportDialogComponent implements OnInit {
             reader.onload = () => {
                 // this 'text' is the content of the file
                 const text = reader.result;
-                this.dialogRef.close(text);
+                this.dialogRef.close({replace: this.replace, value: text});
             };
             reader.readAsText(this.el.nativeElement.files[index], 'UTF-8');
         }
+    }
+
+    importFromGeoadmin() {
+        this.geoadminService.queryPolygons(this.geoadminLayer, this.geoadminKey, this.geoadminValue).then(features => {
+            let featureWrapper = {
+                type: "FeatureCollection",
+                features: features
+            }
+            this.dialogRef.close({replace: this.replace, value: JSON.stringify(featureWrapper)});
+
+        });
     }
 
 }

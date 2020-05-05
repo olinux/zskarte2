@@ -18,6 +18,7 @@
  *
  */
 
+
 #history {
     position: absolute;
     bottom: 0;
@@ -27,20 +28,11 @@
 
 .selector{
     height: 20em;
-    width: 100%;
-    position: relative;
-}
-
-.timeline{
-    scroll-behavior: smooth;
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    height: 100%;
     overflow: auto;
 }
 
-.timeline .event {
+
+.event {
     margin-top: 1em;
     line-height: 1.5em;
     margin-left:2em;
@@ -49,8 +41,8 @@
     cursor: pointer;
 }
 
-.timeline .startSpacer{
-    //padding-top: 8.75em;
+.selected{
+    background: rgba(198, 198, 198, 0.3);
 }
 
 .loader{

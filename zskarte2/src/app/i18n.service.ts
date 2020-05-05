@@ -218,11 +218,6 @@ export class I18NService {
             fr: "Charger à partir du fichier",
             en: "Load from file"
         },
-        importDrawing: {
-            de: "Mit importierter Zeichnung ersetzen",
-            fr: "Remplacer par un dessin importé",
-            en: "Replace with imported drawing"
-        },
         import: {
             de: "Importieren",
             fr: "Importer",
@@ -549,7 +544,48 @@ export class I18NService {
             de: "Wollen Sie dieses Symbol wirklich löschen?",
             fr: "Voulez-vous vraiment supprimer ce symbole ?",
             en: "Do you really want to delete this symbol?"
+        },
+        defineCoordinates: {
+            de: "Koordinaten definieren",
+            en: "Define coordinates",
+            fr: "Définir les coordonnées"
+        },
+        replaceByImport: {
+            de: "Existierende Elemente mit Import ersetzen",
+            fr: "Remplacer les éléments existants par l'import",
+            en: "Replace existing elements with import"
+        },
+        importFromFile: {
+            de: "Von Datei",
+            en: "From File",
+            fr: "Du fichier"
+        },
+        importFromGeoadmin: {
+            de: "Von Geoadmin",
+            en: "From Geoadmin",
+            fr: "De Geoadmin"
+        },
+        importFromGeoadminDescription:{
+            de: "Um Formen von Geoadmin importieren zu können, benötigen Sie den Layer-Namen (z.B. \"ch.swisstopo.swissboundaries3d-gemeinde-flaeche.fill\") sowie einen Suchschlüssel und dessen Wert, nach welchen die Metadaten gefiltert werden (z.B. \"kanton\" als Schlüssel und \"FR\" als Wert um alle Gemeinden von Fribourg zu importieren)",
+            fr: "Pour importer des formes de geoadmin, vous avez besoin du nom de la couche (par exemple \"ch.swisstopo.swissboundaries3d-gemeinde-flaeche.fill\") ainsi que d'une clé de recherche et de sa valeur, selon laquelle les métadonnées seront filtrées (par exemple \"kanton\" comme clé et \"FR\" comme valeur pour importer toutes les communes de Fribourg)",
+            en: "To import forms of geoadmin, you need the layer name (e.g. \"ch.swisstopo.swissboundaries3d-gemeinde-flaeche.fill\") as well as a search key and its value, according to which the metadata will be filtered (e.g. \"canton\" as key and \"FR\" as value to import all communes of Fribourg)"
+        },
+        geoadminImportLayer: {
+            de: "Layer",
+            en: "Layer",
+            fr: "Couche"
+        },
+        geoadminImportKey: {
+            de: "Such-Schlüssel",
+            en: "Search key",
+            fr: "Clé de recherche"
+        },
+        geoadminImportValue: {
+            de: "Wert",
+            en: "Value",
+            fr: "Valeur"
         }
+
     }
-    ;
+
 }

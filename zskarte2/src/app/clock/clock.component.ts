@@ -32,7 +32,7 @@ export class ClockComponent implements OnInit {
     historyDate = null;
     constructor(public i18n:I18NService, private sharedState: SharedStateService) {
         this.sharedState.history.subscribe(s => {
-            this.historyDate = s ? new Date(JSON.parse(s)) : null;
+            this.historyDate = s ? new Date(s) : null;
             this.redefine();
         })
 

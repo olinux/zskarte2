@@ -38,6 +38,8 @@ import CENTER_LEFT from "ol/OverlayPositioning";
 import {CustomImageStoreService} from "../custom-image-store.service";
 import {MatDialog} from "@angular/material/dialog";
 import {ConfirmationDialogComponent} from "../confirmation-dialog/confirmation-dialog.component";
+import {v4 as uuidv4} from 'uuid';
+import {EditCoordinatesComponent} from "../edit-coordinates/edit-coordinates.component";
 
 export const DRAW_LAYER_ZINDEX = 100000;
 
@@ -58,6 +60,7 @@ export class DrawlayerComponent implements OnInit {
     maxZIndex = 0;
     minZIndex = 0;
 
+
     source = new Vector({
         format: new GeoJSON()
     });
@@ -72,7 +75,6 @@ export class DrawlayerComponent implements OnInit {
         //condition: never
         layers: [this.layer],
         hitTolerance: 10
-
     });
 
     lastModificationPointCoordinates = null;
@@ -116,6 +118,8 @@ export class DrawlayerComponent implements OnInit {
         return -1;
     }
 
+
+
     private getCoordinationGroupOfLastPoint() {
         //Since we're working with single select, this should be only one - we iterate it nevertheless for being defensive
         for (let feature of this.select.getFeatures().getArray()) {
@@ -153,10 +157,26 @@ export class DrawlayerComponent implements OnInit {
         return null;
     }
 
-    private drawingManipulated() {
+    private drawingManipulated(feature:Feature, changeEvent=false) {
         if (this.recordChanges) {
-            this.status = "Save changes";
-            this.save().then(this.status = null);
+            if(changeEvent){
+                //There are too many change events (also when a feature is selected / unselected). We don't want to save those events since they are not manipulating anything...
+                if (this.selectedFeature && this.selectedFeature.getId() === feature.getId()) {
+                    if (this.select.getFeatures().getLength() == 0) {
+                        console.log("This was a unselect only");
+                    } else {
+                        console.log("Save changes");
+                        this.status = "Save changes";
+                        this.save().then(this.status = null);
+                    }
+                } else {
+                    console.log("This was a select only");
+                }
+            }
+            else{
+                this.save().then(this.status = null);
+            }
+
         }
     }
 
@@ -170,7 +190,7 @@ export class DrawlayerComponent implements OnInit {
             positioning: CENTER_LEFT,
             offset: [10, 0]
         });
-        this.modify.addEventListener('modifystart', e => {
+        this.modify.addEventListener('modifystart', () => {
             this.toggleRemoveButton(false);
         });
         this.modify.addEventListener('modifyend', e => {
@@ -213,32 +233,31 @@ export class DrawlayerComponent implements OnInit {
         this.layer.setZIndex(DRAW_LAYER_ZINDEX);
         this.map = this.inputMap;
         this.map.addOverlay(this.removeButton);
-        this.source.drawLayer = this;
-        this.select.drawLayer = this;
-        this.map.drawLayer = this;
-        this.modify.drawLayer = this;
         this.map.addInteraction(this.select);
         this.map.addInteraction(this.modify);
         this.map.addInteraction(this.drawHole);
         this.drawHole.setActive(true);
-        this.drawHole.drawLayer = this;
-        this.select.addEventListener('select', function (e) {
-            this.drawLayer.selectionChanged();
+        this.select.addEventListener('select', e=>{
+            this.selectionChanged();
         })
-        this.source.addEventListener('addfeature', function (e) {
-            this.drawLayer.drawingManipulated();
+        this.source.addEventListener('addfeature', e=> {
+            if(!e.feature.getId()){
+                e.feature.setId(uuidv4())
+            }
+            this.selectionChanged();
+            this.drawingManipulated(e.feature);
         });
-        this.source.addEventListener('removefeature', function (e) {
-            this.drawLayer.drawingManipulated();
+        this.source.addEventListener('removefeature', e=> {
+            this.drawingManipulated(e.feature);
         });
-        this.source.addEventListener('changefeature', function (e) {
-            this.drawLayer.drawingManipulated();
+        this.source.addEventListener('changefeature', e=> {
+            this.drawingManipulated(e.feature, true);
         });
-        this.drawHole.addEventListener('drawend', function (e) {
-            this.drawLayer.sharedState.updateDrawHoleMode(false);
+        this.drawHole.addEventListener('drawend', e=> {
+            this.sharedState.updateDrawHoleMode(false);
         });
-
-        this.sharedState.deletedFeature.subscribe(feature => this.removeFeature(feature))
+        this.sharedState.defineCoordinates.subscribe(defineCoordinates => {if(defineCoordinates){ this.defineCoordinates()}});
+        this.sharedState.deletedFeature.subscribe(feature => this.removeFeature(feature));
         this.sharedState.currentSign.subscribe(sign => this.startDrawing(sign));
         this.sharedState.drawHoleMode.subscribe(drawHole => this.doDrawHole(drawHole));
         this.sharedState.history.subscribe(history => this.toggleHistory(history));
@@ -260,10 +279,9 @@ export class DrawlayerComponent implements OnInit {
                     this.currentSessionId = s.uuid;
                     //The session has changed - we need to reload
                     this.status = "Now loading the map...";
-                    this.load().then(() => {
+                    this.load(false).then(() => {
                         this.status = "Map loaded";
                         this.recordChanges = true;
-                        //this.startAutoSave();
                     });
                 }
             } else {
@@ -282,19 +300,31 @@ export class DrawlayerComponent implements OnInit {
                 }
             }
         );
-
-        this
-            .source
-            .on(
-                'addfeature'
-                ,
-                function () {
-                    this.drawLayer.selectionChanged();
-                }
-            );
     }
 
     mergeSource: any = null;
+
+    defineCoordinates(){
+        let currentFeature = this.select.getFeatures().getLength() == 1 ? this.select.getFeatures().item(0) : null;
+        if(currentFeature) {
+            let editDialog = this.dialog.open(EditCoordinatesComponent, {data: JSON.stringify(currentFeature.getGeometry().getCoordinates())});
+            editDialog.afterClosed().subscribe(result => {
+                if(result){
+                    try{
+                        currentFeature.getGeometry().setCoordinates(JSON.parse(result));
+                    }
+                    catch(e){
+                        console.log("Invalid JSON payload");
+                    }
+                }
+
+                this.sharedState.defineCoordinates.next(false);
+            })
+        }
+        else{
+            this.sharedState.defineCoordinates.next(false);
+        }
+    }
 
     splitMode(split: boolean) {
         if (split) {
@@ -331,6 +361,14 @@ export class DrawlayerComponent implements OnInit {
             featureA.getGeometry().getCoordinates().forEach(c => newCoordinates.push(c));
             featureB.getGeometry().getCoordinates().forEach(c => newCoordinates.push(c));
             featureA.getGeometry().setCoordinates(newCoordinates);
+            if(featureB.get("sig").label){
+                if(featureA.get("sig").label){
+                    featureA.get("sig").label += " "+featureB.get("sig").label
+                }
+                else{
+                    featureA.get("sig").label = featureB.get("sig").label
+                }
+            }
             this.removeFeature(featureB)
             this.select.getFeatures().clear();
             this.select.getFeatures().push(featureA);
@@ -365,21 +403,32 @@ export class DrawlayerComponent implements OnInit {
         this.modify.setActive(false);
         this.select.setActive(false);
         this.mapStore.getHistoricalStateByKey(this.currentSessionId, history).then(h => {
-            this.loadElements(h);
+            this.loadElements(h, true);
         });
     }
+
+    selectedFeature:Feature;
 
     selectionChanged() {
         this.toggleRemoveButton(false)
         if (this.select.getFeatures().getLength() === 1) {
+            let feature = this.select.getFeatures().item(0);
+            this.selectedFeature = feature;
             if (this.mergeSource) {
-                this.mergeFeatures(this.mergeSource, this.select.getFeatures().item(0))
+                this.mergeFeatures(this.mergeSource, feature)
             } else {
-                this.sharedState.selectFeature(this.select.getFeatures().item(0));
+                this.sharedState.selectFeature(feature);
             }
         } else if (this.select.getFeatures().getLength() === 0) {
+            if(this.mergeSource){
+                this.sharedState.setMergeMode(false);
+            }
+            this.selectedFeature = null;
             this.sharedState.selectFeature(null);
         } else {
+            if(this.mergeSource){
+                this.sharedState.setMergeMode(false);
+            }
             window.alert('too many items selected at once!');
         }
     }
@@ -403,13 +452,13 @@ export class DrawlayerComponent implements OnInit {
         this.maxZIndex = 0;
         this.source.clear();
         this.select.getFeatures().clear();
+        DrawStyle.clearCaches();
         this.recordChanges = true;
     }
 
     removeAll() {
         if (!this.historyMode) {
-            this.mapStore.removeMap(this.currentSessionId, false).then(() => {
-            });
+            this.mapStore.removeMap(this.currentSessionId, false).then(() => {});
             this.clearDrawingArea();
             this.save();
         }
@@ -423,10 +472,12 @@ export class DrawlayerComponent implements OnInit {
         return Promise.resolve({});
     }
 
-    loadElements(elements: GeoJSON) {
+    loadElements(elements: GeoJSON, replace:boolean, reenableChangeRecording=true) {
         this.recordChanges = false;
-        this.source.clear();
-        this.select.getFeatures().clear();
+        if(replace) {
+            this.source.clear();
+            this.select.getFeatures().clear()
+        }
         if (elements) {
             this.customImages.importImages(elements.images).then(() => {
                 if (elements.session) {
@@ -450,23 +501,26 @@ export class DrawlayerComponent implements OnInit {
                 }
             });
         }
-        this.recordChanges = true;
+        if(reenableChangeRecording) {
+            this.recordChanges = true;
+        }
     }
 
-    load(): Promise<any> {
+    load(reenableChangeRecording:boolean=true, replace:boolean=true): Promise<any> {
         return new Promise<any>(resolve => {
+
             this.customImages.loadSignsInMemory().then(() => {
                 //We need to make sure the custom images are loaded before we load the map - this is why we set it in sequence.
                 this.mapStore.getMap(this.currentSessionId).then(map => {
-                    this.loadElements(map)
+                    this.loadElements(map, replace, reenableChangeRecording)
                     resolve("Elements loaded");
                 });
             });
         })
     }
 
-    loadFromString(text, save: boolean) {
-        this.loadElements(JSON.parse(text));
+    loadFromString(text, save: boolean, replace:boolean) {
+        this.loadElements(JSON.parse(text), replace);
         if (save) {
             this.save();
         }
@@ -484,8 +538,8 @@ export class DrawlayerComponent implements OnInit {
                     type: this.currentDrawingSign.type
                 });
                 drawer.drawLayer = this;
-                drawer.addEventListener('drawend', function (event) {
-                    this.drawLayer.endDrawing(event);
+                drawer.addEventListener('drawend', event => {
+                    this.endDrawing(event);
                 });
                 this.map.addInteraction(drawer);
             }

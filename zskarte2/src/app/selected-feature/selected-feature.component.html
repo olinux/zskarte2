@@ -177,6 +177,9 @@
                 <button mat-flat-button (click)="drawHole()" [disabled]="drawHoleMode"
                         *ngIf="selectedSignature.type==='Polygon' || selectedSignature.type==='MultiPolygon'"><i
                         class="material-icons">vignette</i><span>{{i18n.get("drawHole")}}</span></button>
+                <button mat-flat-button (click)="editCoordinates()"
+                        *ngIf="!sharedState.defineCoordinates.getValue() && selectedSignature.type==='Polygon'"><i
+                        class="material-icons">format_shapes</i><span>{{i18n.get("defineCoordinates")}}</span></button>
             </mat-expansion-panel>
         </div>
         <button class="primarybutton" mat-raised-button color="warn" (click)="delete()"><i

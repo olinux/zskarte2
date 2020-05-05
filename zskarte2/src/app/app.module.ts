@@ -66,6 +66,7 @@ import {MatExpansionModule} from "@angular/material/expansion";
 import {CustomImagesComponent} from './custom-images/custom-images.component';
 import {CustomImageStoreService} from "./custom-image-store.service";
 import {MapStoreService} from "./map-store.service";
+import {EditCoordinatesComponent} from './edit-coordinates/edit-coordinates.component';
 
 const dbConfig: DBConfig = {
     name: 'ZSKarte2-DB1.0',
@@ -110,7 +111,8 @@ const dbConfig: DBConfig = {
         ExportDialogComponent,
         MapLegendDisplayComponent,
         TagStateComponent,
-        CustomImagesComponent
+        CustomImagesComponent,
+        EditCoordinatesComponent
     ],
     imports: [
         BrowserModule,
@@ -144,7 +146,8 @@ const dbConfig: DBConfig = {
         ExportDialogComponent,
         MapLegendDisplayComponent,
         TagStateComponent,
-        CustomImagesComponent
+        CustomImagesComponent,
+        EditCoordinatesComponent
     ],
     providers: [],
     bootstrap: [AppComponent]

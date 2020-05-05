@@ -72,6 +72,10 @@ export class SelectedFeatureComponent implements OnInit {
         this.redraw();
     }
 
+    editCoordinates(){
+        this.sharedState.defineCoordinates.next(true);
+    }
+
     delete() {
         let confirm = this.dialog.open(ConfirmationDialogComponent, {
             data: this.i18n.get('removeFeatureFromMapConfirm')

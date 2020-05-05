@@ -24,7 +24,6 @@ import {Sign} from './entity/sign';
 import {Coordinate} from "./entity/coordinate";
 import {Session} from './entity/session';
 import {Layer} from "./layers/layer";
-import {ZSO} from "./entity/zso";
 
 @Injectable({
     providedIn: 'root'
@@ -78,6 +77,8 @@ export class SharedStateService {
 
     private tagStateSource = new BehaviorSubject<string>(null);
     tagState = this.tagStateSource.asObservable();
+
+    defineCoordinates = new BehaviorSubject<boolean>(null);
 
     doTagState(label:string){
         this.tagStateSource.next(label);
@@ -150,4 +151,7 @@ export class SharedStateService {
     didChangeLayer(){
         this.layerChangedSource.next(true)
     }
+
+
+
 }

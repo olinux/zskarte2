@@ -18,11 +18,12 @@
  *
  */
 
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {SharedStateService} from '../shared-state.service';
-import {NgxIndexedDBService} from "ngx-indexed-db";
 import {I18NService} from "../i18n.service";
 import {MapStoreService} from "../map-store.service";
+import {DomSanitizer} from "@angular/platform-browser";
+import {DrawlayerComponent} from "../drawlayer/drawlayer.component";
 
 @Component({
     selector: 'app-history',
@@ -31,10 +32,8 @@ import {MapStoreService} from "../map-store.service";
 })
 export class HistoryComponent implements OnInit {
 
-    @ViewChild('indicator') indicator;
-    @ViewChild('timeline') timeline;
-    @ViewChild('startSpacer') startSpacer;
-    currentSessionId = null;
+
+    @Input() drawLayer: DrawlayerComponent;
     history = null;
     private _historyDatesAll = null;
     private _historyDatesAllLocale = null
@@ -42,9 +41,21 @@ export class HistoryComponent implements OnInit {
     private _historyDatesFilteredLocale = null;
     tagSource = null;
     public showHistory = false;
-    itemHeight = null;
     filtered: boolean = true
+    downloadData = null;
+    downloadTime = null;
 
+
+    getDownloadFileName() {
+        return "history_zskarte_" + this.selectedDate + ".geojson";
+    }
+
+    private selectedDate:string;
+
+    select(date:string, index:number){
+        this.selectedDate = date;
+        this.sharedState.gotoHistory(this.historyDates[index])
+    }
 
     get historyDates(): string[] {
         if (this.filtered) {
@@ -55,16 +66,15 @@ export class HistoryComponent implements OnInit {
 
     get historyDatesLocale(): string[] {
         if (this.filtered) {
+            if(!this._historyDatesFilteredLocale.includes(this.selectedDate)){
+                this.select(this._historyDatesFilteredLocale[0], 0)
+            }
             return this._historyDatesFilteredLocale;
         }
         return this._historyDatesAllLocale;
     }
 
-    constructor(private sharedState: SharedStateService, private mapStore: MapStoreService, public i18n: I18NService) {
-        this.currentSessionId = this.sharedState.getCurrentSession();
-        this.sharedState.session.subscribe(s => {
-            this.currentSessionId = s != null ? s.uuid : null
-        });
+    constructor(private sanitizer: DomSanitizer, private sharedState: SharedStateService, private mapStore: MapStoreService, public i18n: I18NService) {
     }
 
     ngOnInit(): void {
@@ -89,27 +99,29 @@ export class HistoryComponent implements OnInit {
         this.history = history;
         this.tagSource = history.tags;
         this._historyDatesAll = Object.keys(history.states).sort().reverse();
-        this._historyDatesAllLocale = this._historyDatesAll.map(h => new Date(JSON.parse(h)).toLocaleString());
+        this._historyDatesAllLocale = this._historyDatesAll.map(h => new Date(h).toLocaleString());
         let lastDate: Date = null;
         this._historyDatesFiltered = [];
         for (let historyDate of this._historyDatesAll) {
-            let realDate = new Date(JSON.parse(historyDate));
+            let realDate = new Date(historyDate);
             if (!lastDate || historyDate === this._historyDatesAll[this._historyDatesAll.length - 1] || lastDate.getTime() - realDate.getTime() > TIME_DIFF_BETWEEN_EVENTS || historyDate in this.tagSource) {
+
                 this._historyDatesFiltered.push(historyDate);
                 lastDate = realDate;
             }
         }
-        this._historyDatesFilteredLocale = this._historyDatesFiltered.map(h => new Date(JSON.parse(h)).toLocaleString());
-        this.loading = false;
-        if (this.historyDates.length > 0) {
-            this.goToIndex(0, 0);
+        this._historyDatesFilteredLocale = this._historyDatesFiltered.map(h => new Date(h).toLocaleString());
+        if(!this.selectedDate || !this.historyDatesLocale.includes(this.selectedDate)){
+            this.select(this.historyDatesLocale[0], 0)
         }
+        this.loading = false;
+
     }
 
 
     private loadHistoryFromDB() {
         this.loading = true;
-        this.mapStore.getHistory(this.currentSessionId).then(history => this.loadHistory(history));
+        this.mapStore.getHistory(this.sharedState.getCurrentSession().uuid).then(history => this.loadHistory(history));
     }
 
     toggleHistoryMode() {
@@ -120,61 +132,16 @@ export class HistoryComponent implements OnInit {
         }
     }
 
-
-    targetScroll = null;
-    lastHandledScrollPosition = null;
-    targetIndex = null;
-    lastShownIndex = null;
     loading = false;
 
-    goToIndex(index, delay) {
-        this.ensureItemHeightCalc();
-        let expectedPosition = index * this.itemHeight;
-        if (this.timeline.nativeElement.scrollTop != expectedPosition) {
-            //It's not a precise scroll - so we programmatically scroll to the correct position (we do this deferred to reduce the load)
-            this.targetScroll = expectedPosition
-            setTimeout(() => {
-                if (this.timeline.nativeElement.scrollTop !== this.targetScroll) {
-                    this.timeline.nativeElement.scrollTo(0, this.targetScroll);
-                }
-            }, delay);
-
-        }
-        this.targetIndex = index;
-        this.loading = true;
-        setTimeout(() => {
-            if (this.targetIndex !== this.lastShownIndex) {
-                this.lastShownIndex = this.targetIndex;
-                this.sharedState.gotoHistory(this.historyDates[this.targetIndex])
-            }
-            this.loading = false;
-        }, 500)
-    }
-
-    ensureItemHeightCalc() {
-        if (!this.itemHeight) {
-            this.itemHeight = this.indicator.nativeElement.clientHeight;
-        }
-    }
-
-    handleScrollDeferred() {
-        let scrollTop = this.timeline.nativeElement.scrollTop;
-        if (!this.lastHandledScrollPosition || this.lastHandledScrollPosition !== scrollTop) {
-            this.lastHandledScrollPosition = scrollTop;
-            this.ensureItemHeightCalc();
-            this.goToIndex(Math.round(scrollTop / this.itemHeight), 200);
-        }
-    }
-
-    handleScroll(event) {
-        setTimeout(() => this.handleScrollDeferred(), 200);
-    }
-
     removeTag(index) {
-        this.mapStore.removeTag(this.currentSessionId, this.historyDates[index]).then(() => {
+        this.mapStore.removeTag(this.sharedState.getCurrentSession().uuid, this.historyDates[index]).then(() => {
             this.loadHistoryFromDB();
-
         });
+    }
+
+    download(): void {
+        this.downloadData = this.sanitizer.bypassSecurityTrustUrl(this.drawLayer.toDataUrl());
     }
 
 }

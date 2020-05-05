@@ -25,15 +25,15 @@
     "bootstrap": "^4.4.1",
     "material-design-icons": "^3.0.1",
     "ngx-indexed-db": "^4.0.14",
+    "ngx-md": "^8.1.6",
     "ol": "^6.3.1",
     "ol-ext": "^3.1.12",
     "proj4": "^2.5.0",
     "rxjs": "~6.5.5",
     "ts-md5": "^1.2.7",
     "tslib": "^1.10.0",
-    "zone.js": "~0.10.2",
     "uuid": "^7.0.3",
-    "ngx-md": "^8.1.6"
+    "zone.js": "~0.10.2"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.901.1",

@@ -53,12 +53,12 @@ export class ToolsComponent implements OnInit {
             maxHeight: '80vh'
         });
         dialogRef.afterClosed().subscribe(result => {
-            if(result) {
+            if(result && result.value) {
                 this.dialog.open(ConfirmationDialogComponent, {
                     data: this.i18n.get('confirmImportDrawing')
                 }).afterClosed().subscribe(confirmed => {
                     if (confirmed) {
-                        this.drawLayer.loadFromString(result, true);
+                        this.drawLayer.loadFromString(result.value, true, result.replace);
                     }
                 })
             }
@@ -91,7 +91,7 @@ export class ToolsComponent implements OnInit {
         const dialogRef = this.dialog.open(TagStateComponent);
         dialogRef.afterClosed().subscribe(result => {
             if(result) {
-                this.mapStore.setTag(this.sharedState.getCurrentSession().uuid, result).then(()=>{});
+                this.mapStore.setTag(result).then(()=>{});
             }
         });
     }

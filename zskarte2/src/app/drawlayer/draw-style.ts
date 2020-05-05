@@ -46,11 +46,11 @@ export class DrawStyle {
         return 'assets/img/signs/' + file;
     }
 
-    static scale(resolution: number, scaleFactor: number, min: number = 0.12): any {
+    private static scale(resolution: number, scaleFactor: number, min: number = 0.12): any {
         return Math.max(min, scaleFactor * Math.sqrt(0.5 * resolution) / resolution);
     }
 
-    static getDash(lineStyle: string, resolution: number): any {
+    private static getDash(lineStyle: string, resolution: number): any {
         if (lineStyle === 'dash') {
             const value = Math.max(30, DrawStyle.scale(resolution, 20));
             return [value, value];
@@ -59,7 +59,7 @@ export class DrawStyle {
         }
     }
 
-    static getDashOffset(lineStyle: string, resolution: number): any {
+    private static getDashOffset(lineStyle: string, resolution: number): any {
         if (lineStyle === 'dash') {
             return Math.max(30, DrawStyle.scale(resolution, 20));
         } else {
@@ -67,7 +67,11 @@ export class DrawStyle {
         }
     }
 
-    static styleFunctionSelect(feature, resolution): any {
+    public static styleFunctionSelect(feature, resolution): any {
+        if(resolution!==DrawStyle.lastResolution){
+            DrawStyle.lastResolution = resolution;
+            DrawStyle.clearCaches();
+        }
         // The feature shall not be displayed or is errorenous. Therefore, we return an empty style.
         const signature = feature.get('sig');
         if (!signature) {
@@ -82,7 +86,12 @@ export class DrawStyle {
     }
 
 
-    static styleFunction(feature, resolution): any {
+    public static styleFunction(feature, resolution): any {
+        if(resolution!==DrawStyle.lastResolution){
+            DrawStyle.lastResolution = resolution;
+            DrawStyle.clearCaches();
+        }
+
         // The feature shall not be displayed or is errorenous. Therefore, we return an empty style.
         const signature = feature.get('sig');
         if (!signature) {
@@ -97,9 +106,20 @@ export class DrawStyle {
         // }
     }
 
+    private static symbolStyleCache={};
+    private static vectorStyleCache={};
+    private static imageCache={};
+    private static colorFill={};
 
-    private static symbolStyleCache = {}
-    private static vectorStyleCache = {}
+    private static lastResolution=null;
+
+    public static clearCaches(){
+        DrawStyle.symbolStyleCache = {};
+        DrawStyle.vectorStyleCache = {};
+        DrawStyle.colorFill = {};
+        DrawStyle.imageCache = {};
+    }
+
 
     private static calculateCacheHashForSymbol(signature, feature, resolution, selected): string {
         return Md5.hashStr(JSON.stringify({
@@ -134,7 +154,7 @@ export class DrawStyle {
     }
 
 
-    static getAnchorCoordinate(feature) {
+    private static getAnchorCoordinate(feature) {
         switch (feature.getGeometry().getType()) {
             case "Point":
                 return feature.getGeometry().getCoordinates();
@@ -143,7 +163,7 @@ export class DrawStyle {
 
     }
 
-    static getIconCoordinates(feature, resolution) {
+    private static getIconCoordinates(feature, resolution) {
         let signature = feature.get('sig');
         let symbolAnchorCoordinate = getMostTopCoordinate(feature);
         let offset = signature.iconOffset;
@@ -152,14 +172,12 @@ export class DrawStyle {
         return [symbolAnchorCoordinate, symbolCoordinate]
     }
 
-    static createLineToIcon(feature, resolution) {
+    private static createLineToIcon(feature, resolution) {
         let iconCoordinates = DrawStyle.getIconCoordinates(feature, resolution);
         let symbolAnchorCoordinate = iconCoordinates[0];
         let symbolCoordinate = iconCoordinates[1];
         return new LineString([symbolCoordinate, [(symbolCoordinate[0] + symbolAnchorCoordinate[0] * 2) / 3, (symbolCoordinate[1] + symbolAnchorCoordinate[1]) / 2], symbolAnchorCoordinate]);
     }
-
-    private static colorFill = {}
 
     private static getColorFill(color) {
         let result = this.colorFill[color];
@@ -187,8 +205,6 @@ export class DrawStyle {
         }
         return stroke;
     }
-
-    private static imageCache = {}
 
     private static getIconStyle(feature, resolution, signature, selected, scale): Style[] {
         const zIndex = selected ? Infinity: this.getZIndex(feature)
@@ -419,7 +435,7 @@ export class DrawStyle {
         return null;
     }
 
-    static imageStyleFunction(feature, resolution, signature, selected): any {
+    private static imageStyleFunction(feature, resolution, signature, selected): any {
         defineDefaultValuesForSignature(signature);
         let scale = DrawStyle.scale(resolution, DrawStyle.defaultScaleFactor);
         let vectorStyles = this.getVectorStyles(feature, resolution, signature, selected, scale);
@@ -434,9 +450,7 @@ export class DrawStyle {
         return styles;
     }
 
-
-
-    static textStyleFunction(feature, resolution, selected) {
+    private static textStyleFunction(feature, resolution, selected) {
         let defaultScale = DrawStyle.scale(resolution, DrawStyle.defaultScaleFactor);
         let signature = feature.get('sig');
         defineDefaultValuesForSignature(signature);
@@ -482,7 +496,7 @@ export class DrawStyle {
         return textStyles;
     }
 
-    static colorFunction = function (signatureColor, alpha) {
+    private static colorFunction = function (signatureColor, alpha) {
         if (signatureColor) {
             let hexAlpha = (Math.floor(255 * (alpha !== undefined ? alpha : 1))).toString(16);
             if (hexAlpha.length == 1) {
