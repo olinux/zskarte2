@@ -78,6 +78,7 @@ export class SharedStateService {
     private tagStateSource = new BehaviorSubject<string>(null);
     tagState = this.tagStateSource.asObservable();
 
+    showMapLoader = new BehaviorSubject<boolean>(false);
     defineCoordinates = new BehaviorSubject<boolean>(null);
 
     doTagState(label:string){

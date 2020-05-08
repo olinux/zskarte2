@@ -119,7 +119,6 @@ export class DrawlayerComponent implements OnInit {
     }
 
 
-
     private getCoordinationGroupOfLastPoint() {
         //Since we're working with single select, this should be only one - we iterate it nevertheless for being defensive
         for (let feature of this.select.getFeatures().getArray()) {
@@ -157,9 +156,9 @@ export class DrawlayerComponent implements OnInit {
         return null;
     }
 
-    private drawingManipulated(feature:Feature, changeEvent=false) {
+    private drawingManipulated(feature: Feature, changeEvent = false) {
         if (this.recordChanges) {
-            if(changeEvent){
+            if (changeEvent) {
                 //There are too many change events (also when a feature is selected / unselected). We don't want to save those events since they are not manipulating anything...
                 if (this.selectedFeature && this.selectedFeature.getId() === feature.getId()) {
                     if (this.select.getFeatures().getLength() == 0) {
@@ -172,8 +171,7 @@ export class DrawlayerComponent implements OnInit {
                 } else {
                     console.log("This was a select only");
                 }
-            }
-            else{
+            } else {
                 this.save().then(this.status = null);
             }
 
@@ -208,7 +206,7 @@ export class DrawlayerComponent implements OnInit {
                 } else if (coordinationGroup.otherCoordinationGroupCount == 0) {
                     //It's the last coordination group - we can remove the feature.
                     let confirm = this.dialog.open(ConfirmationDialogComponent, {
-                        data: this.i18n.get('deleteLastPointOnFeature')+" "+this.i18n.get('removeFeatureFromMapConfirm')
+                        data: this.i18n.get('deleteLastPointOnFeature') + " " + this.i18n.get('removeFeatureFromMapConfirm')
                     })
                     confirm.afterClosed().subscribe(r => {
                         if (r) {
@@ -237,26 +235,30 @@ export class DrawlayerComponent implements OnInit {
         this.map.addInteraction(this.modify);
         this.map.addInteraction(this.drawHole);
         this.drawHole.setActive(true);
-        this.select.addEventListener('select', e=>{
+        this.select.addEventListener('select', e => {
             this.selectionChanged();
         })
-        this.source.addEventListener('addfeature', e=> {
-            if(!e.feature.getId()){
+        this.source.addEventListener('addfeature', e => {
+            if (!e.feature.getId()) {
                 e.feature.setId(uuidv4())
             }
             this.selectionChanged();
             this.drawingManipulated(e.feature);
         });
-        this.source.addEventListener('removefeature', e=> {
+        this.source.addEventListener('removefeature', e => {
             this.drawingManipulated(e.feature);
         });
-        this.source.addEventListener('changefeature', e=> {
+        this.source.addEventListener('changefeature', e => {
             this.drawingManipulated(e.feature, true);
         });
-        this.drawHole.addEventListener('drawend', e=> {
+        this.drawHole.addEventListener('drawend', e => {
             this.sharedState.updateDrawHoleMode(false);
         });
-        this.sharedState.defineCoordinates.subscribe(defineCoordinates => {if(defineCoordinates){ this.defineCoordinates()}});
+        this.sharedState.defineCoordinates.subscribe(defineCoordinates => {
+            if (defineCoordinates) {
+                this.defineCoordinates()
+            }
+        });
         this.sharedState.deletedFeature.subscribe(feature => this.removeFeature(feature));
         this.sharedState.currentSign.subscribe(sign => this.startDrawing(sign));
         this.sharedState.drawHoleMode.subscribe(drawHole => this.doDrawHole(drawHole));
@@ -304,24 +306,22 @@ export class DrawlayerComponent implements OnInit {
 
     mergeSource: any = null;
 
-    defineCoordinates(){
+    defineCoordinates() {
         let currentFeature = this.select.getFeatures().getLength() == 1 ? this.select.getFeatures().item(0) : null;
-        if(currentFeature) {
+        if (currentFeature) {
             let editDialog = this.dialog.open(EditCoordinatesComponent, {data: JSON.stringify(currentFeature.getGeometry().getCoordinates())});
             editDialog.afterClosed().subscribe(result => {
-                if(result){
-                    try{
+                if (result) {
+                    try {
                         currentFeature.getGeometry().setCoordinates(JSON.parse(result));
-                    }
-                    catch(e){
+                    } catch (e) {
                         console.log("Invalid JSON payload");
                     }
                 }
 
                 this.sharedState.defineCoordinates.next(false);
             })
-        }
-        else{
+        } else {
             this.sharedState.defineCoordinates.next(false);
         }
     }
@@ -361,11 +361,10 @@ export class DrawlayerComponent implements OnInit {
             featureA.getGeometry().getCoordinates().forEach(c => newCoordinates.push(c));
             featureB.getGeometry().getCoordinates().forEach(c => newCoordinates.push(c));
             featureA.getGeometry().setCoordinates(newCoordinates);
-            if(featureB.get("sig").label){
-                if(featureA.get("sig").label){
-                    featureA.get("sig").label += " "+featureB.get("sig").label
-                }
-                else{
+            if (featureB.get("sig").label) {
+                if (featureA.get("sig").label) {
+                    featureA.get("sig").label += " " + featureB.get("sig").label
+                } else {
                     featureA.get("sig").label = featureB.get("sig").label
                 }
             }
@@ -402,12 +401,14 @@ export class DrawlayerComponent implements OnInit {
     loadFromHistory(history) {
         this.modify.setActive(false);
         this.select.setActive(false);
+        this.sharedState.showMapLoader.next(true);
         this.mapStore.getHistoricalStateByKey(this.currentSessionId, history).then(h => {
             this.loadElements(h, true);
+            this.sharedState.showMapLoader.next(false);
         });
     }
 
-    selectedFeature:Feature;
+    selectedFeature: Feature;
 
     selectionChanged() {
         this.toggleRemoveButton(false)
@@ -420,13 +421,13 @@ export class DrawlayerComponent implements OnInit {
                 this.sharedState.selectFeature(feature);
             }
         } else if (this.select.getFeatures().getLength() === 0) {
-            if(this.mergeSource){
+            if (this.mergeSource) {
                 this.sharedState.setMergeMode(false);
             }
             this.selectedFeature = null;
             this.sharedState.selectFeature(null);
         } else {
-            if(this.mergeSource){
+            if (this.mergeSource) {
                 this.sharedState.setMergeMode(false);
             }
             window.alert('too many items selected at once!');
@@ -458,7 +459,8 @@ export class DrawlayerComponent implements OnInit {
 
     removeAll() {
         if (!this.historyMode) {
-            this.mapStore.removeMap(this.currentSessionId, false).then(() => {});
+            this.mapStore.removeMap(this.currentSessionId, false).then(() => {
+            });
             this.clearDrawingArea();
             this.save();
         }
@@ -472,9 +474,9 @@ export class DrawlayerComponent implements OnInit {
         return Promise.resolve({});
     }
 
-    loadElements(elements: GeoJSON, replace:boolean, reenableChangeRecording=true) {
+    loadElements(elements: GeoJSON, replace: boolean, reenableChangeRecording = true) {
         this.recordChanges = false;
-        if(replace) {
+        if (replace) {
             this.source.clear();
             this.select.getFeatures().clear()
         }
@@ -501,29 +503,39 @@ export class DrawlayerComponent implements OnInit {
                 }
             });
         }
-        if(reenableChangeRecording) {
+        if (reenableChangeRecording) {
             this.recordChanges = true;
         }
     }
 
-    load(reenableChangeRecording:boolean=true, replace:boolean=true): Promise<any> {
+    load(reenableChangeRecording: boolean = true, replace: boolean = true): Promise<any> {
         return new Promise<any>(resolve => {
 
+            this.sharedState.showMapLoader.next(true);
             this.customImages.loadSignsInMemory().then(() => {
                 //We need to make sure the custom images are loaded before we load the map - this is why we set it in sequence.
                 this.mapStore.getMap(this.currentSessionId).then(map => {
                     this.loadElements(map, replace, reenableChangeRecording)
+                    this.sharedState.showMapLoader.next(false);
                     resolve("Elements loaded");
                 });
             });
         })
     }
 
-    loadFromString(text, save: boolean, replace:boolean) {
-        this.loadElements(JSON.parse(text), replace);
-        if (save) {
-            this.save();
-        }
+    loadFromString(text, save: boolean, replace: boolean) {
+        this.sharedState.showMapLoader.next(true);
+        //Deferred because we need to ensure that the loader is shown first
+        setTimeout(() => {
+            this.loadElements(JSON.parse(text), replace);
+            if (save) {
+                this.save().then(() => {
+                    this.sharedState.showMapLoader.next(false);
+                });
+            } else {
+                this.sharedState.showMapLoader.next(false)
+            }
+        }, 0)
     }
 
     private drawers: { [key: string]: Draw; } = {}

@@ -26,3 +26,19 @@
 .ol-overlaycontainer-stopevent {
     display:none!important;
 }
+
+#maploader{
+    display:none;
+    position: absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background-color: rgba(120, 120, 120, 0.58);
+    justify-content: center;
+    align-items: center;
+}
+
+#maploader.show{
+    display: flex;
+}

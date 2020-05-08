@@ -370,6 +370,11 @@ export class I18NService {
             en: "Do you really want to import this drawing? The current drawing will be replaced - the history of the map will remain though!",
             fr: "Voulez-vous vraiment importer le dessin correspondant ? Le dessin actuel sera remplacé, mais l'histoire restera !"
         },
+        confirmImportDrawingNoReplace: {
+            de: "Wollen Sie die entsprechende Zeichnung wirklich importieren? Die aktuelle Zeichnung wird dabei mit den enthaltenen Elementen ergänzt!",
+            en: "Do you really want to import the corresponding drawing? The current drawing will be extended with the contained elements!",
+            fr: "Voulez-vous vraiment importer le dessin correspondant ? Le dessin actuel sera étendu avec les éléments contenus !"
+        },
         availableLayers: {
             de: "Verfügbare Ebenen",
             en: "Available layers",

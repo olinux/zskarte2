@@ -55,7 +55,7 @@ export class ToolsComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if(result && result.value) {
                 this.dialog.open(ConfirmationDialogComponent, {
-                    data: this.i18n.get('confirmImportDrawing')
+                    data: result.replace ?  this.i18n.get('confirmImportDrawing') : this.i18n.get("confirmImportDrawingNoReplace")
                 }).afterClosed().subscribe(confirmed => {
                     if (confirmed) {
                         this.drawLayer.loadFromString(result.value, true, result.replace);

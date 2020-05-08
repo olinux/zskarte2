@@ -16,6 +16,16 @@ export class MapStoreService {
 
     constructor(private dbService: NgxIndexedDBService, private sharedState:SharedStateService) {
         this.startHistoryExtraction();
+        this.sharedState.session.subscribe(changedSession => {
+           if(changedSession){
+               this.getHistory(changedSession.uuid).then(history => {
+                   if(!history.states){
+                       this.dirtyHistory = true;
+                       this.extractHistory();
+                   }
+               })
+           }
+        });
     }
 
     private static historyRunnerLock = false;
@@ -27,19 +37,26 @@ export class MapStoreService {
         if (!MapStoreService.historyRunnerLock) {
             MapStoreService.historyRunnerLock = true;
             setInterval(() => this.extractHistory(), MapStoreService.historyExtractionInterval);
-            this.extractHistory();
         }
     }
 
+    private ongoingHistoryExtraction = false;
     private extractHistory() {
-        if(this.dirtyHistory && this.mostRecentMap && this.mostRecentSession) {
-           console.log("There was a change - I'm extracting history...");
-           this.addHistoryEntry().then(()=>{
-               console.log("History persisted");
-           });
+        if(!this.ongoingHistoryExtraction) {
+            this.ongoingHistoryExtraction = true;
+            if (this.dirtyHistory && this.mostRecentMap && this.mostRecentSession) {
+                console.log("There was a change - I'm extracting history...");
+                this.addHistoryEntry().then(() => {
+                    console.log("History persisted");
+                    this.ongoingHistoryExtraction = false;
+                });
+            } else {
+                console.log("No change since last history entry - I'm not doing anything");
+                this.ongoingHistoryExtraction = false;
+            }
         }
         else{
-            console.log("No change since last history entry - I'm not doing anything");
+            console.log("Skipping history extraction because there is already another one running...");
         }
     }
 
@@ -55,6 +72,7 @@ export class MapStoreService {
             mapUpdate.then(() => {
                 this.dirtyHistory = true;
                 console.log("Saved to database");
+                resolve(null);
             });
         });
     }
@@ -155,7 +173,11 @@ export class MapStoreService {
     }
 
     public getHistory(sessionId: string): Promise<any> {
-        return this.dbService.getByKey(MapStoreService.STORE_HISTORY, sessionId);
+        return new Promise<any>(resolve => {
+            this.dbService.getByKey(MapStoreService.STORE_HISTORY, sessionId).then(result => {
+                resolve(this.initHistory(result));
+            });
+        });
     }
 
     public saveHistory(sessionId: string, payload: any): Promise<any> {

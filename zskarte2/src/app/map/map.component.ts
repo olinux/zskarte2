@@ -18,7 +18,7 @@
  *
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import OlMap from 'ol/Map';
 import OlView from 'ol/View';
 import {transform} from 'ol/proj';
@@ -43,13 +43,15 @@ import {defaults} from "ol/interaction";
 })
 export class MapComponent implements OnInit {
 
+    @ViewChild('maploader', {static: false}) loader: ElementRef;
+
     map: OlMap = null;
     layer: Layer;
     view: OlView;
     currentSessionId: string;
 
-    positionFlagLocation:Point = new Point([0, 0]);
-    positionFlag:Feature = new Feature({
+    positionFlagLocation: Point = new Point([0, 0]);
+    positionFlag: Feature = new Feature({
         geometry: this.positionFlagLocation
     });
     navigationSource = new VectorSource({
@@ -59,7 +61,7 @@ export class MapComponent implements OnInit {
         source: this.navigationSource
     });
 
-    constructor(private sharedState: SharedStateService, private preferences: PreferencesService,  public i18n:I18NService) {
+    constructor(private sharedState: SharedStateService, private preferences: PreferencesService, public i18n: I18NService) {
         this.positionFlag.setStyle(new Style({
             image: new Icon({
                 anchor: [0.5, 1],
@@ -71,11 +73,11 @@ export class MapComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.navigationLayer.setZIndex(DRAW_LAYER_ZINDEX+1);
+        this.navigationLayer.setZIndex(DRAW_LAYER_ZINDEX + 1);
         const viewPort = this.preferences.getViewPortForSession(this.currentSessionId);
         window.addEventListener('beforeunload', (event) => {
             //Save zoom level and position before leaving (to recover when re-entering)
-            if(this.currentSessionId) {
+            if (this.currentSessionId) {
                 this.preferences.setViewPortForSession(this.currentSessionId, {
                     coordinates: this.map.getView().getCenter(),
                     zoomLevel: this.map.getView().getZoom()
@@ -89,12 +91,12 @@ export class MapComponent implements OnInit {
                 zoom: viewPort.zoomLevel
             }),
             controls: [],
-            interactions : defaults({doubleClickZoom :false, rotate: false, pinchRotate: false, shiftDragZoom: false}),
+            interactions: defaults({doubleClickZoom: false, rotate: false, pinchRotate: false, shiftDragZoom: false}),
             //controls: [mousePositionControl]
         });
         this.map.addLayer(this.navigationLayer);
         this.sharedState.session.subscribe(s => {
-            if(s && s.uuid !== this.currentSessionId){
+            if (s && s.uuid !== this.currentSessionId) {
                 this.currentSessionId = s.uuid;
                 const viewPort = this.preferences.getViewPortForSession(this.currentSessionId);
                 this.map.getView().setCenter(viewPort.coordinates);
@@ -110,20 +112,20 @@ export class MapComponent implements OnInit {
             }
         });
         this.sharedState.addAdditionalLayer.subscribe(layer => {
-            if(layer!=null){
+            if (layer != null) {
                 this.map.addLayer(layer);
                 this.sharedState.didChangeLayer();
             }
         });
         this.sharedState.removeAdditionalLayer.subscribe(layer => {
-            if(layer!=null){
+            if (layer != null) {
                 this.map.removeLayer(layer);
                 this.sharedState.didChangeLayer();
             }
         });
 
         this.sharedState.currentLayer.subscribe(layer => {
-            if(layer!=null) {
+            if (layer != null) {
                 if (this.layer != null) {
                     this.map.removeLayer(this.layer.olLayer);
                 }
@@ -132,8 +134,17 @@ export class MapComponent implements OnInit {
 
                 this.sharedState.didChangeLayer();
             }
-        });
+        })
 
+        this.sharedState.showMapLoader.subscribe(show => {
+            if(this.loader) {
+                if (show) {
+                    this.loader.nativeElement.classList.add("show");
+                } else {
+                    this.loader.nativeElement.classList.remove("show")
+                }
+            }
+        })
     }
 
 }
