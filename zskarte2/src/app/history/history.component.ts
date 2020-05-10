@@ -18,12 +18,10 @@
  *
  */
 
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {SharedStateService} from '../shared-state.service';
 import {I18NService} from "../i18n.service";
 import {MapStoreService} from "../map-store.service";
-import {DomSanitizer} from "@angular/platform-browser";
-import {DrawlayerComponent} from "../drawlayer/drawlayer.component";
 import {DisplayMode} from "../entity/displayMode";
 
 @Component({
@@ -32,7 +30,6 @@ import {DisplayMode} from "../entity/displayMode";
     styleUrls: ['./history.component.css']
 })
 export class HistoryComponent implements OnInit {
-    @Input() drawLayer: DrawlayerComponent;
     history = null;
     private _historyDatesAll = null;
     private _historyDatesAllLocale = null
@@ -41,11 +38,10 @@ export class HistoryComponent implements OnInit {
     tagSource = null;
     public showHistory = false;
     filtered: boolean = true
-    downloadData = null;
     loading = false;
     private selectedDate:string;
 
-    constructor(private sanitizer: DomSanitizer, private sharedState: SharedStateService, private mapStore: MapStoreService, public i18n: I18NService) {
+    constructor(private sharedState: SharedStateService, private mapStore: MapStoreService, public i18n: I18NService) {
         this.sharedState.displayMode.subscribe(m => this.loadHistoryWhenEnabled(m));
         this.sharedState.session.subscribe(s => {if(s){
             this.loadHistoryWhenEnabled(this.sharedState.displayMode.getValue());
@@ -89,8 +85,11 @@ export class HistoryComponent implements OnInit {
 
 
     private loadHistoryWhenEnabled(mode:DisplayMode){
+        if(!this.showHistory && mode === DisplayMode.HISTORY){
+            this.selectedDate = null;
+        }
         this.showHistory = mode === DisplayMode.HISTORY;
-        if(this.showHistory && this.sharedState.getCurrentSession()) {
+        if(this.showHistory && this.sharedState.getCurrentSession()){
             this.loadHistoryFromDB();
         }
     }
@@ -145,10 +144,6 @@ export class HistoryComponent implements OnInit {
         this.mapStore.removeTag(this.sharedState.getCurrentSession().uuid, this.historyDates[index]).then(() => {
             this.loadHistoryFromDB();
         });
-    }
-
-    download(): void {
-        this.downloadData = this.sanitizer.bypassSecurityTrustUrl(this.drawLayer.toDataUrl());
     }
 
 }

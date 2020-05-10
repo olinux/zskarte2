@@ -283,15 +283,25 @@ export class I18NService {
             fr: "Votre texte",
             en: "Your text"
         },
+        drawing: {
+            de: "Zeichnung",
+            fr: "Dessin",
+            en: "Drawing"
+        },
         currentDrawing: {
             de: "Aktuelle Zeichnung",
             fr: "Dessin actuel",
             en: "Current drawing"
         },
         history: {
-            de: "History anzeigen",
-            fr: "Voir l'histoire",
-            en: "Show history"
+            de: "History- / Lese-Modus",
+            fr: "Mode historique / lecture",
+            en: "History / read mode"
+        },
+        drawMode: {
+            de: "Zeichnungsmodus",
+            fr: "Mode de dessin",
+            en: "Drawing mode"
         },
         color: {
             de: "Farbe",

@@ -28,6 +28,7 @@ import {SharedStateService} from "../shared-state.service";
 import {ConfirmationDialogComponent} from "../confirmation-dialog/confirmation-dialog.component";
 import {TagStateComponent} from "../tag-state/tag-state.component";
 import {MapStoreService} from "../map-store.service";
+import {DisplayMode} from "../entity/displayMode";
 
 
 @Component({
@@ -40,8 +41,14 @@ export class ToolsComponent implements OnInit {
     @Input() drawLayer: DrawlayerComponent;
     downloadData = null;
     downloadTime = null;
+    historyMode:boolean;
 
     constructor(private sanitizer: DomSanitizer, public dialog: MatDialog, public i18n: I18NService, private sharedState: SharedStateService, private mapStore: MapStoreService) {
+        this.sharedState.displayMode.subscribe(d => {
+            this.historyMode = d===DisplayMode.HISTORY;
+        })
+        this.historyMode = this.sharedState.displayMode.getValue()===DisplayMode.HISTORY;
+        this.sharedState.historyDate.subscribe(historyDate => historyDate === "now" ? this.downloadTime = new Date().toISOString() : this.downloadTime = historyDate);
     }
 
     importData(): void {
@@ -63,7 +70,7 @@ export class ToolsComponent implements OnInit {
     }
 
     getDownloadFileName() {
-        return "zskarte_" + this.downloadTime.toISOString() + ".geojson";
+        return "zskarte_" + this.downloadTime+ ".geojson";
     }
 
     clear(): void {
@@ -77,7 +84,9 @@ export class ToolsComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.downloadTime = new Date();
+        if(!this.downloadTime) {
+            this.downloadTime = new Date().toISOString();
+        }
     }
 
     download(): void {

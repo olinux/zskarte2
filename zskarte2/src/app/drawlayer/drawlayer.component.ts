@@ -284,13 +284,12 @@ export class DrawlayerComponent implements OnInit {
                 this.defineCoordinates()
             }
         });
-        this.map.getView().on('change:resolution', ()=>{
-           let resolution = Math.ceil(Math.sqrt(this.map.getView().getResolution()));
-           console.log("resolution changed: "+resolution);
-           let newDistance = Math.max(1, (resolution+1))*15;
-           if(newDistance !== this.cluster.getDistance()) {
-               this.cluster.setDistance(newDistance);
-           }
+        this.map.getView().on('change:resolution', () => {
+            let resolution = Math.ceil(Math.sqrt(this.map.getView().getResolution()));
+            let newDistance = Math.max(1, (resolution + 1)) * 15;
+            if (newDistance !== this.cluster.getDistance()) {
+                this.cluster.setDistance(newDistance);
+            }
         });
 
         this.sharedState.deletedFeature.subscribe(feature => this.removeFeature(feature));
@@ -455,13 +454,15 @@ export class DrawlayerComponent implements OnInit {
         this.sharedState.showMapLoader.next(true);
         if (history === "now") {
             this.mapStore.getMap(this.currentSessionId).then(map => {
-                this.loadElements(map, true)
-                this.sharedState.showMapLoader.next(false);
+                this.loadElements(map, true).then(() => {
+                    this.sharedState.showMapLoader.next(false);
+                })
             });
         } else {
             this.mapStore.getHistoricalStateByKey(this.currentSessionId, history).then(h => {
-                this.loadElements(h, true);
-                this.sharedState.showMapLoader.next(false);
+                this.loadElements(h, true).then(() => {
+                    this.sharedState.showMapLoader.next(false);
+                });
             });
         }
     }
@@ -493,8 +494,11 @@ export class DrawlayerComponent implements OnInit {
     }
 
     writeFeatures(): GeoJSON {
-        //TODO check for use cases of writing from history mode (e.g. download for revert)
-        return JSON.parse(new GeoJSON({defaultDataProjection: 'EPSG:3857'}).writeFeatures(this.source.getFeatures()));
+        let features = this.source.getFeatures();
+        if (this.historyMode) {
+            features = features.concat(this.clusterSource.getFeatures());
+        }
+        return JSON.parse(new GeoJSON({defaultDataProjection: 'EPSG:3857'}).writeFeatures(features));
     }
 
 
@@ -502,6 +506,9 @@ export class DrawlayerComponent implements OnInit {
         let result = this.writeFeatures();
         //TODO check for use cases of writing from history mode (e.g. download for revert)
         let signatureSources = this.source.getFeatures().map(f => f.get('sig').src)
+        if (this.historyMode) {
+            signatureSources = signatureSources.concat(this.clusterSource.getFeatures().map(f => f.get('sig').src))
+        }
         // @ts-ignore
         result.images = this.customImages.getAllEntriesForCurrentSession().filter(i => signatureSources.includes(i.sign.src));
         return 'data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(result));
@@ -539,52 +546,94 @@ export class DrawlayerComponent implements OnInit {
         }
     }
 
-    loadElements(elements: GeoJSON, replace: boolean, reenableChangeRecording = true) {
-        this.recordChanges = false;
-        if (replace) {
-            this.source.clear();
-            this.clusterSource.clear()
-            this.select.getFeatures().clear()
-        }
-        if (elements) {
-            this.customImages.importImages(elements.images).then(() => {
-                if (elements.session) {
-                    this.sessions.saveSession(elements.session);
-                    this.sharedState.loadSession(elements.session);
-                    return;
-                }
-                if (elements.features) {
-                    for (let feature of elements.features) {
-                        let zindex = feature.properties.zindex
-                        if (zindex) {
-                            if (zindex > this.maxZIndex) {
-                                this.maxZIndex = zindex;
-                            }
-                            if (zindex < this.minZIndex) {
-                                this.minZIndex = zindex
+    loadElements(elements: GeoJSON, replace: boolean, reenableChangeRecording = true): Promise<boolean> {
+        return new Promise<boolean>(resolve => {
+            this.recordChanges = false;
+            if (replace) {
+                this.source.clear();
+                this.clusterSource.clear()
+                this.select.getFeatures().clear()
+            }
+            if (elements) {
+                this.customImages.importImages(elements.images).then(() => {
+                    if (elements.session) {
+                        this.sessions.saveSession(elements.session);
+                        this.sharedState.loadSession(elements.session);
+                        resolve(false);
+                        return;
+                    }
+                    if (elements.features) {
+                        for (let feature of elements.features) {
+                            let zindex = feature.properties.zindex
+                            if (zindex) {
+                                if (zindex > this.maxZIndex) {
+                                    this.maxZIndex = zindex;
+                                }
+                                if (zindex < this.minZIndex) {
+                                    this.minZIndex = zindex
+                                }
                             }
                         }
-                    }
-                    let geoJSON = new GeoJSON({defaultDataProjection: 'EPSG:3857'})
-                    let features: Feature[] = geoJSON.readFeatures(elements)
-                    if (this.historyMode) {
-                        //In history mode, we split the point features and add them to the cluster layer
-                        let pointFeatures = features.filter(f => f.getGeometry().getType() === "Point")
-                        let otherFeatures = features.filter(f => f.getGeometry().getType() !== "Point")
-                        this.source.addFeatures(otherFeatures);
-                        this.clusterSource.addFeatures(pointFeatures);
+                        let geoJSON = new GeoJSON({defaultDataProjection: 'EPSG:3857'})
+                        let features: Feature[] = geoJSON.readFeatures(elements)
+                        if (this.historyMode) {
+                            //In history mode, we split the point features and add them to the cluster layer
+                            let pointFeatures = features.filter(f => f.getGeometry().getType() === "Point")
+                            let otherFeatures = features.filter(f => f.getGeometry().getType() !== "Point")
+                            let sourceLoaded = false;
+                            let clusterLoaded = false;
+                            if (otherFeatures && otherFeatures.length > 0) {
+                                this.source.once('change', () => {
+                                    sourceLoaded = true;
+                                    if (clusterLoaded) {
+                                        this.handleLoadedElements(reenableChangeRecording, resolve);
+                                    }
+                                });
+                                this.source.addFeatures(otherFeatures);
+                            } else {
+                                sourceLoaded = true;
+                            }
+                            if (pointFeatures && pointFeatures.length > 0) {
+                                this.clusterSource.once('change', () => {
+                                    clusterLoaded = true;
+                                    if (sourceLoaded) {
+                                        this.handleLoadedElements(reenableChangeRecording, resolve);
+                                    }
+                                });
+                                this.clusterSource.addFeatures(pointFeatures);
+                            } else {
+                                clusterLoaded = true;
+                            }
+                            if (sourceLoaded && clusterLoaded) {
+                                this.handleLoadedElements(reenableChangeRecording, resolve);
+                            }
+                        } else {
+                            if (features && features.length > 0) {
+                                this.source.once('change', () => {
+                                    this.handleLoadedElements(reenableChangeRecording, resolve);
+                                });
+                                this.source.addFeatures(features);
+                            } else {
+                                this.handleLoadedElements(reenableChangeRecording, resolve);
+                            }
+                        }
                     } else {
-                        this.source.addFeatures(features);
+                        resolve(false);
                     }
-                }
-            });
-        }
+                });
+            } else {
+                resolve(false);
+            }
+        });
+    }
+
+
+    private handleLoadedElements(reenableChangeRecording: boolean, resolve: (value?: (PromiseLike<any> | any)) => void) {
+        console.log("Done loading");
         if (reenableChangeRecording) {
-            //TODO find a way to detect when the loading is over...
-            setTimeout(() => {
-                this.recordChanges = true;
-            }, 10000);
+            this.recordChanges = true;
         }
+        resolve(true);
     }
 
     load(reenableChangeRecording: boolean = true, replace: boolean = true): Promise<any> {
@@ -593,9 +642,10 @@ export class DrawlayerComponent implements OnInit {
             this.customImages.loadSignsInMemory().then(() => {
                 //We need to make sure the custom images are loaded before we load the map - this is why we set it in sequence.
                 this.mapStore.getMap(this.currentSessionId).then(map => {
-                    this.loadElements(map, replace, reenableChangeRecording)
-                    this.sharedState.showMapLoader.next(false);
-                    resolve("Elements loaded");
+                    this.loadElements(map, replace, reenableChangeRecording).then(() => {
+                        this.sharedState.showMapLoader.next(false);
+                        resolve("Elements loaded");
+                    })
                 });
             });
         })
@@ -603,14 +653,16 @@ export class DrawlayerComponent implements OnInit {
 
     loadFromString(text, save: boolean, replace: boolean) {
         this.sharedState.showMapLoader.next(true);
-        //Deferred because we need to ensure that the loader is shown first
-        setTimeout(() => {
-            this.loadElements(JSON.parse(text), replace);
-            this.sharedState.showMapLoader.next(false);
-            if (save) {
-                this.save();
-            }
-        }, 0)
+        // //Deferred because we need to ensure that the loader is shown first
+        // setTimeout(() => {
+            this.loadElements(JSON.parse(text), replace).then(() => {
+                this.sharedState.showMapLoader.next(false);
+                if (save) {
+                    this.dirtyMap = true;
+                    this.save();
+                }
+            });
+        // }, 0)
     }
 
     private drawers: { [key: string]: Draw; } = {}

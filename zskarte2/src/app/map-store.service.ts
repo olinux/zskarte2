@@ -55,7 +55,6 @@ export class MapStoreService {
                     this.ongoingHistoryExtraction = false;
                 });
             } else {
-                console.log("No change since last history entry - I'm not doing anything");
                 this.ongoingHistoryExtraction = false;
             }
         } else {

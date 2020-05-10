@@ -41,8 +41,9 @@
                 <app-geocoder style="flex:1"></app-geocoder>
                 <app-drawingtools *ngIf="!historyMode"></app-drawingtools>
                 <!--<a class="mat-stroked-button" download="map.jpg"><span class="mat-button-wrapper"><i class="material-icons">photo_camera</i> Screenshot</span></a>-->
-                <app-tools [drawLayer]="drawLayer" *ngIf="!historyMode"></app-tools>
+                <app-tools [drawLayer]="drawLayer"></app-tools>
                 <app-layers></app-layers>
+                <mat-slide-toggle (toggleChange)="toggleHistory()" [checked]="historyMode">{{i18n.get("history")}}</mat-slide-toggle>
             </mat-card-content>
 
 
@@ -51,7 +52,6 @@
                 <button mat-menu-item (click)="editSession()"><i class="material-icons">edit</i> {{i18n.get("editMap")}}</button>
                 <button mat-menu-item (click)="exportSession()"><i class="material-icons">save</i> {{i18n.get("exportSession")}}</button>
                 <button mat-menu-item (click)="deleteSession()"><i class="material-icons">delete</i> {{i18n.get("deleteMap")}}</button>
-                <button mat-menu-item (click)="toggleHistory()"><i class="material-icons">history</i><span> {{i18n.get("history")}}</span></button>
            </mat-menu>
         </div>
         <div class="filter" *ngIf="historyMode"></div>

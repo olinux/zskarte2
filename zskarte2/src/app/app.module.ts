@@ -67,6 +67,7 @@ import {CustomImagesComponent} from './custom-images/custom-images.component';
 import {CustomImageStoreService} from "./custom-image-store.service";
 import {MapStoreService} from "./map-store.service";
 import {EditCoordinatesComponent} from './edit-coordinates/edit-coordinates.component';
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 
 const dbConfig: DBConfig = {
     name: 'ZSKarte2-DB1.0',
@@ -135,7 +136,8 @@ const dbConfig: DBConfig = {
         NgxMdModule.forRoot(),
         MatProgressSpinnerModule,
         MatCheckboxModule,
-        MatExpansionModule
+        MatExpansionModule,
+        MatSlideToggleModule
     ],
     entryComponents: [
         DrawingDialogComponent,

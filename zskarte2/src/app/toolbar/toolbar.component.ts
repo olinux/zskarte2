@@ -121,6 +121,11 @@ export class ToolbarComponent implements OnInit {
     }
 
     toggleHistory(): void {
-        this.sharedState.displayMode.next(DisplayMode.HISTORY);
+        if(this.sharedState.displayMode.getValue() == DisplayMode.HISTORY){
+            this.sharedState.displayMode.next(DisplayMode.DRAW);
+        }
+        else {
+            this.sharedState.displayMode.next(DisplayMode.HISTORY);
+        }
     }
 }

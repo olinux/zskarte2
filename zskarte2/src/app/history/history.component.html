@@ -35,14 +35,5 @@
                     mode="indeterminate">
             </mat-progress-spinner>
         </div>
-        <div class="buttons">
-            <div><a mat-raised-button [download]="getDownloadFileName()" id="exportHistory" (click)="download()"
-                    [href]="downloadData"><i class="material-icons">save</i> {{i18n.get("download")}}</a>
-            </div>
-            <div>
-                <button mat-raised-button color="primary"
-                        (click)="endHistoryMode()">{{i18n.get("endHistoryMode")}}</button>
-            </div>
-        </div>
     </mat-card-content>
 </mat-card>
