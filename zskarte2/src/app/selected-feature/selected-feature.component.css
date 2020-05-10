@@ -4,10 +4,24 @@ mat-card.selection{
     left:0;
     background-color: #f1f1f1;
     margin-bottom: 0;
+    max-height: 70vh;
+    min-width: 20vw;
+    max-width: 25vw;
+    overflow: auto;
+}
+
+.titleCard{
+    min-height: 10vh;
 }
 
 mat-card, mat-expansion-panel {
     margin-bottom: 1em;
+}
+
+mat-card.featureGroup .mat-expansion-panel-header-title{
+    font-weight: bold;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 mat-form-field{
@@ -23,11 +37,17 @@ mat-slider{
     margin-bottom: 1em;
 }
 
+.featureGroup .imgwrapper img{
+    max-height: 5em;
+    max-width: 5em;
+}
+
+
 .imgwrapper img{
     min-width: 3em;
     min-height: 3em;
-    max-height: 10em;
-    max-width: 10em;
+    max-height: 5em;
+    max-width: 5em;
 }
 
 

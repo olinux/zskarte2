@@ -38,7 +38,7 @@
                 </div>
             </div>
             <mat-card-content class="flexContainer">
-                <app-geocoder style="flex:1"></app-geocoder>
+                <app-geocoder style="flex:1" [drawLayer]="drawLayer"></app-geocoder>
                 <app-drawingtools *ngIf="!historyMode"></app-drawingtools>
                 <!--<a class="mat-stroked-button" download="map.jpg"><span class="mat-button-wrapper"><i class="material-icons">photo_camera</i> Screenshot</span></a>-->
                 <app-tools [drawLayer]="drawLayer"></app-tools>

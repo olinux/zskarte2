@@ -33,7 +33,7 @@ import Style from 'ol/style/Style';
 import Icon from 'ol/style/Icon';
 import Point from 'ol/geom/Point';
 import {PreferencesService} from "../preferences.service";
-import {DRAW_LAYER_ZINDEX} from "../drawlayer/drawlayer.component";
+import {CLUSTER_LAYER_ZINDEX} from "../drawlayer/drawlayer.component";
 import {defaults} from "ol/interaction";
 
 @Component({
@@ -66,14 +66,15 @@ export class MapComponent implements OnInit {
                 anchor: [0.5, 1],
                 anchorXUnits: 'fraction',
                 anchorYUnits: 'fraction',
-                src: 'assets/img/place.png'
+                src: 'assets/img/place.png',
+                scale: 0.5
             })
         }));
     }
 
 
     ngOnInit() {
-        this.navigationLayer.setZIndex(DRAW_LAYER_ZINDEX + 1);
+        this.navigationLayer.setZIndex(CLUSTER_LAYER_ZINDEX + 1);
         const viewPort = this.preferences.getViewPortForSession(this.currentSessionId);
         window.addEventListener('beforeunload', (event) => {
             //Save zoom level and position before leaving (to recover when re-entering)
@@ -105,10 +106,18 @@ export class MapComponent implements OnInit {
         })
         this.sharedState.currentCoordinate.subscribe(coordinate => {
             if (coordinate != null) {
-                const c = transform([coordinate.lon, coordinate.lat], coordinatesProjection, mercatorProjection);
+                const c = coordinate.mercator ? [coordinate.lon, coordinate.lat] : transform([coordinate.lon, coordinate.lat], coordinatesProjection, mercatorProjection);
                 this.positionFlagLocation.setCoordinates(c);
                 this.positionFlag.changed();
-                this.map.getView().setCenter(c);
+                this.navigationLayer.setVisible(true);
+                if(coordinate.center) {
+                    setTimeout(() => {
+                        this.map.getView().animate({center: c});
+                    }, 100)
+                }
+            }
+            else{
+                this.navigationLayer.setVisible(false);
             }
         });
         this.sharedState.addAdditionalLayer.subscribe(layer => {

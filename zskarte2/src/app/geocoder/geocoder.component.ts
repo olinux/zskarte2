@@ -18,11 +18,11 @@
  *
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {SharedStateService} from "../shared-state.service";
 import {I18NService} from "../i18n.service";
-import {FormControl} from '@angular/forms';
+import {DrawlayerComponent} from "../drawlayer/drawlayer.component";
 
 @Component({
     selector: 'app-geocoder',
@@ -31,41 +31,129 @@ import {FormControl} from '@angular/forms';
 })
 export class GeocoderComponent implements OnInit {
 
+    @Input() drawLayer: DrawlayerComponent;
     geocoderUrl = 'https://api3.geo.admin.ch/rest/services/api/SearchServer?type=locations&searchText='
-    //geocoderUrl = 'https://nominatim.openstreetmap.org/search?format=json&q=';
     foundLocations = []
-    formControl = new FormControl();
     inputText: string = undefined;
     selected = null;
 
 
-    constructor(private http: HttpClient, private sharedState: SharedStateService, public i18n:I18NService) {
+    constructor(private http: HttpClient, private sharedState: SharedStateService, public i18n: I18NService) {
     }
 
     ngOnInit() {
     }
 
+    private getCoordinate(geometry){
+        switch(geometry.getType()){
+            case "Point":
+                return geometry.getCoordinates();
+            case "LineString":
+                return geometry.getCoordinates()[0];
+            case "Polygon":
+                return geometry.getCoordinates()[0][0];
+        }
+        return null;
+    }
+
+
+    private mapFeatureForSearch(f) {
+        let sig = f.get('sig');
+        let sign = this.i18n.getLabelForSign(sig)
+        let label = ""
+        if (sign) {
+            label += "<i>" + sign + "</i> "
+        }
+        if (sig.label) {
+            label += sig.label
+        }
+        let normalizedLabel = label.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        let words = this.inputText.toLowerCase().split(" ");
+        let allHits = true;
+
+        words.forEach(word => {
+            if (!normalizedLabel.toLowerCase().includes(word.normalize("NFD").replace(/[\u0300-\u036f]/g, ""))) {
+                allHits = false;
+            }
+        })
+        let coordinates = this.getCoordinate(f.getGeometry());
+        return {
+            attrs: {
+                label: label,
+                normalizedLabel: normalizedLabel,
+                mercatorCoordinates: coordinates,
+                hit: coordinates ? allHits : false,
+                feature: f
+            },
+            uuid: f.getId()
+        }
+
+    }
+
     geoCodeLoad() {
-        if(this.inputText.length>1) {
+        if (this.inputText.length > 1) {
             const originalInput = this.inputText;
             this.http.get(this.geocoderUrl + this.inputText).subscribe(result => {
-                if(this.inputText === originalInput) {
-                    this.foundLocations = <any[]>(result["results"]);
+                if (this.inputText === originalInput) {
+                    this.foundLocations = [];
+                    this.drawLayer.source.getFeatures().map(f => this.mapFeatureForSearch(f)).filter(f => {
+                        return f.attrs.hit;
+                    }).forEach(f => {
+                        this.foundLocations.push(f)
+                    });
+                    this.drawLayer.clusterSource.getFeatures().map(f => this.mapFeatureForSearch(f)).filter(f => {
+                        return f.attrs.hit;
+                    }).forEach(f => {
+                        this.foundLocations.push(f)
+                    });
+
+                    result["results"].forEach(r => this.foundLocations.push(r));
                 }
             });
-        }
-        else{
+
+        } else {
             this.foundLocations = [];
             this.sharedState.gotoCoordinate(null);
         }
     }
 
-    getLabel(selected){
+    getLabel(selected) {
         return selected ? selected.label.replace(/<[^>]*>/g, '') : undefined;
     }
 
-    geoCodeSelected(event){
-        this.sharedState.gotoCoordinate({lat: event.option.value.lat, lon: event.option.value.lon})
+    geoCodeSelected(event) {
+        this.selected = event.option.value;
+        this.goToCoordinate(true);
+        this.inputText = null;
     }
+
+    previewCoordinate(element) {
+        this.doGoToCoordinate(element, false, false);
+    }
+
+    private doGoToCoordinate(element, center, select) {
+        if (element) {
+            if (element.mercatorCoordinates) {
+                if (select) {
+                    this.sharedState.selectFeature(element.feature);
+                }
+                this.sharedState.gotoCoordinate({
+                    lat: element.mercatorCoordinates[1],
+                    lon: element.mercatorCoordinates[0],
+                    mercator: true,
+                    center: center
+                })
+            } else {
+                this.sharedState.gotoCoordinate({lat: element.lat, lon: element.lon, mercator: false, center: center})
+            }
+        } else {
+            this.sharedState.gotoCoordinate(null)
+        }
+    }
+
+    goToCoordinate(center: boolean) {
+        this.doGoToCoordinate(this.selected, center, true);
+    }
+
 
 }

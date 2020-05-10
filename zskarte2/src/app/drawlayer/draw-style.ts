@@ -68,31 +68,36 @@ export class DrawStyle {
         }
     }
 
-    public static styleFunctionSelect(feature, resolution): any {
+
+    private static styleFunctionSelectSingleFeature(feature, resolution, editMode){
+        if (resolution !== DrawStyle.lastResolution) {
+            DrawStyle.lastResolution = resolution;
+            DrawStyle.clearCaches();
+        }
+        // The feature shall not be displayed or is errorenous. Therefore, we return an empty style.
+        const signature = feature.get('sig');
+        if (!signature) {
+            return [];
+        } else if (signature.text !== undefined && signature.text !== null) {
+            // It's a text-entry...
+            return DrawStyle.textStyleFunction(feature, resolution, true);
+        } else {
+            // It's a symbol-signature.
+            return DrawStyle.imageStyleFunction(feature, resolution, signature, true, editMode);
+        }
+    }
+
+    public static styleFunctionSelect(feature, resolution, editMode): any {
         if(feature.get("features")){
             if(feature.get("features").length>1) {
                 return DrawStyle.clusterStyleFunction(feature, resolution, true);
             }
             else{
-                return DrawStyle.styleFunctionSelect(feature.get("features")[0], resolution);
+                return DrawStyle.styleFunctionSelectSingleFeature(feature.get("features")[0], resolution, editMode);
             }
         }
         else {
-            if (resolution !== DrawStyle.lastResolution) {
-                DrawStyle.lastResolution = resolution;
-                DrawStyle.clearCaches();
-            }
-            // The feature shall not be displayed or is errorenous. Therefore, we return an empty style.
-            const signature = feature.get('sig');
-            if (!signature) {
-                return [];
-            } else if (signature.text !== undefined && signature.text !== null) {
-                // It's a text-entry...
-                return DrawStyle.textStyleFunction(feature, resolution, true);
-            } else {
-                // It's a symbol-signature.
-                return DrawStyle.imageStyleFunction(feature, resolution, signature, true);
-            }
+            return DrawStyle.styleFunctionSelectSingleFeature(feature, resolution, editMode);
         }
     }
 
@@ -174,7 +179,7 @@ export class DrawStyle {
                         let paddingFactor = 0.6;
                         return new Polygon([[[coordinates[0] + bottomLeft[0] - iconSizeInCoordinates * paddingFactor+offset, coordinates[1] + bottomLeft[1] - iconSizeInCoordinates * paddingFactor + offset], [coordinates[0] + bottomRight[0] + iconSizeInCoordinates * paddingFactor + offset, coordinates[1] + bottomRight[1] - iconSizeInCoordinates * paddingFactor + offset], [coordinates[0] + topRight[0] + iconSizeInCoordinates * paddingFactor + offset, coordinates[1] + topRight[1] + iconSizeInCoordinates * paddingFactor + offset], [coordinates[0] + topLeft[0] - iconSizeInCoordinates * paddingFactor + offset, coordinates[1] + topLeft[1] + iconSizeInCoordinates * paddingFactor + offset]]]);
                     },
-                    zIndex: 3
+                    zIndex: 3*(selected ? 10 : 1)
                 }));
                 Object.keys(groupedFeatures).forEach((src, index) => {
                     let iconLocation = DrawStyle.getIconLocation(index, groupedFeatureCount, iconSizeInCoordinates);
@@ -190,7 +195,7 @@ export class DrawStyle {
                                 backgroundStroke: DrawStyle.createDefaultStroke(0.12, "#3399CC"),
                                 padding: [0, 0, 1, 1]
                             }),
-                            zIndex: 5,
+                            zIndex: 5*(selected ? 10 : 1),
                             geometry: function (feature) {
                                 let coordinates = feature.getGeometry().getCoordinates();
                                 return new Point([coordinates[0] + iconLocation[0]+offset, coordinates[1] + iconLocation[1]+offset]);
@@ -204,7 +209,7 @@ export class DrawStyle {
                                     color: '#3399CC'
                                 })
                             }),
-                            zIndex: 10,
+                            zIndex: 10*(selected ? 10 : 1),
                             geometry: function (feature) {
                                 let coordinates = feature.getGeometry().getCoordinates();
                                 return new Point([coordinates[0] + iconLocation[0]+offset, coordinates[1] + iconLocation[1]+offset]);
@@ -233,7 +238,7 @@ export class DrawStyle {
                                 img: imageFromMemory ? imageFromMemory : undefined,
                                 imgSize: scaledSize ? [naturalDim, naturalDim] : undefined,
                             })),
-                            zIndex: 15,
+                            zIndex: 15*(selected ? 10 : 1),
                             geometry: function (feature) {
                                 let coordinates = feature.getGeometry().getCoordinates();
                                 return new Point([coordinates[0] + iconLocation[0]+offset, coordinates[1] + iconLocation[1]+offset]);
@@ -271,7 +276,7 @@ export class DrawStyle {
             return DrawStyle.textStyleFunction(feature, resolution, false);
         } else {
             // It's a symbol-signature.
-            return DrawStyle.imageStyleFunction(feature, resolution, signature, false);
+            return DrawStyle.imageStyleFunction(feature, resolution, signature, false, true);
         }
         // }
     }
@@ -317,10 +322,11 @@ export class DrawStyle {
         })).toString();
     }
 
-    private static calculateCacheHashForVector(signature, feature, resolution, selected): string {
+    private static calculateCacheHashForVector(signature, feature, resolution, selected, editMode): string {
         feature = DrawStyle.getSubfeature(feature);
         return Md5.hashStr(JSON.stringify({
             color: signature.color,
+            editMode: editMode,
             selected: selected,
             opacity: signature.fillOpacity,
             resolution: resolution,
@@ -532,9 +538,9 @@ export class DrawStyle {
         }
     }
 
-    private static getVectorStyles(feature, resolution, signature, selected, scale): Style {
+    private static getVectorStyles(feature, resolution, signature, selected, scale, editMode): Style {
         feature = DrawStyle.getSubfeature(feature);
-        const vectorCacheHash = DrawStyle.calculateCacheHashForVector(signature, feature, resolution, selected);
+        const vectorCacheHash = DrawStyle.calculateCacheHashForVector(signature, feature, resolution, selected, editMode);
         let vectorStyle = this.vectorStyleCache[vectorCacheHash];
         if (!vectorStyle) {
             vectorStyle = this.vectorStyleCache[vectorCacheHash] = [];
@@ -542,6 +548,7 @@ export class DrawStyle {
             if (selected) {
                 let highlightStyle = this.getHighlightLineWhenSelectedStyle(feature, scale, selected);
                 if (highlightStyle) {
+                    highlightStyle.setZIndex(zIndex-1);
                     vectorStyle.push(highlightStyle)
                 }
             }
@@ -555,7 +562,7 @@ export class DrawStyle {
                 fill: this.getAreaFill(DrawStyle.colorFunction(signature.color, signature.fillOpacity), scale, signature.fillStyle),
                 zIndex: zIndex
             }));
-            if (selected) {
+            if (selected && editMode) {
                 let highlightedPointsStyle = this.getHighlightPointsWhenSelectedStyle(feature, scale, selected);
                 if (highlightedPointsStyle) {
                     vectorStyle.push(highlightedPointsStyle);
@@ -635,10 +642,10 @@ export class DrawStyle {
         return null;
     }
 
-    private static imageStyleFunction(feature, resolution, signature, selected): any {
+    private static imageStyleFunction(feature, resolution, signature, selected, editMode): any {
         defineDefaultValuesForSignature(signature);
         let scale = DrawStyle.scale(resolution, DrawStyle.defaultScaleFactor);
-        let vectorStyles = this.getVectorStyles(feature, resolution, signature, selected, scale);
+        let vectorStyles = this.getVectorStyles(feature, resolution, signature, selected, scale, editMode);
         let iconStyles = this.getIconStyle(feature, resolution, signature, selected, scale);
         let styles = [];
         if (iconStyles) {

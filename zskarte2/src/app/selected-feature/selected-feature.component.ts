@@ -18,23 +18,29 @@ export class SelectedFeatureComponent implements OnInit {
 
     constructor(public dialog: MatDialog, private sharedState: SharedStateService, public i18n: I18NService) {
         this.sharedState.currentFeature.subscribe(feature => {
-            if(feature && feature.get("features")){
-                feature = feature.get("features")[0];
-            }
-            this.selectedFeature = feature;
-            this.selectedSignature = feature ? feature.get('sig') : null;
-            if (this.selectedSignature) {
-                defineDefaultValuesForSignature(this.selectedSignature);
+
+            if (feature && feature.get("features")) {
+                if(feature.get("features").length===1){
+                    this.groupedFeatures = null;
+                    this.activeFeatureSelect(feature.get("features")[0]);
+                }
+                else {
+                    this.groupedFeatures = this.extractFeatureGroups(feature.get("features"));
+                }
+            } else {
+                this.groupedFeatures = null;
+                this.activeFeatureSelect(feature);
             }
         });
         this.sharedState.drawHoleMode.subscribe(drawHoleMode => this.drawHoleMode = drawHoleMode);
         this.sharedState.mergeMode.subscribe(m => {
             this.mergeMode = m;
         });
-        this.sharedState.displayMode.subscribe(displayMode => this.editMode = displayMode !== DisplayMode.HISTORY )
+        this.sharedState.displayMode.subscribe(displayMode => this.editMode = displayMode !== DisplayMode.HISTORY)
         this.editMode = this.sharedState.displayMode.getValue() !== DisplayMode.HISTORY;
     }
 
+    groupedFeatures = null;
     editMode: boolean;
     selectedFeature: any = null;
     selectedSignature: Sign = null;
@@ -42,6 +48,52 @@ export class SelectedFeatureComponent implements OnInit {
     drawHoleMode: boolean = false;
     mergeMode: boolean = false;
 
+    private extractFeatureGroups(allFeatures: any[]): any {
+        let result = {}
+        allFeatures.forEach(f => {
+            let sig = f.get("sig");
+            let label = this.i18n.getLabelForSign(sig)
+            let group = result[label];
+            if (!group) {
+                group = result[label] = {
+                    label: label
+                }
+            }
+            if (!group.src && sig.src) {
+                group.src = sig.src;
+            }
+            if (!group.features) {
+                group.features = []
+            }
+            group.features.push(f)
+        });
+        return result
+    }
+
+    private showFeature(feature) {
+        if (feature && feature.getGeometry()) {
+            this.sharedState.gotoCoordinate({lon: feature.getGeometry().getCoordinates()[0], lat: feature.getGeometry().getCoordinates()[1], mercator: true, center:false});
+        }
+    }
+
+    private hideFeature(){
+        this.sharedState.gotoCoordinate(null);
+    }
+
+
+    get featureGroups() {
+        // @ts-ignore
+        return this.groupedFeatures ? Object.values(this.groupedFeatures).sort((a, b) => a.label.localeCompare(b.label)) : null;
+    }
+
+
+    private activeFeatureSelect(feature: any) {
+        this.selectedFeature = feature;
+        this.selectedSignature = feature ? feature.get('sig') : null;
+        if (this.selectedSignature) {
+            defineDefaultValuesForSignature(this.selectedSignature);
+        }
+    }
 
     setRotation(perc) {
         if (this.selectedFeature != null) {
@@ -56,7 +108,6 @@ export class SelectedFeatureComponent implements OnInit {
 
 
     ngOnInit() {
-
     }
 
     chooseSymbol() {
@@ -80,7 +131,7 @@ export class SelectedFeatureComponent implements OnInit {
         this.redraw();
     }
 
-    editCoordinates(){
+    editCoordinates() {
         this.sharedState.defineCoordinates.next(true);
     }
 

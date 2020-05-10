@@ -89,7 +89,7 @@ export class DrawlayerComponent implements OnInit {
 
     select = new Select({
         //toggleCondition: never,
-        style: DrawStyle.styleFunctionSelect,
+        style: (feature, resolution) => {return DrawStyle.styleFunctionSelect(feature, resolution, !this.historyMode)},
         //condition: never
         layers: [this.layer, this.clusterLayer],
         hitTolerance: 10
@@ -203,7 +203,7 @@ export class DrawlayerComponent implements OnInit {
     }
 
     toggleRemoveButton(show: boolean) {
-        this.removeButton.getElement().style.display = show ? "block" : "none";
+        this.removeButton.getElement().style.display = show && !this.historyMode ? "block" : "none";
     }
 
     ngOnInit() {
@@ -270,6 +270,13 @@ export class DrawlayerComponent implements OnInit {
             this.selectionChanged();
             this.drawingManipulated(e.feature);
         });
+        this.sharedState.currentFeature.subscribe(f=>{
+            if(f && this.getSelectedFeature()!==f) {
+                this.select.getFeatures().clear();
+                this.select.getFeatures().push(f);
+            }
+        });
+
         this.source.addEventListener('removefeature', e => {
             this.drawingManipulated(e.feature);
         });
@@ -285,10 +292,16 @@ export class DrawlayerComponent implements OnInit {
             }
         });
         this.map.getView().on('change:resolution', () => {
-            let resolution = Math.ceil(Math.sqrt(this.map.getView().getResolution()));
-            let newDistance = Math.max(1, (resolution + 1)) * 15;
-            if (newDistance !== this.cluster.getDistance()) {
-                this.cluster.setDistance(newDistance);
+            if(this.historyMode) {
+                let resolution = Math.ceil(Math.sqrt(this.map.getView().getResolution()));
+                let newDistance = Math.max(1, (resolution + 1)) * 15;
+                if (newDistance !== this.cluster.getDistance()) {
+                    this.cluster.setDistance(newDistance);
+                }
+                if(this.getSelectedFeature() && this.getSelectedFeature().get("features")) {
+                    //Since clustering means the elements change when zooming in / out, we need to get rid of the selection made if the selection is a cluster (because the instance could not be available anymore)
+                    this.clearSelection();
+                }
             }
         });
 
@@ -437,6 +450,7 @@ export class DrawlayerComponent implements OnInit {
 
     endHistoryMode() {
         if (this.currentSessionId) {
+            this.clearSelection();
             this.load().then(() => {
                 //this.select.setActive(true);
                 this.modify.setActive(true);

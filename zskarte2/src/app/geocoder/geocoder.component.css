@@ -25,3 +25,14 @@
 mat-form-field{
     width: 100%;
 }
+
+.currentLocation{
+    display: flex;
+    align-items: center;
+    line-height: 1.5em;
+}
+
+.currentLocation img{
+    height: 1.5em;
+    margin-right: 1em;
+}
