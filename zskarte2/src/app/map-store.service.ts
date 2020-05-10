@@ -14,35 +14,39 @@ export class MapStoreService {
     //Flags if there are changes since the last time, the history has been saved.
     private dirtyHistory: boolean = false;
 
-    constructor(private dbService: NgxIndexedDBService, private sharedState:SharedStateService) {
+    //Flags if there are cahnges sicnce the last time, the map has been saved;
+    private dirtyMap: boolean = false;
+
+    constructor(private dbService: NgxIndexedDBService, private sharedState: SharedStateService) {
         this.startHistoryExtraction();
         this.sharedState.session.subscribe(changedSession => {
-           if(changedSession){
-               this.getHistory(changedSession.uuid).then(history => {
-                   if(!history.states){
-                       this.dirtyHistory = true;
-                       this.extractHistory();
-                   }
-               })
-           }
+            if (changedSession) {
+                this.getHistory(changedSession.uuid).then(history => {
+                    if (!history.states) {
+                        this.dirtyHistory = true;
+                        this.extractHistory();
+                    }
+                })
+            }
         });
     }
 
-    private static historyRunnerLock = false;
+    private static saveRunnerLock = false;
 
-    private static historyExtractionInterval: number = 10*60*1000;
+    private static historyExtractionInterval: number = 10 * 60 * 1000;
 
     private startHistoryExtraction() {
-        console.log("starting history extraction now...");
-        if (!MapStoreService.historyRunnerLock) {
-            MapStoreService.historyRunnerLock = true;
+        if (!MapStoreService.saveRunnerLock) {
+            console.log("starting history extraction now...");
+            MapStoreService.saveRunnerLock = true;
             setInterval(() => this.extractHistory(), MapStoreService.historyExtractionInterval);
         }
     }
 
     private ongoingHistoryExtraction = false;
+
     private extractHistory() {
-        if(!this.ongoingHistoryExtraction) {
+        if (!this.ongoingHistoryExtraction) {
             this.ongoingHistoryExtraction = true;
             if (this.dirtyHistory && this.mostRecentMap && this.mostRecentSession) {
                 console.log("There was a change - I'm extracting history...");
@@ -54,8 +58,7 @@ export class MapStoreService {
                 console.log("No change since last history entry - I'm not doing anything");
                 this.ongoingHistoryExtraction = false;
             }
-        }
-        else{
+        } else {
             console.log("Skipping history extraction because there is already another one running...");
         }
     }
@@ -64,14 +67,15 @@ export class MapStoreService {
     private mostRecentSession: string;
 
     public saveMap(sessionId: string, currentMap: GeoJSON): Promise<any> {
+        currentMap.timestamp = new Date().toISOString()
+        this.mostRecentMap = currentMap;
+        this.mostRecentSession = sessionId;
         return new Promise<any>(resolve => {
-            currentMap.timestamp = new Date().toISOString()
-            this.mostRecentMap = currentMap;
-            this.mostRecentSession = sessionId;
-            let mapUpdate: Promise<any> = this.dbService.update(MapStoreService.STORE_MAP, currentMap, sessionId);
+            let mapUpdate: Promise<any> = this.dbService.update(MapStoreService.STORE_MAP, this.mostRecentMap, this.mostRecentSession);
             mapUpdate.then(() => {
-                this.dirtyHistory = true;
+                this.dirtyMap = false;
                 console.log("Saved to database");
+                this.dirtyHistory = true;
                 resolve(null);
             });
         });
@@ -95,11 +99,10 @@ export class MapStoreService {
     public setTag(tag: string) {
         return new Promise<any>(resolve => {
             const sessionId = this.sharedState.getCurrentSession();
-            let historyPromise:Promise<any>;
-            if(sessionId.uuid === this.mostRecentSession && this.dirtyHistory){
+            let historyPromise: Promise<any>;
+            if (sessionId.uuid === this.mostRecentSession && this.dirtyHistory) {
                 historyPromise = this.addHistoryEntry();
-            }
-            else{
+            } else {
                 historyPromise = this.dbService.getByKey(MapStoreService.STORE_HISTORY, sessionId.uuid);
             }
             historyPromise.then(history => {
@@ -131,15 +134,14 @@ export class MapStoreService {
             const sessionId = this.mostRecentSession;
             const map = this.mostRecentMap;
             //We only add history entries, if there is a current active session is available and if we have already received a change in this session.
-            if(sessionId && map && this.sharedState.getCurrentSession() && sessionId === this.sharedState.getCurrentSession().uuid) {
+            if (sessionId && map && this.sharedState.getCurrentSession() && sessionId === this.sharedState.getCurrentSession().uuid) {
                 this.dbService.getByKey(MapStoreService.STORE_HISTORY, sessionId).then(history => {
                     history = this.initHistory(history);
                     //TODO reduce history based on size (e.g. increase interval for long ago instances)
                     history.states[map.timestamp] = map;
                     this.dbService.update(MapStoreService.STORE_HISTORY, history, sessionId).then(() => resolve(history));
                 })
-            }
-            else{
+            } else {
                 resolve(null);
             }
         });
@@ -161,15 +163,21 @@ export class MapStoreService {
 
 
     public getHistoricalStateByKey(sessionId: string, key: string): Promise<GeoJSON> {
+
         return new Promise<GeoJSON>(resolve => {
-            this.getHistory(sessionId).then(history => {
-                if (history) {
-                    resolve(history.states[key]);
-                } else {
-                    resolve(null);
-                }
-            });
+            if (sessionId && key) {
+                this.getHistory(sessionId).then(history => {
+                    if (history) {
+                        resolve(history.states[key]);
+                    } else {
+                        resolve(null);
+                    }
+                });
+            } else {
+                resolve(null);
+            }
         });
+
     }
 
     public getHistory(sessionId: string): Promise<any> {

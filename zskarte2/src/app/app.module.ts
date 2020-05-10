@@ -94,7 +94,6 @@ const dbConfig: DBConfig = {
         ToolsComponent,
         LayersComponent,
         CreditsComponent,
-
         ToolbarComponent,
         DrawingDialogComponent,
         DrawlayerComponent,

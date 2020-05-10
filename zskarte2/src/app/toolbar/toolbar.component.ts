@@ -20,7 +20,6 @@
 
 import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {DrawlayerComponent} from '../drawlayer/drawlayer.component';
-import {HistoryComponent} from "../history/history.component";
 import {SharedStateService} from "../shared-state.service";
 import {I18NService} from "../i18n.service";
 import {Session} from "../entity/session";
@@ -31,6 +30,7 @@ import {SessionsService} from "../sessions.service";
 import {ConfirmationDialogComponent} from "../confirmation-dialog/confirmation-dialog.component";
 import {MapStoreService} from "../map-store.service";
 import {ExportDialogComponent} from "../export-dialog/export-dialog.component";
+import {DisplayMode} from "../entity/displayMode";
 
 @Component({
     selector: 'app-toolbar',
@@ -40,10 +40,11 @@ import {ExportDialogComponent} from "../export-dialog/export-dialog.component";
 export class ToolbarComponent implements OnInit {
 
     @Input() drawLayer: DrawlayerComponent;
-    @Input() history: HistoryComponent;
     session: Session;
+    historyMode: boolean;
 
     constructor(public i18n: I18NService, private cdr: ChangeDetectorRef, private sharedState: SharedStateService, public dialog: MatDialog, private preferences: PreferencesService, private sessions: SessionsService, private mapStore: MapStoreService) {
+        this.sharedState.displayMode.subscribe(mode => this.historyMode = mode === DisplayMode.HISTORY);
     }
 
     ngOnInit() {
@@ -120,6 +121,6 @@ export class ToolbarComponent implements OnInit {
     }
 
     toggleHistory(): void {
-        this.history.toggleHistoryMode();
+        this.sharedState.displayMode.next(DisplayMode.HISTORY);
     }
 }

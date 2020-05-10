@@ -21,7 +21,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {DrawlayerComponent} from "../drawlayer/drawlayer.component";
 import {DomSanitizer} from "@angular/platform-browser";
-import {HistoryComponent} from "../history/history.component";
 import {MatDialog} from "@angular/material/dialog";
 import {ImportDialogComponent} from "../import-dialog/import-dialog.component";
 import {I18NService} from "../i18n.service";
@@ -39,8 +38,6 @@ import {MapStoreService} from "../map-store.service";
 export class ToolsComponent implements OnInit {
 
     @Input() drawLayer: DrawlayerComponent;
-    @Input() history: HistoryComponent;
-
     downloadData = null;
     downloadTime = null;
 

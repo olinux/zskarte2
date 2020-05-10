@@ -25,15 +25,16 @@ import FillPattern from 'ol-ext/style/FillPattern';
 import Icon from 'ol/style/Icon';
 import Text from 'ol/style/Text';
 import Point from 'ol/geom/Point';
+import Polygon from 'ol/geom/Polygon';
 import MultiPoint from 'ol/geom/MultiPoint';
 import LineString from 'ol/geom/LineString';
 import Circle from 'ol/style/Circle';
 import {Md5} from "ts-md5";
 import {defineDefaultValuesForSignature, getMostTopCoordinate} from "../entity/sign";
 import {CustomImageStoreService} from "../custom-image-store.service";
+import ConvexHull from 'ol-ext/geom/ConvexHull';
 
 
-// This is a helper class which involves the definitions of stylings used to draw on the map
 export class DrawStyle {
 
     static defaultScaleFactor = 0.2;
@@ -46,7 +47,7 @@ export class DrawStyle {
         return 'assets/img/signs/' + file;
     }
 
-    private static scale(resolution: number, scaleFactor: number, min: number = 0.12): any {
+    private static scale(resolution: number, scaleFactor: number, min: number = 0.1): any {
         return Math.max(min, scaleFactor * Math.sqrt(0.5 * resolution) / resolution);
     }
 
@@ -68,26 +69,189 @@ export class DrawStyle {
     }
 
     public static styleFunctionSelect(feature, resolution): any {
-        if(resolution!==DrawStyle.lastResolution){
-            DrawStyle.lastResolution = resolution;
-            DrawStyle.clearCaches();
+        if(feature.get("features")){
+            if(feature.get("features").length>1) {
+                return DrawStyle.clusterStyleFunction(feature, resolution, true);
+            }
+            else{
+                return DrawStyle.styleFunctionSelect(feature.get("features")[0], resolution);
+            }
         }
-        // The feature shall not be displayed or is errorenous. Therefore, we return an empty style.
-        const signature = feature.get('sig');
-        if (!signature) {
-            return [];
-        } else if (signature.text !== undefined && signature.text !== null) {
-            // It's a text-entry...
-            return DrawStyle.textStyleFunction(feature, resolution, true);
+        else {
+            if (resolution !== DrawStyle.lastResolution) {
+                DrawStyle.lastResolution = resolution;
+                DrawStyle.clearCaches();
+            }
+            // The feature shall not be displayed or is errorenous. Therefore, we return an empty style.
+            const signature = feature.get('sig');
+            if (!signature) {
+                return [];
+            } else if (signature.text !== undefined && signature.text !== null) {
+                // It's a text-entry...
+                return DrawStyle.textStyleFunction(feature, resolution, true);
+            } else {
+                // It's a symbol-signature.
+                return DrawStyle.imageStyleFunction(feature, resolution, signature, true);
+            }
+        }
+    }
+
+    private static getGridDimensions(totalSize: number) {
+        return Math.ceil(Math.sqrt(totalSize));
+    }
+
+    private static getNumberOfRows(totalSize: number) {
+        return Math.ceil(totalSize / DrawStyle.getGridDimensions(totalSize));
+    }
+
+    private static getNumberOfInstancesInLastRow(totalSize: number) {
+        let numberOfRows = DrawStyle.getNumberOfRows(totalSize)
+        let gridDimensions = DrawStyle.getGridDimensions(totalSize);
+        let remainder = totalSize % Math.max(1, (numberOfRows-1) * gridDimensions);
+        return remainder === 0 ? gridDimensions : remainder;
+    }
+
+    private static getIconLocation(index: number, totalSize: number, iconSizeInCoordinates: number) {
+        let numberOfRows = DrawStyle.getNumberOfRows(totalSize);
+        let gridDimensions = DrawStyle.getGridDimensions(totalSize);
+        let row = Math.floor(index / gridDimensions);
+        let col = index - (row * gridDimensions)
+        let numberOfInstancesInRow = numberOfRows - row - 1 === 0 ? this.getNumberOfInstancesInLastRow(totalSize) : gridDimensions;
+        let leftOffset = numberOfInstancesInRow / 2 - col + 0.5
+        let topOffset = numberOfRows / 2 - row + 0.5
+        return [iconSizeInCoordinates - leftOffset * iconSizeInCoordinates, iconSizeInCoordinates - topOffset * iconSizeInCoordinates];
+    }
+
+
+    public static clusterStyleFunctionDefault(feature, resolution): any {
+        return DrawStyle.clusterStyleFunction(feature, resolution, false);
+    }
+
+    private static clusterStyleFunction(feature, resolution, selected:boolean): any {
+        let coordinateScale = resolution;
+        let iconSizeInCoordinates = 50 * coordinateScale;
+        const scale = 0.12;
+        let features = feature.get("features");
+        if (features.length == 1) {
+            return DrawStyle.styleFunction(features[0], resolution);
         } else {
-            // It's a symbol-signature.
-            return DrawStyle.imageStyleFunction(feature, resolution, signature, true);
+            let offset = 0;
+            let iconCount = {};
+            let styles = [];
+            let pointCoordinates = [];
+            features.forEach(f => pointCoordinates.push(f.getGeometry().getCoordinates()));
+            let hull = ConvexHull(pointCoordinates);
+            let groupedFeatures = {}
+            features.forEach(f => {
+                let sigSrc = f.get("sig").src;
+                let signature = groupedFeatures[sigSrc];
+                if (!signature) {
+                    signature = groupedFeatures[sigSrc] = [];
+                }
+                signature.push(f);
+            })
+
+            let groupedFeatureCount = Object.keys(groupedFeatures).length;
+            styles.push(new Style({
+                fill: DrawStyle.getAreaFill(DrawStyle.colorFunction(selected ? "#FFFFFF" : "#e5e5e5", 1), 1, "filled"),
+                stroke: new Stroke({
+                    color: '#3399CC',
+                    width: selected ? 2 : 1
+                }),
+                geometry: function (feature) {
+                    let gridDimensions = DrawStyle.getGridDimensions(groupedFeatureCount);
+                    let bottomLeft = DrawStyle.getIconLocation(0, groupedFeatureCount, iconSizeInCoordinates);
+                    let bottomRight = DrawStyle.getIconLocation(gridDimensions-1, groupedFeatureCount, iconSizeInCoordinates);
+                    let topLeft = DrawStyle.getIconLocation((DrawStyle.getNumberOfRows(groupedFeatureCount) - 1) * gridDimensions, groupedFeatureCount, iconSizeInCoordinates);
+                    let instancesInLastRow = DrawStyle.getNumberOfInstancesInLastRow(groupedFeatureCount);
+                    let topRight = DrawStyle.getIconLocation((DrawStyle.getNumberOfRows(groupedFeatureCount) -1) * gridDimensions + instancesInLastRow - 1, groupedFeatureCount, iconSizeInCoordinates);
+                    let coordinates = feature.getGeometry().getCoordinates();
+                    let paddingFactor = 0.6;
+                    return new Polygon([[[coordinates[0] + bottomLeft[0] - iconSizeInCoordinates * paddingFactor+offset, coordinates[1] + bottomLeft[1] - iconSizeInCoordinates * paddingFactor + offset], [coordinates[0] + bottomRight[0] + iconSizeInCoordinates * paddingFactor + offset, coordinates[1] + bottomRight[1] - iconSizeInCoordinates * paddingFactor + offset], [coordinates[0] + topRight[0] + iconSizeInCoordinates * paddingFactor + offset, coordinates[1] + topRight[1] + iconSizeInCoordinates * paddingFactor + offset], [coordinates[0] + topLeft[0] - iconSizeInCoordinates * paddingFactor + offset, coordinates[1] + topLeft[1] + iconSizeInCoordinates * paddingFactor + offset]]]);
+                },
+                zIndex: 3
+            }));
+            Object.keys(groupedFeatures).forEach((src, index) => {
+                let iconLocation = DrawStyle.getIconLocation(index, groupedFeatureCount, iconSizeInCoordinates);
+                if (iconLocation) {
+                    styles.push(new Style({
+                        text: new Text({
+                            text: groupedFeatures[src].length.toString(),
+                            font: 11 + 'px sans-serif',
+                            offsetX: 19,
+                            offsetY: -19,
+                            fill: DrawStyle.getColorFill("#FFFFFF"),
+                            backgroundFill: DrawStyle.getColorFill("#3399CC"),
+                            backgroundStroke: DrawStyle.createDefaultStroke(0.12, "#3399CC"),
+                            padding: [0, 0, 1, 1]
+                        }),
+                        zIndex: 5,
+                        geometry: function (feature) {
+                            let coordinates = feature.getGeometry().getCoordinates();
+                            return new Point([coordinates[0] + iconLocation[0]+offset, coordinates[1] + iconLocation[1]+offset]);
+                        }
+                    }));
+                    styles.push(new Style({
+                        image: new Circle({
+                            radius: 20,
+                            fill: DrawStyle.getColorFill("#ffffff"),
+                            stroke: new Stroke({
+                                color: '#3399CC'
+                            })
+                        }),
+                        zIndex: 10,
+                        geometry: function (feature) {
+                            let coordinates = feature.getGeometry().getCoordinates();
+                            return new Point([coordinates[0] + iconLocation[0]+offset, coordinates[1] + iconLocation[1]+offset]);
+                        }
+                    }));
+                    let icon = src
+                    iconCount[icon] = (iconCount[icon] ? iconCount[icon] : 0) + 1;
+                    let imageFromMemory;
+                    let scaledSize = undefined;
+                    let naturalDim = null;
+                    let imageFromMemoryDataUrl = CustomImageStoreService.getImageDataUrl(icon)
+
+                    if (imageFromMemoryDataUrl) {
+                        imageFromMemory = new Image();
+                        imageFromMemory.src = imageFromMemoryDataUrl;
+                        naturalDim = Math.min.apply(null, CustomImageStoreService.getDimensions(icon));
+                        scaledSize = 60 / naturalDim;
+                    }
+                    styles.push(new Style({
+                        image: new Icon(({
+                            anchor: [0.5, 0.5],
+                            anchorXUnits: 'fraction',
+                            anchorYUnits: 'fraction',
+                            scale: 0.25,
+                            src: imageFromMemory ? undefined : DrawStyle.getImageUrl(icon),
+                            img: imageFromMemory ? imageFromMemory : undefined,
+                            imgSize: scaledSize ? [naturalDim, naturalDim] : undefined,
+                        })),
+                        zIndex: 15,
+                        geometry: function (feature) {
+                            let coordinates = feature.getGeometry().getCoordinates();
+                            return new Point([coordinates[0] + iconLocation[0]+offset, coordinates[1] + iconLocation[1]+offset]);
+                        }
+                    }));
+                }
+            });
+            if(selected) {
+                styles.push(new Style({
+                    fill: DrawStyle.getAreaFill(DrawStyle.colorFunction("#dedede", 0.6), 1, "filled"),
+                    stroke: DrawStyle.createDefaultStroke(scale, "#3399CC", true),
+                    geometry: function (feature) {
+                        return new Polygon([hull]);
+                    }
+                }));
+            }
+            return styles;
         }
     }
 
 
     public static styleFunction(feature, resolution): any {
-        if(resolution!==DrawStyle.lastResolution){
+        if (resolution !== DrawStyle.lastResolution) {
             DrawStyle.lastResolution = resolution;
             DrawStyle.clearCaches();
         }
@@ -106,14 +270,14 @@ export class DrawStyle {
         // }
     }
 
-    private static symbolStyleCache={};
-    private static vectorStyleCache={};
-    private static imageCache={};
-    private static colorFill={};
+    private static symbolStyleCache = {};
+    private static vectorStyleCache = {};
+    private static imageCache = {};
+    private static colorFill = {};
 
-    private static lastResolution=null;
+    private static lastResolution = null;
 
-    public static clearCaches(){
+    public static clearCaches() {
         DrawStyle.symbolStyleCache = {};
         DrawStyle.vectorStyleCache = {};
         DrawStyle.colorFill = {};
@@ -122,6 +286,7 @@ export class DrawStyle {
 
 
     private static calculateCacheHashForSymbol(signature, feature, resolution, selected): string {
+        feature = DrawStyle.getSubfeature(feature);
         return Md5.hashStr(JSON.stringify({
             resolution: resolution,
             rotation: feature.rotation,
@@ -137,6 +302,7 @@ export class DrawStyle {
     }
 
     private static calculateCacheHashForVector(signature, feature, resolution, selected): string {
+        feature = DrawStyle.getSubfeature(feature);
         return Md5.hashStr(JSON.stringify({
             color: signature.color,
             selected: selected,
@@ -155,6 +321,7 @@ export class DrawStyle {
 
 
     private static getAnchorCoordinate(feature) {
+        feature = DrawStyle.getSubfeature(feature);
         switch (feature.getGeometry().getType()) {
             case "Point":
                 return feature.getGeometry().getCoordinates();
@@ -164,6 +331,7 @@ export class DrawStyle {
     }
 
     private static getIconCoordinates(feature, resolution) {
+        feature = DrawStyle.getSubfeature(feature);
         let signature = feature.get('sig');
         let symbolAnchorCoordinate = getMostTopCoordinate(feature);
         let offset = signature.iconOffset;
@@ -173,6 +341,7 @@ export class DrawStyle {
     }
 
     private static createLineToIcon(feature, resolution) {
+        feature = DrawStyle.getSubfeature(feature);
         let iconCoordinates = DrawStyle.getIconCoordinates(feature, resolution);
         let symbolAnchorCoordinate = iconCoordinates[0];
         let symbolCoordinate = iconCoordinates[1];
@@ -189,25 +358,35 @@ export class DrawStyle {
         return result;
     }
 
-    private static showIcon(signature){
+    private static showIcon(signature) {
         return !signature.hideIcon && signature.src;
     }
 
-    private static createDefaultStroke(scale, color, dashed=false){
+    private static createDefaultStroke(scale, color, dashed = false) {
         let strokeWidth = scale * 10;
         let stroke = new Stroke({
             color: DrawStyle.colorFunction(color, 1.0),
             width: strokeWidth
         });
-        if(dashed){
+        if (dashed) {
             stroke.setLineDash([strokeWidth * 2, strokeWidth * 2]);
             stroke.setLineDashOffset(strokeWidth * 2);
         }
         return stroke;
     }
 
+    private static getSubfeature(feature) {
+        let subfeature = feature.get('features');
+        if (subfeature && subfeature.length == 1) {
+            return subfeature[0];
+        }
+        return feature;
+    }
+
+
     private static getIconStyle(feature, resolution, signature, selected, scale): Style[] {
-        const zIndex = selected ? Infinity: this.getZIndex(feature)
+        feature = DrawStyle.getSubfeature(feature);
+        const zIndex = selected ? Infinity : this.getZIndex(feature)
         const symbolCacheHash = DrawStyle.calculateCacheHashForSymbol(signature, feature, resolution, selected);
         let iconStyles = this.symbolStyleCache[symbolCacheHash];
         let featureId = feature.ol_uid;
@@ -233,6 +412,7 @@ export class DrawStyle {
                     }),
                     geometry: function (feature) {
                         return new Point(DrawStyle.getIconCoordinates(feature, resolution)[1]);
+
                     },
                     zIndex: zIndex
                 }));
@@ -253,7 +433,7 @@ export class DrawStyle {
                 }))
             }
 
-            if(showIcon) {
+            if (showIcon) {
                 //Draw a dashed line to the icon
                 iconStyles.push(new Style({
                     stroke: dashedStroke,
@@ -280,9 +460,9 @@ export class DrawStyle {
                 let scaledSize = undefined;
                 let naturalDim = null;
                 let imageFromMemoryDataUrl = CustomImageStoreService.getImageDataUrl(signature.src)
-                if(imageFromMemoryDataUrl) {
+                if (imageFromMemoryDataUrl) {
                     imageFromMemory = this.imageCache[featureId]
-                    if(!imageFromMemory){
+                    if (!imageFromMemory) {
                         imageFromMemory = this.imageCache[featureId] = new Image();
                     }
                     imageFromMemory.src = imageFromMemoryDataUrl;
@@ -293,12 +473,12 @@ export class DrawStyle {
                     anchor: [0.5, 0.5],
                     anchorXUnits: 'fraction',
                     anchorYUnits: 'fraction',
-                    scale: scaledSize ? scaledSize : scale*2.5,
+                    scale: scaledSize ? scaledSize : scale * 2.5,
                     opacity: 1,
                     rotation: feature.rotation !== undefined ? feature.rotation * Math.PI / 180 : 0,
                     src: imageFromMemory ? undefined : this.getImageUrl(signature.src),
                     img: imageFromMemory ? imageFromMemory : undefined,
-                    imgSize: scaledSize ? [naturalDim, naturalDim]: undefined
+                    imgSize: scaledSize ? [naturalDim, naturalDim] : undefined
                 }))
 
                 //Draw the icon
@@ -315,6 +495,7 @@ export class DrawStyle {
     }
 
     private static getZIndex(feature) {
+        feature = DrawStyle.getSubfeature(feature);
         return feature.get('zindex') ? feature.get('zindex') : 0
     }
 
@@ -336,6 +517,7 @@ export class DrawStyle {
     }
 
     private static getVectorStyles(feature, resolution, signature, selected, scale): Style {
+        feature = DrawStyle.getSubfeature(feature);
         const vectorCacheHash = DrawStyle.calculateCacheHashForVector(signature, feature, resolution, selected);
         let vectorStyle = this.vectorStyleCache[vectorCacheHash];
         if (!vectorStyle) {
@@ -373,6 +555,7 @@ export class DrawStyle {
 
 
     private static getHighlightStroke(feature, scale) {
+        feature = DrawStyle.getSubfeature(feature);
         return new Stroke({
             color: "#fff5cb",
             width: this.calculateStrokeWidth(scale, feature.get('sig')) + scale * 30,
@@ -381,6 +564,7 @@ export class DrawStyle {
 
 
     private static getHighlightLineWhenSelectedStyle(feature, scale, selected): Style {
+        feature = DrawStyle.getSubfeature(feature);
         if (selected) {
             switch (feature.getGeometry().getType()) {
                 case "Polygon":
@@ -486,7 +670,7 @@ export class DrawStyle {
         ]
 
         let highlightLine = this.getHighlightLineWhenSelectedStyle(feature, defaultScale, selected);
-        if(highlightLine){
+        if (highlightLine) {
             textStyles.push(highlightLine);
         }
         let highlightPoints = this.getHighlightPointsWhenSelectedStyle(feature, defaultScale, selected)

@@ -40,8 +40,11 @@ import {MatDialog} from "@angular/material/dialog";
 import {ConfirmationDialogComponent} from "../confirmation-dialog/confirmation-dialog.component";
 import {v4 as uuidv4} from 'uuid';
 import {EditCoordinatesComponent} from "../edit-coordinates/edit-coordinates.component";
+import {DisplayMode} from "../entity/displayMode";
+import Cluster from "ol/source/Cluster";
 
-export const DRAW_LAYER_ZINDEX = 100000;
+export const DRAW_LAYER_ZINDEX = 100000
+export const CLUSTER_LAYER_ZINDEX = DRAW_LAYER_ZINDEX + 1;
 
 @Component({
     selector: 'app-drawlayer',
@@ -60,20 +63,35 @@ export class DrawlayerComponent implements OnInit {
     maxZIndex = 0;
     minZIndex = 0;
 
-
     source = new Vector({
         format: new GeoJSON()
     });
+
+    clusterSource = new Vector({
+        format: new GeoJSON()
+    })
+
+    cluster = new Cluster({
+        distance: 140,
+        source: this.clusterSource
+    })
+
+    clusterLayer = new LayerVector({
+        source: this.cluster,
+        style: DrawStyle.clusterStyleFunctionDefault
+    })
+
     layer = new LayerVector({
         source: this.source,
         style: DrawStyle.styleFunction,
         className: 'drawLayer'
     });
+
     select = new Select({
         //toggleCondition: never,
         style: DrawStyle.styleFunctionSelect,
         //condition: never
-        layers: [this.layer],
+        layers: [this.layer, this.clusterLayer],
         hitTolerance: 10
     });
 
@@ -94,14 +112,28 @@ export class DrawlayerComponent implements OnInit {
     );
     removeButton: Overlay = null;
 
-    historyMode = false;
     firstLoad = true;
     drawHole = new DrawHole(
         {
             layers: [this.layer]
         });
 
+    private static mapSaveInterval: number = 1000;
+    private static saveRunnerLock = false;
+    private dirtyMap = false;
+
+    private startAutosave() {
+        if (!DrawlayerComponent.saveRunnerLock) {
+            console.log("starting autosave now...");
+            //Ensure there is only a single autosave interval running at a time.
+            DrawlayerComponent.saveRunnerLock = true;
+            setInterval(() => this.save(), DrawlayerComponent.mapSaveInterval);
+        }
+    }
+
+
     constructor(private sharedState: SharedStateService, private mapStore: MapStoreService, public i18n: I18NService, private sessions: SessionsService, private customImages: CustomImageStoreService, private dialog: MatDialog) {
+        this.startAutosave();
     }
 
     private isModifyPointInteraction() {
@@ -117,7 +149,6 @@ export class DrawlayerComponent implements OnInit {
         }
         return -1;
     }
-
 
     private getCoordinationGroupOfLastPoint() {
         //Since we're working with single select, this should be only one - we iterate it nevertheless for being defensive
@@ -157,24 +188,17 @@ export class DrawlayerComponent implements OnInit {
     }
 
     private drawingManipulated(feature: Feature, changeEvent = false) {
-        if (this.recordChanges) {
+        if (this.recordChanges && !this.historyMode) {
             if (changeEvent) {
                 //There are too many change events (also when a feature is selected / unselected). We don't want to save those events since they are not manipulating anything...
                 if (this.selectedFeature && this.selectedFeature.getId() === feature.getId()) {
-                    if (this.select.getFeatures().getLength() == 0) {
-                        console.log("This was a unselect only");
-                    } else {
-                        console.log("Save changes");
-                        this.status = "Save changes";
-                        this.save().then(this.status = null);
+                    if (this.select.getFeatures().getLength() > 0) {
+                        this.dirtyMap = true;
                     }
-                } else {
-                    console.log("This was a select only");
                 }
             } else {
-                this.save().then(this.status = null);
+                this.dirtyMap = true;
             }
-
         }
     }
 
@@ -229,6 +253,7 @@ export class DrawlayerComponent implements OnInit {
             this.toggleRemoveButton(false);
         });
         this.layer.setZIndex(DRAW_LAYER_ZINDEX);
+        this.clusterLayer.setZIndex(CLUSTER_LAYER_ZINDEX);
         this.map = this.inputMap;
         this.map.addOverlay(this.removeButton);
         this.map.addInteraction(this.select);
@@ -259,10 +284,27 @@ export class DrawlayerComponent implements OnInit {
                 this.defineCoordinates()
             }
         });
+        this.map.getView().on('change:resolution', ()=>{
+           let resolution = Math.ceil(Math.sqrt(this.map.getView().getResolution()));
+           console.log("resolution changed: "+resolution);
+           let newDistance = Math.max(1, (resolution+1))*15;
+           if(newDistance !== this.cluster.getDistance()) {
+               this.cluster.setDistance(newDistance);
+           }
+        });
+
         this.sharedState.deletedFeature.subscribe(feature => this.removeFeature(feature));
         this.sharedState.currentSign.subscribe(sign => this.startDrawing(sign));
-        this.sharedState.drawHoleMode.subscribe(drawHole => this.doDrawHole(drawHole));
-        this.sharedState.history.subscribe(history => this.toggleHistory(history));
+        this.sharedState.drawHoleMode.subscribe(drawHole => this.doDrawHole(drawHole))
+        this.sharedState.displayMode.subscribe(displayMode => {
+            if (this.historyMode && displayMode !== DisplayMode.HISTORY) {
+                this.endHistoryMode();
+            } else if (!this.historyMode && displayMode === DisplayMode.HISTORY) {
+                this.startHistoryMode();
+            }
+            this.historyMode = displayMode === DisplayMode.HISTORY;
+        })
+        this.sharedState.historyDate.subscribe(history => this.toggleHistoryDate(history));
         this.sharedState.mergeMode.subscribe(mergeMode => this.mergeMode(mergeMode));
         this.sharedState.splitMode.subscribe(splitMode => this.splitMode(splitMode));
         this.sharedState.reorder.subscribe(toTop => {
@@ -294,11 +336,13 @@ export class DrawlayerComponent implements OnInit {
         // Because of the closure, we end up inside the map -> let's just add an
         // indirection and go back to the drawlayer level again.
         this.sharedState.layerChanged.subscribe(changed => {
-                if (changed) {
+                if (changed && (this.sharedState.displayMode.getValue() === DisplayMode.DRAW || this.sharedState.displayMode.getValue() === DisplayMode.HISTORY)) {
                     if (!this.firstLoad) {
                         this.map.removeLayer(this.layer);
+                        this.map.removeLayer(this.clusterLayer);
                     }
                     this.map.addLayer(this.layer);
+                    this.map.addLayer(this.clusterLayer);
                 }
             }
         );
@@ -318,7 +362,6 @@ export class DrawlayerComponent implements OnInit {
                         console.log("Invalid JSON payload");
                     }
                 }
-
                 this.sharedState.defineCoordinates.next(false);
             })
         } else {
@@ -326,9 +369,19 @@ export class DrawlayerComponent implements OnInit {
         }
     }
 
+    private getSelectedFeature() {
+        if (this.select.getFeatures().getLength() === 1) {
+            return this.select.getFeatures().item(0)
+        } else if (this.select.getFeatures().getLength() === 0) {
+            return null;
+        } else {
+            window.alert('too many items selected at once!');
+        }
+    }
+
     splitMode(split: boolean) {
         if (split) {
-            let currentFeature = this.select.getFeatures().getLength() == 1 ? this.select.getFeatures().item(0) : null;
+            let currentFeature = this.getSelectedFeature();
             if (currentFeature && currentFeature.getGeometry().getType() === "Polygon") {
                 let coordinateGroups = currentFeature.getGeometry().getCoordinates();
                 let splittedFeatures = []
@@ -341,15 +394,14 @@ export class DrawlayerComponent implements OnInit {
                 }
                 this.source.addFeatures(splittedFeatures);
                 this.removeFeature(currentFeature);
-                this.select.getFeatures().clear();
-                this.sharedState.selectFeature(null);
+                this.clearSelection();
             }
         }
     }
 
     mergeMode(merge: boolean) {
         if (merge) {
-            this.mergeSource = this.select.getFeatures().getLength() == 1 ? this.select.getFeatures().item(0) : null;
+            this.mergeSource = this.getSelectedFeature();
         } else {
             this.mergeSource = null;
         }
@@ -376,14 +428,10 @@ export class DrawlayerComponent implements OnInit {
         this.sharedState.setMergeMode(false);
     }
 
-    toggleHistory(history: string) {
-        this.historyMode = true;
-        this.select.getFeatures().clear();
-        this.sharedState.selectFeature(null);
-        if (history === null && this.historyMode) {
-            this.historyMode = false;
-            this.endHistoryMode();
-        } else if (history !== null) {
+    historyMode: boolean;
+
+    toggleHistoryDate(history: string) {
+        if (this.historyMode) {
             this.loadFromHistory(history);
         }
     }
@@ -391,21 +439,31 @@ export class DrawlayerComponent implements OnInit {
     endHistoryMode() {
         if (this.currentSessionId) {
             this.load().then(() => {
-                this.select.setActive(true);
+                //this.select.setActive(true);
                 this.modify.setActive(true);
             });
         }
+    }
 
+    startHistoryMode() {
+        this.clearSelection();
+        this.modify.setActive(false);
+        //this.select.setActive(false);
     }
 
     loadFromHistory(history) {
-        this.modify.setActive(false);
-        this.select.setActive(false);
         this.sharedState.showMapLoader.next(true);
-        this.mapStore.getHistoricalStateByKey(this.currentSessionId, history).then(h => {
-            this.loadElements(h, true);
-            this.sharedState.showMapLoader.next(false);
-        });
+        if (history === "now") {
+            this.mapStore.getMap(this.currentSessionId).then(map => {
+                this.loadElements(map, true)
+                this.sharedState.showMapLoader.next(false);
+            });
+        } else {
+            this.mapStore.getHistoricalStateByKey(this.currentSessionId, history).then(h => {
+                this.loadElements(h, true);
+                this.sharedState.showMapLoader.next(false);
+            });
+        }
     }
 
     selectedFeature: Feature;
@@ -435,12 +493,14 @@ export class DrawlayerComponent implements OnInit {
     }
 
     writeFeatures(): GeoJSON {
+        //TODO check for use cases of writing from history mode (e.g. download for revert)
         return JSON.parse(new GeoJSON({defaultDataProjection: 'EPSG:3857'}).writeFeatures(this.source.getFeatures()));
     }
 
 
     toDataUrl() {
         let result = this.writeFeatures();
+        //TODO check for use cases of writing from history mode (e.g. download for revert)
         let signatureSources = this.source.getFeatures().map(f => f.get('sig').src)
         // @ts-ignore
         result.images = this.customImages.getAllEntriesForCurrentSession().filter(i => signatureSources.includes(i.sign.src));
@@ -452,9 +512,15 @@ export class DrawlayerComponent implements OnInit {
         this.minZIndex = 0;
         this.maxZIndex = 0;
         this.source.clear();
-        this.select.getFeatures().clear();
+        this.clusterSource.clear();
+        this.clearSelection();
         DrawStyle.clearCaches();
         this.recordChanges = true;
+    }
+
+    private clearSelection() {
+        this.select.getFeatures().clear();
+        this.sharedState.selectFeature(null);
     }
 
     removeAll() {
@@ -466,18 +532,18 @@ export class DrawlayerComponent implements OnInit {
         }
     }
 
-    save(): Promise<any> {
-        if (!this.historyMode) {
-            let features = this.writeFeatures();
-            return this.mapStore.saveMap(this.currentSessionId, features);
+    save() {
+        if (!this.historyMode && this.dirtyMap) {
+            this.dirtyMap = false;
+            return this.mapStore.saveMap(this.currentSessionId, this.writeFeatures());
         }
-        return Promise.resolve({});
     }
 
     loadElements(elements: GeoJSON, replace: boolean, reenableChangeRecording = true) {
         this.recordChanges = false;
         if (replace) {
             this.source.clear();
+            this.clusterSource.clear()
             this.select.getFeatures().clear()
         }
         if (elements) {
@@ -499,18 +565,30 @@ export class DrawlayerComponent implements OnInit {
                             }
                         }
                     }
-                    this.source.addFeatures(new GeoJSON({defaultDataProjection: 'EPSG:3857'}).readFeatures(elements));
+                    let geoJSON = new GeoJSON({defaultDataProjection: 'EPSG:3857'})
+                    let features: Feature[] = geoJSON.readFeatures(elements)
+                    if (this.historyMode) {
+                        //In history mode, we split the point features and add them to the cluster layer
+                        let pointFeatures = features.filter(f => f.getGeometry().getType() === "Point")
+                        let otherFeatures = features.filter(f => f.getGeometry().getType() !== "Point")
+                        this.source.addFeatures(otherFeatures);
+                        this.clusterSource.addFeatures(pointFeatures);
+                    } else {
+                        this.source.addFeatures(features);
+                    }
                 }
             });
         }
         if (reenableChangeRecording) {
-            this.recordChanges = true;
+            //TODO find a way to detect when the loading is over...
+            setTimeout(() => {
+                this.recordChanges = true;
+            }, 10000);
         }
     }
 
     load(reenableChangeRecording: boolean = true, replace: boolean = true): Promise<any> {
         return new Promise<any>(resolve => {
-
             this.sharedState.showMapLoader.next(true);
             this.customImages.loadSignsInMemory().then(() => {
                 //We need to make sure the custom images are loaded before we load the map - this is why we set it in sequence.
@@ -528,12 +606,9 @@ export class DrawlayerComponent implements OnInit {
         //Deferred because we need to ensure that the loader is shown first
         setTimeout(() => {
             this.loadElements(JSON.parse(text), replace);
+            this.sharedState.showMapLoader.next(false);
             if (save) {
-                this.save().then(() => {
-                    this.sharedState.showMapLoader.next(false);
-                });
-            } else {
-                this.sharedState.showMapLoader.next(false)
+                this.save();
             }
         }, 0)
     }
@@ -568,7 +643,7 @@ export class DrawlayerComponent implements OnInit {
         if (feature != null) {
             this.toggleRemoveButton(false);
             this.source.removeFeature(feature);
-            this.select.getFeatures().clear();
+            this.clearSelection();
         }
     }
 

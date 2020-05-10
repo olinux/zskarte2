@@ -31,11 +31,10 @@ export class ClockComponent implements OnInit {
 
     historyDate = null;
     constructor(public i18n:I18NService, private sharedState: SharedStateService) {
-        this.sharedState.history.subscribe(s => {
-            this.historyDate = s ? new Date(s) : null;
+        this.sharedState.historyDate.subscribe(s => {
+            this.historyDate = s && s!=="now" ?  new Date(s) : null;
             this.redefine();
         })
-
     }
     now: Date;
 

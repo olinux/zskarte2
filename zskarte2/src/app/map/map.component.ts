@@ -47,7 +47,6 @@ export class MapComponent implements OnInit {
 
     map: OlMap = null;
     layer: Layer;
-    view: OlView;
     currentSessionId: string;
 
     positionFlagLocation: Point = new Point([0, 0]);
@@ -71,6 +70,7 @@ export class MapComponent implements OnInit {
             })
         }));
     }
+
 
     ngOnInit() {
         this.navigationLayer.setZIndex(DRAW_LAYER_ZINDEX + 1);

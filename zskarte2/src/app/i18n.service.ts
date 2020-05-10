@@ -589,6 +589,11 @@ export class I18NService {
             de: "Wert",
             en: "Value",
             fr: "Valeur"
+        },
+        currentState:{
+            de: "Aktuell",
+            en: "Most recent",
+            fr: "Actuel"
         }
 
     }

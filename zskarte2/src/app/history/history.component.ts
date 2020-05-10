@@ -24,6 +24,7 @@ import {I18NService} from "../i18n.service";
 import {MapStoreService} from "../map-store.service";
 import {DomSanitizer} from "@angular/platform-browser";
 import {DrawlayerComponent} from "../drawlayer/drawlayer.component";
+import {DisplayMode} from "../entity/displayMode";
 
 @Component({
     selector: 'app-history',
@@ -31,8 +32,6 @@ import {DrawlayerComponent} from "../drawlayer/drawlayer.component";
     styleUrls: ['./history.component.css']
 })
 export class HistoryComponent implements OnInit {
-
-
     @Input() drawLayer: DrawlayerComponent;
     history = null;
     private _historyDatesAll = null;
@@ -43,14 +42,28 @@ export class HistoryComponent implements OnInit {
     public showHistory = false;
     filtered: boolean = true
     downloadData = null;
-    downloadTime = null;
+    loading = false;
+    private selectedDate:string;
 
+    constructor(private sanitizer: DomSanitizer, private sharedState: SharedStateService, private mapStore: MapStoreService, public i18n: I18NService) {
+        this.sharedState.displayMode.subscribe(m => this.loadHistoryWhenEnabled(m));
+        this.sharedState.session.subscribe(s => {if(s){
+            this.loadHistoryWhenEnabled(this.sharedState.displayMode.getValue());
+        }});
+        this.loadHistoryWhenEnabled(this.sharedState.displayMode.getValue());
+    }
+
+    ngOnInit(): void {
+    }
 
     getDownloadFileName() {
         return "history_zskarte_" + this.selectedDate + ".geojson";
     }
 
-    private selectedDate:string;
+    selectNow(){
+        this.selectedDate = "now";
+        this.sharedState.gotoHistory("now");
+    }
 
     select(date:string, index:number){
         this.selectedDate = date;
@@ -66,18 +79,20 @@ export class HistoryComponent implements OnInit {
 
     get historyDatesLocale(): string[] {
         if (this.filtered) {
-            if(!this._historyDatesFilteredLocale.includes(this.selectedDate)){
-                this.select(this._historyDatesFilteredLocale[0], 0)
+            if(this.selectedDate!=="now" && !this._historyDatesFilteredLocale.includes(this.selectedDate)){
+                this.selectNow();
             }
             return this._historyDatesFilteredLocale;
         }
         return this._historyDatesAllLocale;
     }
 
-    constructor(private sanitizer: DomSanitizer, private sharedState: SharedStateService, private mapStore: MapStoreService, public i18n: I18NService) {
-    }
 
-    ngOnInit(): void {
+    private loadHistoryWhenEnabled(mode:DisplayMode){
+        this.showHistory = mode === DisplayMode.HISTORY;
+        if(this.showHistory && this.sharedState.getCurrentSession()) {
+            this.loadHistoryFromDB();
+        }
     }
 
     getTag(index: number): string {
@@ -93,7 +108,6 @@ export class HistoryComponent implements OnInit {
         return this.historyDatesLocale[index];
     }
 
-
     loadHistory(history) {
         const TIME_DIFF_BETWEEN_EVENTS = 30 * 60 * 1000;
         this.history = history;
@@ -105,34 +119,27 @@ export class HistoryComponent implements OnInit {
         for (let historyDate of this._historyDatesAll) {
             let realDate = new Date(historyDate);
             if (!lastDate || historyDate === this._historyDatesAll[this._historyDatesAll.length - 1] || lastDate.getTime() - realDate.getTime() > TIME_DIFF_BETWEEN_EVENTS || historyDate in this.tagSource) {
-
                 this._historyDatesFiltered.push(historyDate);
                 lastDate = realDate;
             }
         }
         this._historyDatesFilteredLocale = this._historyDatesFiltered.map(h => new Date(h).toLocaleString());
-        if(!this.selectedDate || !this.historyDatesLocale.includes(this.selectedDate)){
-            this.select(this.historyDatesLocale[0], 0)
+        if(!this.selectedDate || (this.selectedDate !== "now" && !this.historyDatesLocale.includes(this.selectedDate))){
+            this.selectNow();
         }
         this.loading = false;
-
     }
-
 
     private loadHistoryFromDB() {
         this.loading = true;
         this.mapStore.getHistory(this.sharedState.getCurrentSession().uuid).then(history => this.loadHistory(history));
     }
 
-    toggleHistoryMode() {
-        this.showHistory = !this.showHistory;
-        this.sharedState.gotoHistory(null);
-        if (this.showHistory) {
-            this.loadHistoryFromDB();
-        }
+    endHistoryMode() {
+        this.selectedDate = null;
+        //We're returning to the draw mode.
+        this.sharedState.displayMode.next(DisplayMode.DRAW);
     }
-
-    loading = false;
 
     removeTag(index) {
         this.mapStore.removeTag(this.sharedState.getCurrentSession().uuid, this.historyDates[index]).then(() => {

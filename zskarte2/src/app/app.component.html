@@ -22,8 +22,8 @@
 <div class="application">
     <app-map #map></app-map>
     <app-drawlayer [inputMap]="map.map" #drawLayer></app-drawlayer>
-    <app-history [drawLayer]="drawLayer" #history></app-history>
-    <app-toolbar [drawLayer]="drawLayer" [history]="history"></app-toolbar>
+    <app-history [drawLayer]="drawLayer"></app-history>
+    <app-toolbar [drawLayer]="drawLayer"></app-toolbar>
     <app-selected-feature></app-selected-feature>
 </div>
 

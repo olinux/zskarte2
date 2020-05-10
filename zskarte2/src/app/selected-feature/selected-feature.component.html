@@ -7,21 +7,25 @@
                             [src]="getImageUrl(selectedSignature.src)"/></div>
                     <div *ngIf="i18n.getLabelForSign(selectedSignature)"
                          class="label">{{i18n.getLabelForSign(selectedSignature)}}</div>
-                    <mat-form-field>
+                    <mat-form-field *ngIf="editMode">
                         <mat-label>{{i18n.get('name')}}</mat-label>
                         <input type="text" matInput [(ngModel)]="selectedSignature.label"
-                               *ngIf="!selectedSignature.text"/>
+                               *ngIf="!selectedSignature.text" />
                         <textarea matInput [(ngModel)]="selectedSignature.text" (ngModelChange)="redraw()"
                                   *ngIf="selectedSignature.text"></textarea>
                     </mat-form-field>
-                    <mat-form-field>
+                    <div *ngIf="!editMode" class="title">
+                        <div *ngIf="!selectedSignature.text">{{selectedSignature.label}}</div>
+                        <div *ngIf="selectedSignature.text">{{selectedSignature.text}}</div>
+                    </div>
+                    <mat-form-field *ngIf="editMode">
                         <mat-label>{{i18n.get("color")}}:</mat-label>
                         <input matInput type="color" name="color" [(ngModel)]="selectedSignature.color"
-                               (ngModelChange)="redraw()"/>
+                               (ngModelChange)="redraw()" />
                     </mat-form-field>
                 </mat-card-content>
             </mat-card>
-            <mat-expansion-panel *ngIf="selectedSignature.type!=='Point' && !selectedSignature.text">
+            <mat-expansion-panel *ngIf="editMode && selectedSignature.type!=='Point' && !selectedSignature.text">
                 <mat-expansion-panel-header>
                     <mat-panel-title>Linie</mat-panel-title>
                 </mat-expansion-panel-header>
@@ -46,7 +50,7 @@
                 </mat-form-field>
             </mat-expansion-panel>
 
-            <mat-expansion-panel *ngIf="selectedSignature.type==='Polygon'">
+            <mat-expansion-panel *ngIf="editMode && selectedSignature.type==='Polygon'">
                 <mat-expansion-panel-header>
                     <mat-panel-title>{{i18n.get("fillPattern")}}</mat-panel-title>
                 </mat-expansion-panel-header>
@@ -103,7 +107,7 @@
                 </mat-form-field>
             </mat-expansion-panel>
 
-            <mat-expansion-panel *ngIf="!selectedSignature.text" class="noPadding">
+            <mat-expansion-panel *ngIf="editMode && !selectedSignature.text" class="noPadding">
                 <mat-expansion-panel-header>
                         <mat-panel-title>{{i18n.get('symbol')}}</mat-panel-title>
                 </mat-expansion-panel-header>
@@ -142,7 +146,7 @@
                 </mat-form-field>
             </mat-expansion-panel>
 
-            <mat-expansion-panel *ngIf="selectedSignature.text">
+            <mat-expansion-panel *ngIf="editMode && selectedSignature.text">
                 <mat-expansion-panel-header>
                     <mat-panel-title>{{i18n.get('font')}}</mat-panel-title>
                 </mat-expansion-panel-header>
@@ -157,7 +161,7 @@
                 </mat-form-field>
             </mat-expansion-panel>
 
-            <mat-expansion-panel id="functionsPanel" class="noPadding">
+            <mat-expansion-panel id="functionsPanel" class="noPadding" *ngIf="editMode">
                 <mat-expansion-panel-header>
                     <mat-panel-title>{{i18n.get('functions')}}</mat-panel-title>
                 </mat-expansion-panel-header>
@@ -182,10 +186,10 @@
                         class="material-icons">format_shapes</i><span>{{i18n.get("defineCoordinates")}}</span></button>
             </mat-expansion-panel>
         </div>
-        <button class="primarybutton" mat-raised-button color="warn" (click)="delete()"><i
+        <button class="primarybutton" mat-raised-button color="warn" (click)="delete()" *ngIf="editMode"><i
                         class="material-icons">delete</i><span>{{i18n.get("delete")}}</span></button>
     </mat-card-content>
-    <mat-card-content *ngIf="mergeMode">
+    <mat-card-content *ngIf="editMode && mergeMode">
         <div>{{i18n.get('chooseGroupingArea')}}</div>
         <button mat-raised-button (click)="merge(false)" [disabled]="drawHoleMode"
                 *ngIf="selectedSignature.type==='Polygon' || selectedSignature.type==='MultiPolygon'"><i

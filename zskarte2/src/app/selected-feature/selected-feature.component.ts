@@ -7,6 +7,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {DrawingDialogComponent} from "../drawing-dialog/drawing-dialog.component";
 import {CustomImageStoreService} from "../custom-image-store.service";
 import {ConfirmationDialogComponent} from "../confirmation-dialog/confirmation-dialog.component";
+import {DisplayMode} from "../entity/displayMode";
 
 @Component({
     selector: 'app-selected-feature',
@@ -16,8 +17,25 @@ import {ConfirmationDialogComponent} from "../confirmation-dialog/confirmation-d
 export class SelectedFeatureComponent implements OnInit {
 
     constructor(public dialog: MatDialog, private sharedState: SharedStateService, public i18n: I18NService) {
+        this.sharedState.currentFeature.subscribe(feature => {
+            if(feature && feature.get("features")){
+                feature = feature.get("features")[0];
+            }
+            this.selectedFeature = feature;
+            this.selectedSignature = feature ? feature.get('sig') : null;
+            if (this.selectedSignature) {
+                defineDefaultValuesForSignature(this.selectedSignature);
+            }
+        });
+        this.sharedState.drawHoleMode.subscribe(drawHoleMode => this.drawHoleMode = drawHoleMode);
+        this.sharedState.mergeMode.subscribe(m => {
+            this.mergeMode = m;
+        });
+        this.sharedState.displayMode.subscribe(displayMode => this.editMode = displayMode !== DisplayMode.HISTORY )
+        this.editMode = this.sharedState.displayMode.getValue() !== DisplayMode.HISTORY;
     }
 
+    editMode: boolean;
     selectedFeature: any = null;
     selectedSignature: Sign = null;
     rotationPercent: number = 0;
@@ -38,17 +56,7 @@ export class SelectedFeatureComponent implements OnInit {
 
 
     ngOnInit() {
-        this.sharedState.currentFeature.subscribe(feature => {
-            this.selectedFeature = feature;
-            this.selectedSignature = feature != null ? feature.get('sig') : null;
-            if (this.selectedSignature) {
-                defineDefaultValuesForSignature(this.selectedSignature);
-            }
-        });
-        this.sharedState.drawHoleMode.subscribe(drawHoleMode => this.drawHoleMode = drawHoleMode);
-        this.sharedState.mergeMode.subscribe(m => {
-            this.mergeMode = m;
-        });
+
     }
 
     chooseSymbol() {

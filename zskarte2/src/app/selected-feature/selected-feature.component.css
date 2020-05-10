@@ -41,6 +41,12 @@ mat-slider{
     margin-bottom: 2em;
 }
 
+.title{
+    text-align: center;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
 .menu-wrapper{
     text-align:right;
 }

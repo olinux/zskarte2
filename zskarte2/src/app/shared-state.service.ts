@@ -24,11 +24,28 @@ import {Sign} from './entity/sign';
 import {Coordinate} from "./entity/coordinate";
 import {Session} from './entity/session';
 import {Layer} from "./layers/layer";
+import {DisplayMode} from "./entity/displayMode";
 
 @Injectable({
     providedIn: 'root'
 })
 export class SharedStateService {
+
+    private static getFromQueryParam(queryParam:string, map:object=null, nullValue){
+        const fromUrlParam = new URLSearchParams(document.location.search).get(queryParam);
+        if(fromUrlParam){
+            if(map){
+                return map[fromUrlParam] ? map[fromUrlParam] : nullValue;
+            }
+            else{
+                return fromUrlParam;
+            }
+        }
+        return nullValue;
+    }
+
+
+    public displayMode = new BehaviorSubject<DisplayMode>(SharedStateService.getFromQueryParam("mode", {"draw": DisplayMode.DRAW, "history": DisplayMode.HISTORY}, DisplayMode.DRAW));
 
     private layerSource = new BehaviorSubject<Layer>(null);
     currentLayer = this.layerSource.asObservable();
@@ -45,8 +62,8 @@ export class SharedStateService {
     private coordinateSource = new BehaviorSubject<Coordinate>(null);
     currentCoordinate = this.coordinateSource.asObservable();
 
-    private historySource = new BehaviorSubject<string>(null);
-    history = this.historySource.asObservable();
+    private historyDateSource = new BehaviorSubject<string>(null);
+    historyDate = this.historyDateSource.asObservable();
 
     private downloadSource = new BehaviorSubject<string>(null);
     downloadData = this.downloadSource.asObservable();
@@ -130,7 +147,8 @@ export class SharedStateService {
     }
 
     gotoHistory(key: string) {
-        this.historySource.next(key);
+        this.displayMode.next(DisplayMode.HISTORY);
+        this.historyDateSource.next(key);
     }
 
     gotoCoordinate(coordinate: Coordinate) {
