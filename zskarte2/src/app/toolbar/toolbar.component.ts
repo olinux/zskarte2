@@ -48,7 +48,10 @@ export class ToolbarComponent implements OnInit {
 
 
     constructor(public i18n: I18NService, private cdr: ChangeDetectorRef, private sharedState: SharedStateService, public dialog: MatDialog, private preferences: PreferencesService, private sessions: SessionsService, private mapStore: MapStoreService) {
-        this.sharedState.displayMode.subscribe(mode => this.historyMode = mode === DisplayMode.HISTORY);
+        this.sharedState.displayMode.subscribe(mode => {
+            this.historyMode = mode === DisplayMode.HISTORY
+            window.history.pushState(null,"", "?mode="+mode);
+        });
         this.sharedState.drawingManipulated.subscribe(updated=>{
             if(updated){
                 this.updateFilterSymbols();

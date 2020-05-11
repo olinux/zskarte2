@@ -44,6 +44,7 @@ export class HistoryComponent implements OnInit {
     constructor(private sharedState: SharedStateService, private mapStore: MapStoreService, public i18n: I18NService) {
         this.sharedState.displayMode.subscribe(m => this.loadHistoryWhenEnabled(m));
         this.sharedState.session.subscribe(s => {if(s){
+            this.history = null;
             this.loadHistoryWhenEnabled(this.sharedState.displayMode.getValue());
         }});
         this.loadHistoryWhenEnabled(this.sharedState.displayMode.getValue());

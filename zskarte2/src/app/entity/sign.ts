@@ -47,6 +47,7 @@ export interface Sign {
     flipIcon?: boolean;
     topCoord?:number[];
     onlyForSessionId?:string;
+    description?:string;
     kat?: string; //deprecated - kept for compatibility reasons (is translated directly to color)
 }
 

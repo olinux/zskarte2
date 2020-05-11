@@ -20,11 +20,10 @@ export class SelectedFeatureComponent implements OnInit {
         this.sharedState.currentFeature.subscribe(feature => {
 
             if (feature && feature.get("features")) {
-                if(feature.get("features").length===1){
+                if (feature.get("features").length === 1) {
                     this.groupedFeatures = null;
                     this.activeFeatureSelect(feature.get("features")[0]);
-                }
-                else {
+                } else {
                     this.groupedFeatures = this.extractFeatureGroups(feature.get("features"));
                 }
             } else {
@@ -72,11 +71,16 @@ export class SelectedFeatureComponent implements OnInit {
 
     private showFeature(feature) {
         if (feature && feature.getGeometry()) {
-            this.sharedState.gotoCoordinate({lon: feature.getGeometry().getCoordinates()[0], lat: feature.getGeometry().getCoordinates()[1], mercator: true, center:false});
+            this.sharedState.gotoCoordinate({
+                lon: feature.getGeometry().getCoordinates()[0],
+                lat: feature.getGeometry().getCoordinates()[1],
+                mercator: true,
+                center: false
+            });
         }
     }
 
-    private hideFeature(){
+    private hideFeature() {
         this.sharedState.gotoCoordinate(null);
     }
 

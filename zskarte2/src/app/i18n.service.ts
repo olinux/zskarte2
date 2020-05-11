@@ -604,6 +604,11 @@ export class I18NService {
             de: "Aktuell",
             en: "Most recent",
             fr: "Actuel"
+        },
+        description:{
+            de: "Beschreibung",
+            en: "Description",
+            fr: "Description"
         }
 
     }

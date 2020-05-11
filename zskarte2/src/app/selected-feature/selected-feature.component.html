@@ -7,7 +7,6 @@
                             [src]="getImageUrl(featureGroup.src)"/></div>
                     <div class="label">{{featureGroup.label}}</div>
 
-
                     <mat-expansion-panel *ngFor="let feature of featureGroup.features" (mouseover)="showFeature(feature)" (mouseleave)="hideFeature()">
                         <mat-expansion-panel-header>
                             <mat-panel-title>{{feature.get('sig').label ? feature.get('sig').label : "Unknown"}}</mat-panel-title>
@@ -33,6 +32,13 @@
                         <div *ngIf="!selectedSignature.text">{{selectedSignature.label}}</div>
                         <div *ngIf="selectedSignature.text">{{selectedSignature.text}}</div>
                     </div>
+                    <div *ngIf="!editMode && selectedSignature.description" class="description" Markdown [data]="selectedSignature.description">
+                    </div>
+                    <mat-form-field *ngIf="editMode">
+                        <mat-label>{{i18n.get('description')}}</mat-label>
+                        <textarea matInput [(ngModel)]="selectedSignature.description"
+                                  (ngModelChange)="redraw()"></textarea>
+                    </mat-form-field>
                     <mat-form-field *ngIf="editMode">
                         <mat-label>{{i18n.get("color")}}:</mat-label>
                         <input matInput type="color" name="color" [(ngModel)]="selectedSignature.color"

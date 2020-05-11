@@ -19,5 +19,5 @@
  */
 
 export enum DisplayMode {
-    DRAW, HISTORY
+    DRAW="draw", HISTORY="history"
 }
