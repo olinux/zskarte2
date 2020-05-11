@@ -117,7 +117,7 @@ export class SelectedFeatureComponent implements OnInit {
                 this.selectedSignature.src = result.src;
                 this.selectedSignature.de = result.de;
                 this.selectedSignature.fr = result.fr;
-                this.selectedSignature.en = result.en;
+                this.selectedSignature.en = result.en
                 this.redraw();
             }
         });

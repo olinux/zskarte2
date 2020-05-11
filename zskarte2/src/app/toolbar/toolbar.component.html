@@ -54,6 +54,9 @@
                 <button mat-menu-item (click)="deleteSession()"><i class="material-icons">delete</i> {{i18n.get("deleteMap")}}</button>
            </mat-menu>
         </div>
-        <div class="filter" *ngIf="historyMode"></div>
+
+    </div>
+    <div class="filterWrapper" *ngIf="filterSymbols && filterSymbols.length>0">
+        <div class="fixedFilter">{{i18n.get("filter")}}: <button mat-icon-button (click)="filterAll(false)"><i class="material-icons">visibility</i></button> <button mat-icon-button class="allButton" (click)="filterAll(true)"><i class="material-icons">visibility_off</i></button></div><div class="filterButtons"><button mat-stroked-button [class]="drawLayer.filters[symbol.origSrc] ? 'active filterItem' : 'filterItem'" *ngFor="let symbol of filterSymbols" (click)="drawLayer.toggleFilter(symbol.origSrc)"><img [src]="symbol.src" [title]="symbol.label"/></button></div>
     </div>
 </mat-card>

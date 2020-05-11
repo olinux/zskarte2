@@ -39,6 +39,10 @@ export class GeocoderComponent implements OnInit {
 
 
     constructor(private http: HttpClient, private sharedState: SharedStateService, public i18n: I18NService) {
+        this.sharedState.session.subscribe(s => {
+            this.selected = null;
+        })
+
     }
 
     ngOnInit() {

@@ -67,3 +67,35 @@ mat-card-content.flexContainer *{
     top:0;
     padding: 0.5em;
 }
+
+.filterWrapper{
+    display:flex;
+    margin-top: 0.5em;
+}
+
+.filterItem{
+    display: inline-block;
+    overflow: hidden;
+    margin-left: 0.1em;
+    margin-right: 0.1em;
+}
+
+.filterItem img {
+    max-height: 2em;
+    max-width: 2em;
+}
+
+.filterItem.active{
+    background-color: #d3d3d3;
+}
+
+.allButton{
+    margin-right: 1em;
+}
+
+.filterButtons{
+    flex:1;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 0.5em;
+}

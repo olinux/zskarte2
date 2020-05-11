@@ -31,6 +31,7 @@ import {ConfirmationDialogComponent} from "../confirmation-dialog/confirmation-d
 import {MapStoreService} from "../map-store.service";
 import {ExportDialogComponent} from "../export-dialog/export-dialog.component";
 import {DisplayMode} from "../entity/displayMode";
+import {CustomImageStoreService} from "../custom-image-store.service";
 
 @Component({
     selector: 'app-toolbar',
@@ -41,13 +42,52 @@ export class ToolbarComponent implements OnInit {
 
     @Input() drawLayer: DrawlayerComponent;
     session: Session;
-    historyMode: boolean;
+    historyMode: boolean
+    filterKeys: any[];
+    filterSymbols: any[];
+
 
     constructor(public i18n: I18NService, private cdr: ChangeDetectorRef, private sharedState: SharedStateService, public dialog: MatDialog, private preferences: PreferencesService, private sessions: SessionsService, private mapStore: MapStoreService) {
         this.sharedState.displayMode.subscribe(mode => this.historyMode = mode === DisplayMode.HISTORY);
+        this.sharedState.drawingManipulated.subscribe(updated=>{
+            if(updated){
+                this.updateFilterSymbols();
+            }
+        })
+    }
+
+    extractSymbol(f, symbols) {
+        let sig = f.get("sig");
+        if (sig && sig.src) {
+            if (!symbols[sig.src]) {
+                let dataUrl = CustomImageStoreService.getImageDataUrl(sig.src)
+                symbols[sig.src] = {
+                    label: this.i18n.getLabelForSign(sig),
+                    origSrc: sig.src,
+                    src: dataUrl ? dataUrl : "assets/img/signs/" + sig.src
+                }
+            }
+        }
+    }
+
+    updateFilterSymbols() {
+        let symbols = {}
+        this.drawLayer.source.getFeatures().forEach(f => this.extractSymbol(f, symbols))
+        if (this.historyMode) {
+            this.drawLayer.clusterSource.getFeatures().forEach(f => this.extractSymbol(f, symbols));
+        }
+        this.filterKeys = Object.keys(symbols);
+        // @ts-ignore
+        this.filterSymbols = Object.values(symbols).sort((a, b) => a.label.localeCompare(b.label));;
     }
 
     ngOnInit() {
+        this.sharedState.showMapLoader.subscribe(l => {
+            if (!l) {
+                //The loader has been hidden -> we should check if we have new symbols for filters.
+                this.updateFilterSymbols();
+            }
+        })
         this.sharedState.session.subscribe(s => {
             this.session = s;
             if (s) {
@@ -65,7 +105,11 @@ export class ToolbarComponent implements OnInit {
         this.createInitialSession();
     }
 
-    private createInitialSession(){
+    private filterAll(active:boolean){
+        this.drawLayer.toggleFilters(this.filterKeys, active);
+    }
+
+    private createInitialSession() {
         this.dialog.open(SessionCreatorComponent, {
             disableClose: true,
             width: '80vw',
@@ -74,7 +118,7 @@ export class ToolbarComponent implements OnInit {
     }
 
     createOrLoadSession() {
-        this.dialog.open(SessionCreatorComponent,{
+        this.dialog.open(SessionCreatorComponent, {
             data: {
                 session: this.session,
                 edit: false
@@ -96,8 +140,8 @@ export class ToolbarComponent implements OnInit {
         })
     }
 
-    deleteSession():void{
-        if(this.session) {
+    deleteSession(): void {
+        if (this.session) {
             const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
                 data: this.i18n.get('confirmDeleteMap')
             });
@@ -121,10 +165,9 @@ export class ToolbarComponent implements OnInit {
     }
 
     toggleHistory(): void {
-        if(this.sharedState.displayMode.getValue() == DisplayMode.HISTORY){
+        if (this.sharedState.displayMode.getValue() == DisplayMode.HISTORY) {
             this.sharedState.displayMode.next(DisplayMode.DRAW);
-        }
-        else {
+        } else {
             this.sharedState.displayMode.next(DisplayMode.HISTORY);
         }
     }

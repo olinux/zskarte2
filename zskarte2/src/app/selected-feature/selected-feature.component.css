@@ -44,8 +44,6 @@ mat-slider{
 
 
 .imgwrapper img{
-    min-width: 3em;
-    min-height: 3em;
     max-height: 5em;
     max-width: 5em;
 }

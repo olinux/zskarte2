@@ -55,6 +55,7 @@ export class DrawlayerComponent implements OnInit {
 
     @Input() inputMap: OlMap;
 
+    filters = {};
     map: OlMap;
     currentDrawingSign = null;
     status = "Loading data...";
@@ -73,17 +74,36 @@ export class DrawlayerComponent implements OnInit {
 
     cluster = new Cluster({
         distance: 140,
-        source: this.clusterSource
+        source: this.clusterSource,
+        geometryFunction: (feature) => {
+            if(feature.get("sig") && feature.get("sig").src && !this.filters[feature.get("sig").src]){
+                return feature.getGeometry();
+            }
+            return null;
+        }
     })
 
     clusterLayer = new LayerVector({
         source: this.cluster,
-        style: DrawStyle.clusterStyleFunctionDefault
+        style: (feature, resolution) => {return DrawStyle.clusterStyleFunctionDefault(feature,resolution);}
     })
 
     layer = new LayerVector({
         source: this.source,
-        style: DrawStyle.styleFunction,
+        style: (feature, resolution) => {
+            let sig = feature.get("sig");
+            if(sig && sig.src){
+                if(!this.filters[sig.src]){
+                    return DrawStyle.styleFunction(feature, resolution);
+                }
+                else{
+                    return [];
+                }
+            }
+            else{
+                return DrawStyle.styleFunction(feature, resolution);
+            }
+            },
         className: 'drawLayer'
     });
 
@@ -131,6 +151,31 @@ export class DrawlayerComponent implements OnInit {
         }
     }
 
+    public toggleFilters(instances:string[], active:boolean){
+        let hasChanges = false;
+        instances.forEach(i => {
+            if(this.filters[i]!=active) {
+                this.filters[i] = active
+                hasChanges  = true;
+            }
+        });
+        if(hasChanges) {
+            this.source.changed();
+            if (this.historyMode) {
+                this.clusterSource.changed();
+            }
+            this.clearSelection();
+        }
+    }
+
+    public toggleFilter(src){
+        this.filters[src] = !this.filters[src];
+        this.source.changed();
+        if(this.historyMode) {
+            this.clusterSource.changed();
+        }
+        this.clearSelection();
+    }
 
     constructor(private sharedState: SharedStateService, private mapStore: MapStoreService, public i18n: I18NService, private sessions: SessionsService, private customImages: CustomImageStoreService, private dialog: MatDialog) {
         this.startAutosave();
@@ -188,7 +233,9 @@ export class DrawlayerComponent implements OnInit {
     }
 
     private drawingManipulated(feature: Feature, changeEvent = false) {
+        this.sharedState.drawingManipulated.next(true);
         if (this.recordChanges && !this.historyMode) {
+            this.toggleFilters([feature.get("sig").src], false)
             if (changeEvent) {
                 //There are too many change events (also when a feature is selected / unselected). We don't want to save those events since they are not manipulating anything...
                 if (this.selectedFeature && this.selectedFeature.getId() === feature.getId()) {
@@ -267,7 +314,7 @@ export class DrawlayerComponent implements OnInit {
             if (!e.feature.getId()) {
                 e.feature.setId(uuidv4())
             }
-            this.selectionChanged();
+            this.selectionChanged()
             this.drawingManipulated(e.feature);
         });
         this.sharedState.currentFeature.subscribe(f=>{
@@ -333,6 +380,7 @@ export class DrawlayerComponent implements OnInit {
             if (s) {
                 if (this.currentSessionId !== s.uuid) {
                     this.currentSessionId = s.uuid;
+                    this.clearSelection();
                     //The session has changed - we need to reload
                     this.status = "Now loading the map...";
                     this.load(false).then(() => {
@@ -682,8 +730,10 @@ export class DrawlayerComponent implements OnInit {
     private drawers: { [key: string]: Draw; } = {}
 
     startDrawing(sign) {
+        //this.select.setActive(false);
         this.currentDrawingSign = sign;
         if (sign) {
+            this.toggleFilters([sign.src], false)
             let drawer = this.drawers[sign.type];
             if (!drawer) {
                 drawer = this.drawers[sign.type] = new Draw({
@@ -701,6 +751,7 @@ export class DrawlayerComponent implements OnInit {
     }
 
     endDrawing(event) {
+        //this.select.setActive(true);
         event.feature.set('sig', this.currentDrawingSign);
         Object.values(this.drawers).forEach(drawer => drawer.setActive(false));
     }

@@ -69,7 +69,7 @@ export class DrawStyle {
     }
 
 
-    private static styleFunctionSelectSingleFeature(feature, resolution, editMode){
+    private static styleFunctionSelectSingleFeature(feature, resolution, editMode) {
         if (resolution !== DrawStyle.lastResolution) {
             DrawStyle.lastResolution = resolution;
             DrawStyle.clearCaches();
@@ -88,15 +88,16 @@ export class DrawStyle {
     }
 
     public static styleFunctionSelect(feature, resolution, editMode): any {
-        if(feature.get("features")){
-            if(feature.get("features").length>1) {
+        if (feature.get("features")) {
+            let features = feature.get("features");
+            if (features.length > 1) {
                 return DrawStyle.clusterStyleFunction(feature, resolution, true);
+            } else if (features.length > 0) {
+                return DrawStyle.styleFunctionSelectSingleFeature(features[0], resolution, editMode);
+            } else {
+                return [];
             }
-            else{
-                return DrawStyle.styleFunctionSelectSingleFeature(feature.get("features")[0], resolution, editMode);
-            }
-        }
-        else {
+        } else {
             return DrawStyle.styleFunctionSelectSingleFeature(feature, resolution, editMode);
         }
     }
@@ -112,7 +113,7 @@ export class DrawStyle {
     private static getNumberOfInstancesInLastRow(totalSize: number) {
         let numberOfRows = DrawStyle.getNumberOfRows(totalSize)
         let gridDimensions = DrawStyle.getGridDimensions(totalSize);
-        let remainder = totalSize % Math.max(1, (numberOfRows-1) * gridDimensions);
+        let remainder = totalSize % Math.max(1, (numberOfRows - 1) * gridDimensions);
         return remainder === 0 ? gridDimensions : remainder;
     }
 
@@ -136,12 +137,14 @@ export class DrawStyle {
         return DrawStyle.clusterStyleFunction(feature, resolution, false);
     }
 
-    private static clusterStyleFunction(feature, resolution, selected:boolean): any {
+    private static clusterStyleFunction(feature, resolution, selected: boolean): any {
         let coordinateScale = resolution;
         let iconSizeInCoordinates = 50 * coordinateScale;
         const scale = 0.12;
         let features = feature.get("features");
-        if (features.length == 1) {
+        if (features.length == 0) {
+            return [];
+        } else if (features.length == 1) {
             return DrawStyle.styleFunction(features[0], resolution);
         } else {
             let offset = 0;
@@ -160,7 +163,7 @@ export class DrawStyle {
             let groupedFeatureCount = Object.keys(groupedFeatures).length;
             let clusterCacheHash = DrawStyle.calculateCacheHashForCluster(groupedFeatures, selected);
             let styles = this.clusterStyleCache[clusterCacheHash];
-            if(!styles){
+            if (!styles) {
                 styles = this.clusterStyleCache[clusterCacheHash] = []
                 styles.push(new Style({
                     fill: DrawStyle.getAreaFill(DrawStyle.colorFunction(selected ? "#FFFFFF" : "#e5e5e5", 0.8), 1, "filled"),
@@ -171,15 +174,15 @@ export class DrawStyle {
                     geometry: function (feature) {
                         let gridDimensions = DrawStyle.getGridDimensions(groupedFeatureCount);
                         let bottomLeft = DrawStyle.getIconLocation(0, groupedFeatureCount, iconSizeInCoordinates);
-                        let bottomRight = DrawStyle.getIconLocation(gridDimensions-1, groupedFeatureCount, iconSizeInCoordinates);
+                        let bottomRight = DrawStyle.getIconLocation(gridDimensions - 1, groupedFeatureCount, iconSizeInCoordinates);
                         let topLeft = DrawStyle.getIconLocation((DrawStyle.getNumberOfRows(groupedFeatureCount) - 1) * gridDimensions, groupedFeatureCount, iconSizeInCoordinates);
                         let instancesInLastRow = DrawStyle.getNumberOfInstancesInLastRow(groupedFeatureCount);
-                        let topRight = DrawStyle.getIconLocation((DrawStyle.getNumberOfRows(groupedFeatureCount) -1) * gridDimensions + instancesInLastRow - 1, groupedFeatureCount, iconSizeInCoordinates);
+                        let topRight = DrawStyle.getIconLocation((DrawStyle.getNumberOfRows(groupedFeatureCount) - 1) * gridDimensions + instancesInLastRow - 1, groupedFeatureCount, iconSizeInCoordinates);
                         let coordinates = feature.getGeometry().getCoordinates();
                         let paddingFactor = 0.6;
-                        return new Polygon([[[coordinates[0] + bottomLeft[0] - iconSizeInCoordinates * paddingFactor+offset, coordinates[1] + bottomLeft[1] - iconSizeInCoordinates * paddingFactor + offset], [coordinates[0] + bottomRight[0] + iconSizeInCoordinates * paddingFactor + offset, coordinates[1] + bottomRight[1] - iconSizeInCoordinates * paddingFactor + offset], [coordinates[0] + topRight[0] + iconSizeInCoordinates * paddingFactor + offset, coordinates[1] + topRight[1] + iconSizeInCoordinates * paddingFactor + offset], [coordinates[0] + topLeft[0] - iconSizeInCoordinates * paddingFactor + offset, coordinates[1] + topLeft[1] + iconSizeInCoordinates * paddingFactor + offset]]]);
+                        return new Polygon([[[coordinates[0] + bottomLeft[0] - iconSizeInCoordinates * paddingFactor + offset, coordinates[1] + bottomLeft[1] - iconSizeInCoordinates * paddingFactor + offset], [coordinates[0] + bottomRight[0] + iconSizeInCoordinates * paddingFactor + offset, coordinates[1] + bottomRight[1] - iconSizeInCoordinates * paddingFactor + offset], [coordinates[0] + topRight[0] + iconSizeInCoordinates * paddingFactor + offset, coordinates[1] + topRight[1] + iconSizeInCoordinates * paddingFactor + offset], [coordinates[0] + topLeft[0] - iconSizeInCoordinates * paddingFactor + offset, coordinates[1] + topLeft[1] + iconSizeInCoordinates * paddingFactor + offset]]]);
                     },
-                    zIndex: 3*(selected ? 10 : 1)
+                    zIndex: 3 * (selected ? 10 : 1)
                 }));
                 Object.keys(groupedFeatures).forEach((src, index) => {
                     let iconLocation = DrawStyle.getIconLocation(index, groupedFeatureCount, iconSizeInCoordinates);
@@ -195,10 +198,10 @@ export class DrawStyle {
                                 backgroundStroke: DrawStyle.createDefaultStroke(0.12, "#3399CC"),
                                 padding: [0, 0, 1, 1]
                             }),
-                            zIndex: 5*(selected ? 10 : 1),
+                            zIndex: 5 * (selected ? 10 : 1),
                             geometry: function (feature) {
                                 let coordinates = feature.getGeometry().getCoordinates();
-                                return new Point([coordinates[0] + iconLocation[0]+offset, coordinates[1] + iconLocation[1]+offset]);
+                                return new Point([coordinates[0] + iconLocation[0] + offset, coordinates[1] + iconLocation[1] + offset]);
                             }
                         }));
                         styles.push(new Style({
@@ -209,10 +212,10 @@ export class DrawStyle {
                                     color: '#3399CC'
                                 })
                             }),
-                            zIndex: 10*(selected ? 10 : 1),
+                            zIndex: 10 * (selected ? 10 : 1),
                             geometry: function (feature) {
                                 let coordinates = feature.getGeometry().getCoordinates();
-                                return new Point([coordinates[0] + iconLocation[0]+offset, coordinates[1] + iconLocation[1]+offset]);
+                                return new Point([coordinates[0] + iconLocation[0] + offset, coordinates[1] + iconLocation[1] + offset]);
                             }
                         }));
                         let icon = src
@@ -238,15 +241,15 @@ export class DrawStyle {
                                 img: imageFromMemory ? imageFromMemory : undefined,
                                 imgSize: scaledSize ? [naturalDim, naturalDim] : undefined,
                             })),
-                            zIndex: 15*(selected ? 10 : 1),
+                            zIndex: 15 * (selected ? 10 : 1),
                             geometry: function (feature) {
                                 let coordinates = feature.getGeometry().getCoordinates();
-                                return new Point([coordinates[0] + iconLocation[0]+offset, coordinates[1] + iconLocation[1]+offset]);
+                                return new Point([coordinates[0] + iconLocation[0] + offset, coordinates[1] + iconLocation[1] + offset]);
                             }
                         }));
                     }
                 });
-                if(selected) {
+                if (selected) {
                     styles.push(new Style({
                         fill: DrawStyle.getAreaFill(DrawStyle.colorFunction("#dedede", 0.6), 1, "filled"),
                         stroke: DrawStyle.createDefaultStroke(scale, "#3399CC", true),
@@ -298,7 +301,7 @@ export class DrawStyle {
     }
 
 
-    private static calculateCacheHashForCluster(groupedFeatures,  selected): string {
+    private static calculateCacheHashForCluster(groupedFeatures, selected): string {
         return Md5.hashStr(JSON.stringify({
             groupedFeatures: groupedFeatures,
             selected: selected
@@ -434,7 +437,6 @@ export class DrawStyle {
                     }),
                     geometry: function (feature) {
                         return new Point(DrawStyle.getIconCoordinates(feature, resolution)[1]);
-
                     },
                     zIndex: zIndex
                 }));
@@ -548,7 +550,7 @@ export class DrawStyle {
             if (selected) {
                 let highlightStyle = this.getHighlightLineWhenSelectedStyle(feature, scale, selected);
                 if (highlightStyle) {
-                    highlightStyle.setZIndex(zIndex-1);
+                    highlightStyle.setZIndex(zIndex - 1);
                     vectorStyle.push(highlightStyle)
                 }
             }
