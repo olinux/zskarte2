@@ -71,7 +71,7 @@ export class SharedStateService {
     private signSource = new BehaviorSubject<Sign>(null);
     currentSign = this.signSource.asObservable();
 
-    private featureSource = new BehaviorSubject<any>(null);
+    featureSource = new BehaviorSubject<any>(null);
     currentFeature = this.featureSource.asObservable();
 
     private deleteFeatureSource = new BehaviorSubject<any>(null);

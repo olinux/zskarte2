@@ -18,7 +18,7 @@
  *
  */
 
-import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, HostListener, Input, OnInit} from '@angular/core';
 import {DrawlayerComponent} from '../drawlayer/drawlayer.component';
 import {SharedStateService} from "../shared-state.service";
 import {I18NService} from "../i18n.service";
@@ -46,6 +46,18 @@ export class ToolbarComponent implements OnInit {
     filterKeys: any[];
     filterSymbols: any[];
 
+    @HostListener('window:keydown', ['$event'])
+    onKeyDown(event:KeyboardEvent) {
+        //Only handle global events (to prevent input elements to be considered)
+        let globalEvent = event.target instanceof HTMLBodyElement;
+        if (globalEvent && !this.sharedState.featureSource.getValue() && event.altKey) {
+            switch(event.key){
+                case "h":
+                    this.toggleHistory();
+                    break;
+            }
+        }
+    }
 
     constructor(public i18n: I18NService, private cdr: ChangeDetectorRef, private sharedState: SharedStateService, public dialog: MatDialog, private preferences: PreferencesService, private sessions: SessionsService, private mapStore: MapStoreService) {
         this.sharedState.displayMode.subscribe(mode => {
@@ -75,13 +87,15 @@ export class ToolbarComponent implements OnInit {
 
     updateFilterSymbols() {
         let symbols = {}
-        this.drawLayer.source.getFeatures().forEach(f => this.extractSymbol(f, symbols))
-        if (this.historyMode) {
-            this.drawLayer.clusterSource.getFeatures().forEach(f => this.extractSymbol(f, symbols));
+        if(this.drawLayer && this.drawLayer.source) {
+            this.drawLayer.source.getFeatures().forEach(f => this.extractSymbol(f, symbols))
+            if (this.historyMode) {
+                this.drawLayer.clusterSource.getFeatures().forEach(f => this.extractSymbol(f, symbols));
+            }
+            this.filterKeys = Object.keys(symbols);
+            // @ts-ignore
+            this.filterSymbols = Object.values(symbols).sort((a, b) => a.label.localeCompare(b.label));
         }
-        this.filterKeys = Object.keys(symbols);
-        // @ts-ignore
-        this.filterSymbols = Object.values(symbols).sort((a, b) => a.label.localeCompare(b.label));;
     }
 
     ngOnInit() {

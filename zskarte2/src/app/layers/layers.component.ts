@@ -18,7 +18,7 @@
  *
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import {Layer} from "./layer";
 import {swissProjection} from "../projections";
 import OlTileLayer from 'ol/layer/Tile';
@@ -58,6 +58,25 @@ export function createGeoAdminLayer(layerId: string, timestamp:string, extension
     styleUrls: ['./layers.component.css']
 })
 export class LayersComponent implements OnInit {
+
+    @HostListener('window:keydown', ['$event'])
+    onKeyDown(event:KeyboardEvent) {
+        //Only handle global events (to prevent input elements to be considered)
+        let globalEvent = event.target instanceof HTMLBodyElement;
+        if (globalEvent && !this.sharedState.featureSource.getValue() && this.currentLayer && event.altKey) {
+            switch(event.key){
+                case "-":
+                    this.currentLayer.opacity = Math.max(0, this.currentLayer.opacity-0.1);
+                    this.updateMapLayer();
+                    break;
+                case "+":
+                    this.currentLayer.opacity = Math.min(1, this.currentLayer.opacity+0.1);
+                    this.updateMapLayer();
+                    break;
+            }
+        }
+    }
+
 
     constructor(private sharedState: SharedStateService, private geoAdminService: GeoadminService, public i18n:I18NService, public dialog: MatDialog) {
     }

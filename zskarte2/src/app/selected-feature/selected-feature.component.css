@@ -105,3 +105,38 @@ border-bottom: 1px solid ;
 .primarybutton{
     width: 100%;
 }
+
+
+.markdownEditor{
+    position: relative;
+    margin-bottom: 2.5em;
+}
+
+
+.markdownEditor .fab{
+    font-size: 1.5em;
+    margin-left: 1em;
+    cursor: pointer;
+    position: absolute;
+    top:0;
+    right:0;
+}
+
+.markdownEditor textarea{
+    min-height: 5em;
+}
+
+.markdownEditor a{
+    font-size: 0.8em;
+    position: absolute;
+    bottom: -0.6em;
+    right: 0;
+}
+
+.markdown .preview{
+    border-bottom: 1px dashed;
+    border-left: 1px dashed;
+    border-right: 1px dashed;
+    margin-bottom: 1em;
+    padding: 1em;
+}

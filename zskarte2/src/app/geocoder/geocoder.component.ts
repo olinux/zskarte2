@@ -18,7 +18,7 @@
  *
  */
 
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, ElementRef, HostListener, Input, OnInit, ViewChild} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {SharedStateService} from "../shared-state.service";
 import {I18NService} from "../i18n.service";
@@ -31,11 +31,22 @@ import {DrawlayerComponent} from "../drawlayer/drawlayer.component";
 })
 export class GeocoderComponent implements OnInit {
 
+    @ViewChild('searchField', {static: false}) el: ElementRef;
     @Input() drawLayer: DrawlayerComponent;
     geocoderUrl = 'https://api3.geo.admin.ch/rest/services/api/SearchServer?type=locations&searchText='
     foundLocations = []
     inputText: string = undefined;
     selected = null;
+
+    @HostListener('window:keydown', ['$event'])
+    onKeyDown(event:KeyboardEvent) {
+        //Only handle global events (to prevent input elements to be considered)
+        let globalEvent = event.target instanceof HTMLBodyElement;
+        if (globalEvent && !this.sharedState.featureSource.getValue() && !event.altKey) {
+            this.el.nativeElement.focus();
+            this.el.nativeElement.dispatchEvent(new KeyboardEvent('keydown', {key: event.key}));
+        }
+    }
 
 
     constructor(private http: HttpClient, private sharedState: SharedStateService, public i18n: I18NService) {

@@ -20,7 +20,7 @@
 
 <div class="geocoder">
     <mat-form-field (mouseenter)="previewCoordinate(this.selected)">
-        <input type="text" placeholder="{{i18n.get('findPlace')}}" matInput [matAutocomplete]="auto" [(ngModel)]="inputText" (ngModelChange)="geoCodeLoad()">
+        <input type="text" placeholder="{{i18n.get('findPlace')}}" matInput [matAutocomplete]="auto" [(ngModel)]="inputText" (ngModelChange)="geoCodeLoad()" #searchField>
         <mat-autocomplete #auto="matAutocomplete" [displayWith]="getLabel" (optionSelected)="geoCodeSelected($event)">
             <mat-option *ngFor="let location of foundLocations" [value]="location.attrs" (mouseenter)="previewCoordinate(location.attrs)" (mouseleave)="goToCoordinate(false)">
                 <span [innerHTML]="location.attrs.label" [title]="getLabel(location.attrs)"></span>

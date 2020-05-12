@@ -18,8 +18,8 @@
  *
  */
 
-import {Component, OnInit} from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import {Component, HostListener, OnInit} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
 import {DrawingDialogComponent} from '../drawing-dialog/drawing-dialog.component';
 import {SharedStateService} from "../shared-state.service";
 import {TextDialogComponent} from "../text-dialog/text-dialog.component";
@@ -45,6 +45,28 @@ export class DrawingtoolsComponent implements OnInit {
     }
 
     ngOnInit() {
+    }
+
+    @HostListener('window:keydown', ['$event'])
+    onKeyDown(event:KeyboardEvent) {
+        //Only handle global events (to prevent input elements to be considered)
+        let globalEvent = event.target instanceof HTMLBodyElement;
+        if (globalEvent && !this.sharedState.featureSource.getValue() && event.altKey) {
+           switch(event.key){
+               case "x":
+                   this.openTextDialog();
+                   break;
+               case "s":
+                   this.openDrawDialog();
+                   break;
+               case "p":
+                   this.polygon();
+                   break;
+               case "l":
+                   this.line();
+                   break;
+           }
+        }
     }
 
     openDrawDialog(): void {

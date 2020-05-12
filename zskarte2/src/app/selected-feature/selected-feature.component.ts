@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import {SharedStateService} from "../shared-state.service";
 import {defineDefaultValuesForSignature, Sign} from "../entity/sign";
 import {DrawStyle} from "../drawlayer/draw-style";
@@ -15,6 +15,55 @@ import {DisplayMode} from "../entity/displayMode";
     styleUrls: ['./selected-feature.component.css']
 })
 export class SelectedFeatureComponent implements OnInit {
+
+
+    @HostListener('window:keydown', ['$event'])
+    onKeyDown(event:KeyboardEvent) {
+        //Only handle global events (to prevent input elements to be considered)
+        let globalEvent = event.target instanceof HTMLBodyElement;
+        if (globalEvent && this.selectedFeature && this.selectedSignature) {
+            switch (event.key) {
+                case "Delete":
+                    this.delete();
+                    break;
+                case "+":
+                    this.selectedSignature.strokeWidth += 0.1;
+                    this.redraw();
+                    break;
+                case "-":
+                    this.selectedSignature.strokeWidth -= 0.1;
+                    this.redraw();
+                    break;
+                case "g":
+                    this.merge(true);
+                    break;
+                case "Escape":
+                    if(this.mergeMode){
+                        this.merge(false);
+                    }
+                    else{
+                        this.sharedState.selectFeature(null);
+                    }
+                    break;
+                case "PageUp":
+                    this.bringToFront();
+                    break;
+                case "PageDown":
+                    this.sendToBack();
+                    break;
+                case "h":
+                    this.drawHole();
+                    break;
+                case "c":
+                    this.editCoordinates();
+                    break;
+            }
+        }
+
+    }
+
+    showMarkdown:boolean =false;
+
 
     constructor(public dialog: MatDialog, private sharedState: SharedStateService, public i18n: I18NService) {
         this.sharedState.currentFeature.subscribe(feature => {
@@ -160,19 +209,32 @@ export class SelectedFeatureComponent implements OnInit {
     }
 
     drawHole() {
-        this.sharedState.updateDrawHoleMode(!this.drawHoleMode);
+        if(this.isPolygon) {
+            this.sharedState.updateDrawHoleMode(!this.drawHoleMode);
+        }
+    }
+
+    get isPolygon(){
+        return ["Polygon", "MultiPolygon"].includes(this.selectedFeature.getGeometry().getType())
     }
 
     merge(merge: boolean) {
-        this.sharedState.setMergeMode(merge);
+        if(merge && this.selectedFeature && this.isPolygon) {
+            this.sharedState.setMergeMode(true);
+        }
+        else{
+            this.sharedState.setMergeMode(false);
+        }
     }
 
     get canSplit(): boolean {
-        return this.selectedFeature != null && this.selectedFeature.getGeometry().getCoordinates().length > 1;
+        return this.isPolygon && this.selectedFeature != null && this.selectedFeature.getGeometry().getCoordinates().length > 1;
     }
 
     split() {
-        this.sharedState.setSplitMode(true);
+        if(this.canSplit) {
+            this.sharedState.setSplitMode(true);
+        }
     }
 
     bringToFront() {

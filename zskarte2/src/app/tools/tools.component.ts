@@ -18,7 +18,7 @@
  *
  */
 
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, HostListener, Input, OnInit} from '@angular/core';
 import {DrawlayerComponent} from "../drawlayer/drawlayer.component";
 import {DomSanitizer} from "@angular/platform-browser";
 import {MatDialog} from "@angular/material/dialog";
@@ -49,6 +49,28 @@ export class ToolsComponent implements OnInit {
         })
         this.historyMode = this.sharedState.displayMode.getValue()===DisplayMode.HISTORY;
         this.sharedState.historyDate.subscribe(historyDate => historyDate === "now" ? this.downloadTime = new Date().toISOString() : this.downloadTime = historyDate);
+    }
+
+    @HostListener('window:keydown', ['$event'])
+    onKeyDown(event:KeyboardEvent) {
+        //Only handle global events (to prevent input elements to be considered)
+        let globalEvent = event.target instanceof HTMLBodyElement;
+        if (globalEvent && !this.sharedState.featureSource.getValue() && event.altKey) {
+            switch(event.key){
+                case "i":
+                    this.importData();
+                    break;
+                case "d":
+                    this.download();
+                    break;
+                case "t":
+                    this.tagState();
+                    break;
+                case "Delete":
+                    this.clear();
+                    break;
+            }
+        }
     }
 
     importData(): void {

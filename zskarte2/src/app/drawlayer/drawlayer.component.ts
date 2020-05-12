@@ -76,7 +76,7 @@ export class DrawlayerComponent implements OnInit {
         distance: 140,
         source: this.clusterSource,
         geometryFunction: (feature) => {
-            if(feature.get("sig") && feature.get("sig").src && !this.filters[feature.get("sig").src]){
+            if (feature.get("sig") && feature.get("sig").src && !this.filters[feature.get("sig").src]) {
                 return feature.getGeometry();
             }
             return null;
@@ -85,31 +85,33 @@ export class DrawlayerComponent implements OnInit {
 
     clusterLayer = new LayerVector({
         source: this.cluster,
-        style: (feature, resolution) => {return DrawStyle.clusterStyleFunctionDefault(feature,resolution);}
+        style: (feature, resolution) => {
+            return DrawStyle.clusterStyleFunctionDefault(feature, resolution);
+        }
     })
 
     layer = new LayerVector({
         source: this.source,
         style: (feature, resolution) => {
             let sig = feature.get("sig");
-            if(sig && sig.src){
-                if(!this.filters[sig.src]){
+            if (sig && sig.src) {
+                if (!this.filters[sig.src]) {
                     return DrawStyle.styleFunction(feature, resolution);
-                }
-                else{
+                } else {
                     return [];
                 }
-            }
-            else{
+            } else {
                 return DrawStyle.styleFunction(feature, resolution);
             }
-            },
+        },
         className: 'drawLayer'
     });
 
     select = new Select({
         //toggleCondition: never,
-        style: (feature, resolution) => {return DrawStyle.styleFunctionSelect(feature, resolution, !this.historyMode)},
+        style: (feature, resolution) => {
+            return DrawStyle.styleFunctionSelect(feature, resolution, !this.historyMode)
+        },
         //condition: never
         layers: [this.layer, this.clusterLayer],
         hitTolerance: 10
@@ -151,15 +153,15 @@ export class DrawlayerComponent implements OnInit {
         }
     }
 
-    public toggleFilters(instances:string[], active:boolean){
+    public toggleFilters(instances: string[], active: boolean) {
         let hasChanges = false;
         instances.forEach(i => {
-            if(this.filters[i]!=active) {
+            if (this.filters[i] != active) {
                 this.filters[i] = active
-                hasChanges  = true;
+                hasChanges = true;
             }
         });
-        if(hasChanges) {
+        if (hasChanges) {
             this.source.changed();
             if (this.historyMode) {
                 this.clusterSource.changed();
@@ -168,10 +170,10 @@ export class DrawlayerComponent implements OnInit {
         }
     }
 
-    public toggleFilter(src){
+    public toggleFilter(src) {
         this.filters[src] = !this.filters[src];
         this.source.changed();
-        if(this.historyMode) {
+        if (this.historyMode) {
             this.clusterSource.changed();
         }
         this.clearSelection();
@@ -317,8 +319,8 @@ export class DrawlayerComponent implements OnInit {
             this.selectionChanged()
             this.drawingManipulated(e.feature);
         });
-        this.sharedState.currentFeature.subscribe(f=>{
-            if(f && this.getSelectedFeature()!==f) {
+        this.sharedState.currentFeature.subscribe(f => {
+            if (f && this.getSelectedFeature() !== f) {
                 this.select.getFeatures().clear();
                 this.select.getFeatures().push(f);
             }
@@ -339,19 +341,28 @@ export class DrawlayerComponent implements OnInit {
             }
         });
         this.map.getView().on('change:resolution', () => {
-            if(this.historyMode) {
+            if (this.historyMode) {
                 let resolution = Math.ceil(Math.sqrt(this.map.getView().getResolution()));
                 let newDistance = Math.max(1, (resolution + 1)) * 15;
                 if (newDistance !== this.cluster.getDistance()) {
                     this.cluster.setDistance(newDistance);
                 }
-                if(this.getSelectedFeature() && this.getSelectedFeature().get("features")) {
+                if (this.getSelectedFeature() && this.getSelectedFeature().get("features")) {
                     //Since clustering means the elements change when zooming in / out, we need to get rid of the selection made if the selection is a cluster (because the instance could not be available anymore)
                     this.clearSelection();
                 }
             }
         });
 
+        this.sharedState.currentFeature.subscribe(feature => {
+            if (feature !== this.getSelectedFeature()) {
+                this.select.getFeatures().clear();
+                if (feature) {
+                    this.select.getFeatures().push(feature);
+                }
+                this.select.changed();
+            }
+        })
         this.sharedState.deletedFeature.subscribe(feature => this.removeFeature(feature));
         this.sharedState.currentSign.subscribe(sign => this.startDrawing(sign));
         this.sharedState.drawHoleMode.subscribe(drawHole => this.doDrawHole(drawHole))
@@ -410,24 +421,32 @@ export class DrawlayerComponent implements OnInit {
 
     mergeSource: any = null;
 
+
     defineCoordinates() {
         let currentFeature = this.select.getFeatures().getLength() == 1 ? this.select.getFeatures().item(0) : null;
         if (currentFeature) {
-            let editDialog = this.dialog.open(EditCoordinatesComponent, {data: JSON.stringify(currentFeature.getGeometry().getCoordinates())});
+            let editDialog = this.dialog.open(EditCoordinatesComponent, {
+                data: {
+                    geometry: currentFeature.getGeometry().getType(),
+                    coordinates: JSON.stringify(currentFeature.getGeometry().getCoordinates())
+                }
+            });
             editDialog.afterClosed().subscribe(result => {
                 if (result) {
-                    try {
-                        currentFeature.getGeometry().setCoordinates(JSON.parse(result));
-                    } catch (e) {
-                        console.log("Invalid JSON payload");
-                    }
+
+
+                    currentFeature.getGeometry().setCoordinates(result);
+                    this.sharedState.defineCoordinates.next(false);
+
+                } else {
+                    this.sharedState.defineCoordinates.next(false);
                 }
-                this.sharedState.defineCoordinates.next(false);
             })
         } else {
             this.sharedState.defineCoordinates.next(false);
         }
     }
+
 
     private getSelectedFeature() {
         if (this.select.getFeatures().getLength() === 1) {
@@ -585,6 +604,7 @@ export class DrawlayerComponent implements OnInit {
         this.clearSelection();
         DrawStyle.clearCaches();
         this.recordChanges = true;
+        this.sharedState.drawingManipulated.next(true);
     }
 
     private clearSelection() {
@@ -717,13 +737,13 @@ export class DrawlayerComponent implements OnInit {
         this.sharedState.showMapLoader.next(true);
         // //Deferred because we need to ensure that the loader is shown first
         // setTimeout(() => {
-            this.loadElements(JSON.parse(text), replace).then(() => {
-                this.sharedState.showMapLoader.next(false);
-                if (save) {
-                    this.dirtyMap = true;
-                    this.save();
-                }
-            });
+        this.loadElements(JSON.parse(text), replace).then(() => {
+            this.sharedState.showMapLoader.next(false);
+            if (save) {
+                this.dirtyMap = true;
+                this.save();
+            }
+        });
         // }, 0)
     }
 
@@ -754,6 +774,7 @@ export class DrawlayerComponent implements OnInit {
         //this.select.setActive(true);
         event.feature.set('sig', this.currentDrawingSign);
         Object.values(this.drawers).forEach(drawer => drawer.setActive(false));
+        this.sharedState.selectFeature(event.feature);
     }
 
     removeFeature(feature) {
