@@ -57,6 +57,7 @@
                         <input matInput type="color" name="color" [(ngModel)]="selectedSignature.color"
                                (ngModelChange)="redraw()"/>
                     </mat-form-field>
+                    <mat-checkbox [(ngModel)]="selectedSignature.protected" (ngModelChange)="toggleLockOfFeature()">{{i18n.get('lockFeature')}}</mat-checkbox>
                 </mat-card-content>
             </mat-card>
 

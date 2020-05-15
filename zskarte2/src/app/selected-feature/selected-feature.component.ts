@@ -155,6 +155,12 @@ export class SelectedFeatureComponent implements OnInit {
         }
     }
 
+    toggleLockOfFeature(){
+        //Reselect so the locking is handled appropriately
+        this.sharedState.featureSource.next(this.selectedFeature);
+        this.redraw();
+    }
+
     redraw() {
         this.selectedFeature.changed();
     }

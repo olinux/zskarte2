@@ -331,6 +331,7 @@ export class DrawStyle {
             color: signature.color,
             editMode: editMode,
             selected: selected,
+            protected: signature.protected,
             opacity: signature.fillOpacity,
             resolution: resolution,
             lineStyle: signature.style,
@@ -564,7 +565,7 @@ export class DrawStyle {
                 fill: this.getAreaFill(DrawStyle.colorFunction(signature.color, signature.fillOpacity), scale, signature.fillStyle),
                 zIndex: zIndex
             }));
-            if (selected && editMode) {
+            if (selected && editMode && !signature.protected) {
                 let highlightedPointsStyle = this.getHighlightPointsWhenSelectedStyle(feature, scale, selected);
                 if (highlightedPointsStyle) {
                     vectorStyle.push(highlightedPointsStyle);

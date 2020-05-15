@@ -30,6 +30,7 @@ export interface FillStyle {
 export interface Sign {
     type: string;
     src: string;
+    protected?: boolean;
     de?: string;
     fr?: string;
     en?: string;
@@ -143,5 +144,8 @@ export function defineDefaultValuesForSignature(signature: Sign) {
     }
     if(!signature.iconOffset){
         signature.iconOffset = 0.1;
+    }
+    if(signature.protected===undefined){
+        signature.protected = false;
     }
 }

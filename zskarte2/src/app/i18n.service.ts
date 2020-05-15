@@ -495,6 +495,11 @@ export class I18NService {
             en: "Hide symbol on map",
             fr: "Cacher le symbole sur la carte"
         },
+        lockFeature: {
+            de: "Sperren",
+            en: "Lock",
+            fr: "Bloquer"
+        },
         replaceSymbol:{
             de: "Ersetzen",
             en: "Replace",
@@ -583,7 +588,7 @@ export class I18NService {
         importFromGeoadminDescription:{
             de: "Um Formen von Geoadmin importieren zu können, benötigen Sie den Layer-Namen (z.B. \"ch.swisstopo.swissboundaries3d-gemeinde-flaeche.fill\") sowie einen Suchschlüssel und dessen Wert, nach welchen die Metadaten gefiltert werden (z.B. \"kanton\" als Schlüssel und \"FR\" als Wert um alle Gemeinden von Fribourg zu importieren)",
             fr: "Pour importer des formes de geoadmin, vous avez besoin du nom de la couche (par exemple \"ch.swisstopo.swissboundaries3d-gemeinde-flaeche.fill\") ainsi que d'une clé de recherche et de sa valeur, selon laquelle les métadonnées seront filtrées (par exemple \"kanton\" comme clé et \"FR\" comme valeur pour importer toutes les communes de Fribourg)",
-            en: "To import forms of geoadmin, you need the layer name (e.g. \"ch.swisstopo.swissboundaries3d-gemeinde-flaeche.fill\") as well as a search key and its value, according to which the metadata will be filtered (e.g. \"canton\" as key and \"FR\" as value to import all communes of Fribourg)"
+            en: "To import forms of geoadmin, you need the layer name (e.g. \"ch.swisstopo.swissboundaries3d-gemeinde-flaeche.fill\") as well as a search key and its value, according to which the metadata will be filtered (e.g. \"kanton\" as key and \"FR\" as value to import all communes of Fribourg)"
         },
         geoadminImportLayer: {
             de: "Layer",

@@ -42,6 +42,7 @@ import {v4 as uuidv4} from 'uuid';
 import {EditCoordinatesComponent} from "../edit-coordinates/edit-coordinates.component";
 import {DisplayMode} from "../entity/displayMode";
 import Cluster from "ol/source/Cluster";
+import Collection from 'ol/Collection';
 
 export const DRAW_LAYER_ZINDEX = 100000
 export const CLUSTER_LAYER_ZINDEX = DRAW_LAYER_ZINDEX + 1;
@@ -118,11 +119,12 @@ export class DrawlayerComponent implements OnInit {
     });
 
     lastModificationPointCoordinates = null;
+    modifiableFeatures: Collection<Feature> = new Collection([]);
 
     modify = new Modify({
-            features: this.select.getFeatures(),
+            features: this.modifiableFeatures,
             condition: (event) => {
-                if (this.isModifyPointInteraction()) {
+                if (this.isModifyPointInteraction() && this.selectedFeature && this.selectedFeature.get('sig') && !this.selectedFeature.get('sig').protected) {
                     this.lastModificationPointCoordinates = this.modify["vertexFeature_"].getGeometry().getCoordinates();
                     this.toggleRemoveButton(true);
                     this.removeButton.setPosition(event.coordinate);
@@ -255,6 +257,13 @@ export class DrawlayerComponent implements OnInit {
         this.removeButton.getElement().style.display = show && !this.historyMode ? "block" : "none";
     }
 
+    private setModifiableFeature(f: Feature) {
+        this.modifiableFeatures.clear();
+        if (f && (!f.get("sig") || !f.get("sig").protected)) {
+            this.modifiableFeatures.push(f);
+        }
+    }
+
     ngOnInit() {
         this.removeButton = new Overlay({
             element: document.getElementById('removePoint'),
@@ -320,6 +329,7 @@ export class DrawlayerComponent implements OnInit {
             this.drawingManipulated(e.feature);
         });
         this.sharedState.currentFeature.subscribe(f => {
+            this.setModifiableFeature(f);
             if (f && this.getSelectedFeature() !== f) {
                 this.select.getFeatures().clear();
                 this.select.getFeatures().push(f);
