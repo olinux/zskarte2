@@ -6,22 +6,41 @@
 Zivilschutzkarte 2 makes use of different third party libraries. The corresponding credits go to the authors:
 -----------------------------------------------------------------------------------------------------------
 
-Openlayers - The original software is available from http://openlayers.org/, License: 2-Clause BSD
+Openlayers - The original software is available at http://openlayers.org/, License: 2-Clause BSD
 
-Angular - The original software is available from https://angular.io/, License: MIT
+Angular - The original software is available at https://angular.io/, License: MIT
 
-GeoAdmin API - The original software is available from http://www.geo.admin.ch/, License: BSD
+GeoAdmin API - The original software is available at http://www.geo.admin.ch/, License: BSD
 
-Core-js - The original software is available from https://github.com/zloirock/core-js, License: MIT
+Font Awesome - The original software is available at https://github.com/FortAwesome/Font-Awesome, License: Font Awesome Free License
 
-HammerJS - The original software is available from https://hammerjs.github.io/, License: MIT
+Bootstrap - The original software is available at  https://getbootstrap.com/, License: MIT
 
-RxJS - The original software is available from https://rxjs-dev.firebaseapp.com/, License: Apache 2.0
+NG-Bootstrap - The original software is available at  https://github.com/ng-bootstrap/ng-bootstrap, License: MIT
 
-ZoneJS - The original software is available from  https://github.com/angular/zone.js, License: MIT
+Material Design Icons - The original software is available at https://github.com/google/material-design-icons, License: Apache 2.0
+
+NGX-indexed-db - The original software is available at https://github.com/assuncaocharles/ngx-indexed-db, License: MIT
+
+NGX-md - The original software is available at https://github.com/dimpu/ngx-md, License: MIT
+
+Ol-ext - The original software is available at https://github.com/Viglino/ol-ext, License: BSD-3-clause
+
+proj4js - The original software is available at https://www.npmjs.com/package/proj4, License: MIT
+
+RxJS - The original software is available at https://rxjs-dev.firebaseapp.com/, License: Apache 2.0
+
+Ts-md5 -  The original software is available at https://github.com/cotag/ts-md5, License: MIT
+
+tslib -  The original software is available at https://github.com/Microsoft/tslib, License: 0BSD
+
+Uuid -  The original software is available at github.com/uuidjs/uuid, License: MIT
+
+ZoneJS - The original software is available at  https://github.com/angular/zone.js, License: MIT
+
 
 ---------------------------------------------------------------------------------------------------------------------------------------
-Symbols are either taken from the angular materiel library ( https://material.angular.io/ ) or are taken from the collection of
+Symbols are either taken from the angular materiel library ( https://material.angular.io/ ), the Font Awesome project ( https://fontawesome.com/ ) or are taken from the collection of
 "Zivile Signaturen" available at https://www.babs.admin.ch/de/publikservice/grundlagen/zivileabk.html
 ---------------------------------------------------------------------------------------------------------------------------------------
 
