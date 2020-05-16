@@ -76,11 +76,12 @@ export class CustomImageStoreService {
         return this.dbService.deleteRecord(CustomImageStoreService.STORE_IMAGES, hash);
     }
 
-    public saveSign(sign: Sign, payload, nativeDimensions: number[]): Promise<any> {
+    public saveSign(sign: Sign, payload, originalPayload, nativeDimensions: number[]): Promise<any> {
         sign.src = Md5.hashStr(payload).toString();
         let newSign = {
             sign: sign,
             image: payload,
+            originalImage: originalPayload,
             nativeDimensions: nativeDimensions
         }
         return new Promise<any>(resolve => {
@@ -111,6 +112,14 @@ export class CustomImageStoreService {
         let fromMemory = CustomImageStoreService.inMemoryCache[hash];
         if (fromMemory) {
             return fromMemory.image;
+        }
+        return null;
+    }
+
+    public static getOriginalImageDataUrl(hash: string) {
+        let fromMemory = CustomImageStoreService.inMemoryCache[hash];
+        if (fromMemory) {
+            return fromMemory.originalImage;
         }
         return null;
     }

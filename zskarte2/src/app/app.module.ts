@@ -68,6 +68,7 @@ import {CustomImageStoreService} from "./custom-image-store.service";
 import {MapStoreService} from "./map-store.service";
 import {EditCoordinatesComponent} from './edit-coordinates/edit-coordinates.component';
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {DetailImageViewComponent} from './detail-image-view/detail-image-view.component';
 
 const dbConfig: DBConfig = {
     name: 'ZSKarte2-DB1.0',
@@ -112,7 +113,8 @@ const dbConfig: DBConfig = {
         MapLegendDisplayComponent,
         TagStateComponent,
         CustomImagesComponent,
-        EditCoordinatesComponent
+        EditCoordinatesComponent,
+        DetailImageViewComponent
     ],
     imports: [
         BrowserModule,
@@ -148,7 +150,8 @@ const dbConfig: DBConfig = {
         MapLegendDisplayComponent,
         TagStateComponent,
         CustomImagesComponent,
-        EditCoordinatesComponent
+        EditCoordinatesComponent,
+        DetailImageViewComponent
     ],
     providers: [],
     bootstrap: [AppComponent]

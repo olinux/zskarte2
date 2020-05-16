@@ -17,8 +17,10 @@ export class CustomImagesComponent implements OnInit {
     shareWithOthers: boolean;
     image;
     processedImage;
+    originalImage;
     loading = false;
-    tooBig = false;
+    keepOriginal = false;
+
 
     @ViewChild('importSymbol', {static: false}) el: ElementRef;
     @ViewChild('imageLoader', {static: false}) imgEl: ElementRef
@@ -29,8 +31,12 @@ export class CustomImagesComponent implements OnInit {
     }
 
     private load(sign: Sign) {
-        this.sign = sign ? sign : {type: "Polygon", src: null}
+        this.sign = sign ? sign : {type: "Point", src: null}
         this.shareWithOthers = !this.sign.onlyForSessionId;
+        this.originalImage = this.sign.src ? CustomImageStoreService.getOriginalImageDataUrl(this.sign.src) : null
+        if(this.originalImage){
+            this.keepOriginal = true;
+        }
         this.processedImage = this.sign.src ? CustomImageStoreService.getImageDataUrl(this.sign.src) : null
     }
 
@@ -42,6 +48,38 @@ export class CustomImagesComponent implements OnInit {
     }
 
     processImage(){
+        this.originalImage = this.toReducedOriginal();
+        this.processedImage = this.toSymbol();
+        let hash = Md5.hashStr(this.image).toString();
+        if (CustomImageStoreService.isCustomImage(hash)) {
+           this.load(CustomImageStoreService.getSign(hash));
+        }
+    }
+
+
+
+    private toReducedOriginal():string{
+        const MAX_SIZE_OF_ORIGINAL_IMAGE:number = 700;
+        let canvas = document.createElement("canvas");
+        let iw = this.imgEl.nativeElement.naturalWidth;
+        let ih = this.imgEl.nativeElement.naturalHeight;
+        let vertical = ih > iw;
+        if(vertical){
+            canvas.height = ih<MAX_SIZE_OF_ORIGINAL_IMAGE ? ih : MAX_SIZE_OF_ORIGINAL_IMAGE;
+            canvas.width = iw/ih*canvas.height;
+        }
+        else{
+            canvas.width = iw<MAX_SIZE_OF_ORIGINAL_IMAGE ? iw : MAX_SIZE_OF_ORIGINAL_IMAGE;
+            canvas.height = ih/iw*canvas.width;
+        }
+        let ctx = canvas.getContext("2d");
+        ctx.drawImage(this.imgEl.nativeElement, 0 ,0, canvas.width, canvas.height);
+        ctx.fill();
+        return canvas.toDataURL("image/jpeg", 0.8);
+    }
+
+
+    private toSymbol():string{
         let canvas = document.createElement("canvas");
         let iw = this.imgEl.nativeElement.naturalWidth;
         let ih = this.imgEl.nativeElement.naturalHeight;
@@ -58,17 +96,14 @@ export class CustomImagesComponent implements OnInit {
         ctx.arc(canvas.width/2,canvas.height/2,Math.min(canvas.width, canvas.height)/2,0,Math.PI*2);
         ctx.closePath();
         ctx.fill();
-        this.processedImage = canvas.toDataURL();
-        let hash = Md5.hashStr(this.image).toString();
-        if (CustomImageStoreService.isCustomImage(hash)) {
-           this.load(CustomImageStoreService.getSign(hash));
-        }
+        return canvas.toDataURL();
     }
+
 
     add(): void {
         this.loading = true;
         this.sign.onlyForSessionId = this.shareWithOthers ? null : this.sharedState.getCurrentSession().uuid;
-        this.customImage.saveSign(this.sign, this.processedImage, [this.imgProcessorEl.nativeElement.naturalWidth, this.imgProcessorEl.nativeElement.naturalHeight]).then(() => {
+        this.customImage.saveSign(this.sign, this.processedImage, this.keepOriginal ? this.originalImage :null, [this.imgProcessorEl.nativeElement.naturalWidth, this.imgProcessorEl.nativeElement.naturalHeight]).then(() => {
             this.loading = false;
             this.dialogRef.close(this.sign);
         });

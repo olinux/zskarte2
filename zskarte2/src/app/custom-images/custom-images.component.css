@@ -10,3 +10,15 @@ img{
 mat-form-field{
     display: block;
 }
+
+.warning{
+    max-width: 30vw;
+    background-color: lightgoldenrodyellow;
+    border: 1px solid orange;
+    border-radius: 10px;
+    font-size: 0.9em;
+    padding: 1em;
+    margin-bottom: 2em;
+    margin-top: 0.5em;
+    color: red;
+}

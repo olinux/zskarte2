@@ -8,6 +8,8 @@ import {DrawingDialogComponent} from "../drawing-dialog/drawing-dialog.component
 import {CustomImageStoreService} from "../custom-image-store.service";
 import {ConfirmationDialogComponent} from "../confirmation-dialog/confirmation-dialog.component";
 import {DisplayMode} from "../entity/displayMode";
+import {DetailImageViewComponent} from "../detail-image-view/detail-image-view.component";
+import {Signs} from "../signs/signs";
 
 @Component({
     selector: 'app-selected-feature',
@@ -169,6 +171,21 @@ export class SelectedFeatureComponent implements OnInit {
     ngOnInit() {
     }
 
+    addImage(){
+        const dialogRef = this.dialog.open(DrawingDialogComponent);
+        dialogRef.afterClosed().subscribe(result => {
+            if(result && result.src) {
+                this.selectedSignature.images.push(result.src);
+                this.redraw();
+            }
+        });
+    }
+
+    removeImage(src:string){
+        this.selectedSignature.images.splice(this.selectedSignature.images.indexOf(src), 1);
+        this.redraw();
+    }
+
     chooseSymbol() {
         const dialogRef = this.dialog.open(DrawingDialogComponent);
         dialogRef.afterClosed().subscribe(result => {
@@ -204,6 +221,10 @@ export class SelectedFeatureComponent implements OnInit {
             }
         });
 
+    }
+
+    getOriginalImageUrl(file: string){
+        return CustomImageStoreService.getOriginalImageDataUrl(file)
     }
 
     getImageUrl(file: string) {
@@ -255,4 +276,15 @@ export class SelectedFeatureComponent implements OnInit {
         this.sharedState.reorderFeature(false);
     }
 
+    findSigBySrc(src){
+        let fromCustomStore = CustomImageStoreService.getSign(src);
+        if(fromCustomStore){
+            return fromCustomStore;
+        }
+        return Signs.getSignBySource(src);
+    }
+
+    openImageDetail(sig){
+        this.dialog.open(DetailImageViewComponent, {data: sig})
+    }
 }

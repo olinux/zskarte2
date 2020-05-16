@@ -35,6 +35,7 @@ mat-slider{
 .imgwrapper{
     text-align:center;
     margin-bottom: 1em;
+    cursor: pointer;
 }
 
 .featureGroup .imgwrapper img{
@@ -139,4 +140,39 @@ border-bottom: 1px solid ;
     border-right: 1px dashed;
     margin-bottom: 1em;
     padding: 1em;
+}
+
+.images{
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    overflow-x: auto;
+    padding:0.5em;
+}
+.images>div{
+    display: inline-block;
+    margin-right: 2em;
+    margin-top: 1em;
+    position: relative;
+}
+
+
+.images .material-icons{
+    cursor: pointer;
+}
+
+.images img{
+    max-height: 2.5em;
+    max-width: 2.5em;
+    cursor: pointer;
+}
+
+.images .removeButton{
+    position: absolute;
+    top: -1em;
+    right: -1em;
+}
+
+.images i.removeButton{
+    font-size: 1.2em;
 }

@@ -496,9 +496,9 @@ export class I18NService {
             fr: "Cacher le symbole sur la carte"
         },
         lockFeature: {
-            de: "Sperren",
-            en: "Lock",
-            fr: "Bloquer"
+            de: "Position fixieren",
+            en: "Fix position",
+            fr: "Fixer la position"
         },
         replaceSymbol:{
             de: "Ersetzen",
@@ -549,6 +549,16 @@ export class I18NService {
             de: "Mit anderen Karten teilen",
             fr: "Partager avec d'autres cartes",
             en: "Share with other maps"
+        },
+        keepOriginal: {
+            de: "Original-Bild behalten (grössenreduziert)",
+            en: "Keep original image (reduced in size)",
+            fr: "Conserver l'image originale (taille réduite)"
+        },
+        keepOriginalWarning: {
+            de: "Vorsicht: Die Einbettung von zahlreichen Original-Bildern kann die Performanz der Applikation aufgrund der zusätzlichen Datenmenge einschränken!",
+            en: "Caution: The embedding of numerous original images can limit the performance of the application due to the additional data volume!",
+            fr: "Attention : l'intégration de nombreuses images originales peut limiter les performances de l'application en raison du volume de données supplémentaires !"
         },
         german:{
             de: "Deutsch",
@@ -639,6 +649,21 @@ export class I18NService {
             de: "Drucken",
             en: "Print",
             fr: "Imprimer"
+        },
+        save: {
+            de: "Speichern",
+            en: "Save",
+            fr: "Enregistrer"
+        },
+        images:{
+            de: "Bilder",
+            en: "Images",
+            fr: "Images"
+        },
+        unknown:{
+            de: "Unbekannt",
+            en: "Unknown",
+            fr: "Inconnu"
         }
     }
 

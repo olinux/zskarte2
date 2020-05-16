@@ -23,6 +23,15 @@ import {Sign} from "../entity/sign";
 
 export class Signs {
 
+    public static getSignBySource(src:string){
+        for(let sig of Signs.SIGNS){
+            if(sig.src === src){
+                return sig;
+            }
+        }
+        return null;
+    }
+
     public static SIGNS: Sign[] = [
         {
             type: "Point",

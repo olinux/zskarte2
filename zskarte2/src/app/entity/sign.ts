@@ -51,6 +51,7 @@ export interface Sign {
     description?:string;
     arrow?:string;
     iconSize?:number;
+    images?:string[];
     kat?: string; //deprecated - kept for compatibility reasons (is translated directly to color)
 }
 
@@ -167,7 +168,10 @@ export function defineDefaultValuesForSignature(signature: Sign) {
     if(!signature.arrow){
         signature.arrow = "none";
     }
-    if(!signature.iconSize){
+    if(!signature.iconSize) {
         signature.iconSize = 1;
+    }
+    if(!signature.images) {
+        signature.images = [];
     }
 }
