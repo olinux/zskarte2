@@ -98,6 +98,7 @@ export class SharedStateService {
     showMapLoader = new BehaviorSubject<boolean>(false);
     defineCoordinates = new BehaviorSubject<boolean>(null);
     drawingManipulated = new BehaviorSubject<boolean>(false);
+    zoom = new BehaviorSubject<number>(null);
 
     doTagState(label:string){
         this.tagStateSource.next(label);

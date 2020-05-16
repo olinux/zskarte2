@@ -224,6 +224,10 @@ export class SelectedFeatureComponent implements OnInit {
         return ["Polygon", "MultiPolygon"].includes(this.selectedFeature.getGeometry().getType())
     }
 
+    get isLine(){
+        return this.selectedFeature.getGeometry().getType()==="LineString";
+    }
+
     merge(merge: boolean) {
         if(merge && this.selectedFeature && this.isPolygon) {
             this.sharedState.setMergeMode(true);

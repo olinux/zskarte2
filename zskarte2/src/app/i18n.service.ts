@@ -520,6 +520,11 @@ export class I18NService {
             en: "Offset",
             fr: "Décalage"
         },
+        symbolSize:{
+            de: "Grösse",
+            en: "Size",
+            fr: "Taille"
+        },
         symbolAlignRight:{
             de: "Rechts ausrichten",
             en: "Align right",
@@ -614,8 +619,27 @@ export class I18NService {
             de: "Beschreibung",
             en: "Description",
             fr: "Description"
+        },
+        arrow:{
+            de: "Pfeil",
+            en: "Arrow",
+            fr: "Flèche"
+        },
+        none: {
+            de: "Keiner",
+            en: "None",
+            fr: "Aucun"
+        },
+        thin:{
+            de: "Dünn",
+            en: "Thin",
+            fr: "Fine"
+        },
+        print: {
+            de: "Drucken",
+            en: "Print",
+            fr: "Imprimer"
         }
-
     }
 
 }

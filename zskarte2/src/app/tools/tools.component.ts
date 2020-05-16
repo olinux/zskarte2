@@ -123,4 +123,8 @@ export class ToolsComponent implements OnInit {
             }
         });
     }
+
+    print(): void{
+        window.print();
+    }
 }

@@ -397,6 +397,11 @@ export class DrawlayerComponent implements OnInit {
                 }
             }
         )
+        this.sharedState.zoom.subscribe(z => {
+          if(z){
+              this.map.getView().setZoom(this.map.getView().getZoom()+z);
+          }
+        })
         this.sharedState.session.subscribe(s => {
             if (s) {
                 if (this.currentSessionId !== s.uuid) {

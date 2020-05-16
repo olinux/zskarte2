@@ -57,7 +57,7 @@
                         <input matInput type="color" name="color" [(ngModel)]="selectedSignature.color"
                                (ngModelChange)="redraw()"/>
                     </mat-form-field>
-                    <mat-checkbox [(ngModel)]="selectedSignature.protected" (ngModelChange)="toggleLockOfFeature()">{{i18n.get('lockFeature')}}</mat-checkbox>
+                    <mat-checkbox [(ngModel)]="selectedSignature.protected" (ngModelChange)="toggleLockOfFeature()" *ngIf="editMode">{{i18n.get('lockFeature')}}</mat-checkbox>
                 </mat-card-content>
             </mat-card>
 
@@ -84,6 +84,17 @@
                     </mat-slider>
                     <input type="text" matInput hidden value="-"/>
                 </mat-form-field>
+
+                <mat-form-field *ngIf="isLine">
+                    <mat-label>{{i18n.get("arrow")}}:</mat-label>
+                    <select #ctrl="ngModel" matNativeControl [(ngModel)]="selectedSignature.arrow"
+                            (ngModelChange)="redraw()">
+                        <option value="none">{{i18n.get("none")}}</option>
+                        <option value="thin">{{i18n.get("thin")}}</option>
+                        <option value="filled">{{i18n.get("filled")}}</option>
+                    </select>
+                </mat-form-field>
+
             </mat-expansion-panel>
 
             <mat-expansion-panel *ngIf="editMode && isPolygon">
@@ -159,6 +170,17 @@
                 </div>
                 <mat-form-field *ngIf="selectedSignature.src"><input type="text" matInput hidden value="-"/>
                 </mat-form-field>
+                <mat-form-field *ngIf="selectedSignature.src">
+                    <mat-label>{{i18n.get("symbolSize")}}</mat-label>
+                    <mat-slider [max]="2"
+                                [min]="0.5"
+                                [step]="0.1"
+                                [(ngModel)]="selectedSignature.iconSize" (ngModelChange)="redraw()">
+                    </mat-slider>
+                    <input type="text" matInput hidden value="-"/>
+
+                </mat-form-field>
+
                 <mat-form-field *ngIf="selectedSignature.src">
                     <mat-label>{{i18n.get("symbolOffset")}}</mat-label>
                     <mat-slider [max]="5000"

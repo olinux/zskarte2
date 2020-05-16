@@ -31,9 +31,9 @@
 }
 
 .signSelect {
-    width: 80vw;
-    height: 70vh;
-    max-width: 90vw;
+    min-width: 70vw;
+    min-height: 70vh;
+    max-width: 100%;
     max-height: 60vh;
 }
 .name{

@@ -46,3 +46,14 @@ body{
     border-collapse: collapse;
     padding: 0.5em;
 }
+
+@media print {
+    .noprint{
+        display:none;
+    }
+}
+
+@page {
+    size: 21cm 29.7cm;
+    margin: 5mm 5mm 5mm 5mm;
+}

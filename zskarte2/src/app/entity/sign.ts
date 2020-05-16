@@ -49,6 +49,8 @@ export interface Sign {
     topCoord?:number[];
     onlyForSessionId?:string;
     description?:string;
+    arrow?:string;
+    iconSize?:number;
     kat?: string; //deprecated - kept for compatibility reasons (is translated directly to color)
 }
 
@@ -66,6 +68,20 @@ export function isMoreOptimalIconCoordinate(coordinateToTest, currentCoordinate)
     return false;
 }
 
+
+export function getFirstCoordinate(feature){
+    switch (feature.getGeometry().getType()) {
+        case "Polygon":
+        case "MultiPolygon":
+            return feature.getGeometry().getCoordinates()[0][0];
+        case "LineString":
+            return feature.getGeometry().getCoordinates()[0];
+        case "Point":
+            return feature.getGeometry().getCoordinates();
+    }
+
+
+}
 
 export function getMostTopCoordinate(feature){
     let symbolAnchorCoordinate = null;
@@ -147,5 +163,11 @@ export function defineDefaultValuesForSignature(signature: Sign) {
     }
     if(signature.protected===undefined){
         signature.protected = false;
+    }
+    if(!signature.arrow){
+        signature.arrow = "none";
+    }
+    if(!signature.iconSize){
+        signature.iconSize = 1;
     }
 }

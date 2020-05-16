@@ -45,13 +45,14 @@ export class ToolbarComponent implements OnInit {
     historyMode: boolean
     filterKeys: any[];
     filterSymbols: any[];
+    collapsed: boolean;
 
     @HostListener('window:keydown', ['$event'])
-    onKeyDown(event:KeyboardEvent) {
+    onKeyDown(event: KeyboardEvent) {
         //Only handle global events (to prevent input elements to be considered)
         let globalEvent = event.target instanceof HTMLBodyElement;
         if (globalEvent && !this.sharedState.featureSource.getValue() && event.altKey) {
-            switch(event.key){
+            switch (event.key) {
                 case "h":
                     this.toggleHistory();
                     break;
@@ -62,10 +63,10 @@ export class ToolbarComponent implements OnInit {
     constructor(public i18n: I18NService, private cdr: ChangeDetectorRef, private sharedState: SharedStateService, public dialog: MatDialog, private preferences: PreferencesService, private sessions: SessionsService, private mapStore: MapStoreService) {
         this.sharedState.displayMode.subscribe(mode => {
             this.historyMode = mode === DisplayMode.HISTORY
-            window.history.pushState(null,"", "?mode="+mode);
+            window.history.pushState(null, "", "?mode=" + mode);
         });
-        this.sharedState.drawingManipulated.subscribe(updated=>{
-            if(updated){
+        this.sharedState.drawingManipulated.subscribe(updated => {
+            if (updated) {
                 this.updateFilterSymbols();
             }
         })
@@ -87,7 +88,7 @@ export class ToolbarComponent implements OnInit {
 
     updateFilterSymbols() {
         let symbols = {}
-        if(this.drawLayer && this.drawLayer.source) {
+        if (this.drawLayer && this.drawLayer.source) {
             this.drawLayer.source.getFeatures().forEach(f => this.extractSymbol(f, symbols))
             if (this.historyMode) {
                 this.drawLayer.clusterSource.getFeatures().forEach(f => this.extractSymbol(f, symbols));
@@ -122,7 +123,7 @@ export class ToolbarComponent implements OnInit {
         this.createInitialSession();
     }
 
-    private filterAll(active:boolean){
+    private filterAll(active: boolean) {
         this.drawLayer.toggleFilters(this.filterKeys, active);
     }
 
@@ -187,5 +188,13 @@ export class ToolbarComponent implements OnInit {
         } else {
             this.sharedState.displayMode.next(DisplayMode.HISTORY);
         }
+    }
+
+    zoomIn(): void {
+        this.sharedState.zoom.next(1);
+    }
+
+    zoomOut(): void {
+        this.sharedState.zoom.next(-1);
     }
 }

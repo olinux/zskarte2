@@ -30,10 +30,9 @@ import MultiPoint from 'ol/geom/MultiPoint';
 import LineString from 'ol/geom/LineString';
 import Circle from 'ol/style/Circle';
 import {Md5} from "ts-md5";
-import {defineDefaultValuesForSignature, getMostTopCoordinate} from "../entity/sign";
+import {defineDefaultValuesForSignature, getFirstCoordinate} from "../entity/sign";
 import {CustomImageStoreService} from "../custom-image-store.service";
 import ConvexHull from 'ol-ext/geom/ConvexHull';
-
 
 export class DrawStyle {
 
@@ -321,12 +320,19 @@ export class DrawStyle {
             signaturePayload: signature.dataUrl ? signature.dataUrl.src : null,
             hideIcon: signature.hideIcon,
             iconOffset: signature.iconOffset,
+            iconSize: signature.iconSize,
             zindex: this.getZIndex(feature)
         })).toString();
     }
 
     private static calculateCacheHashForVector(signature, feature, resolution, selected, editMode): string {
         feature = DrawStyle.getSubfeature(feature);
+        let relevantCoordinates = null;
+        if(feature.getGeometry().getType()==="LineString" && signature.arrow && signature.arrow !== "none" ){
+            let coordinates = feature.getGeometry().getCoordinates();
+            relevantCoordinates = [coordinates[Math.max(0, coordinates.length-1)], coordinates[Math.max(0, coordinates.length-2)]];
+        }
+
         return Md5.hashStr(JSON.stringify({
             color: signature.color,
             editMode: editMode,
@@ -338,6 +344,8 @@ export class DrawStyle {
             type: feature.getGeometry().getType(),
             strokeWidth: signature.strokeWidth,
             zindex: this.getZIndex(feature),
+            coordinates: relevantCoordinates,
+            arrow: signature.arrow,
             fillStyle: signature.fillStyle ? signature.fillStyle.name : null,
             fillStyleSize: signature.fillStyle ? signature.fillStyle.size : null,
             fillStyleAngle: signature.fillStyle ? signature.fillStyle.angle : null,
@@ -356,10 +364,12 @@ export class DrawStyle {
 
     }
 
+
+
     private static getIconCoordinates(feature, resolution) {
         feature = DrawStyle.getSubfeature(feature);
         let signature = feature.get('sig');
-        let symbolAnchorCoordinate = getMostTopCoordinate(feature);
+        let symbolAnchorCoordinate = getFirstCoordinate(feature);
         let offset = signature.iconOffset;
         let resolutionFactor = resolution / 10;
         let symbolCoordinate = [signature.flipIcon ? symbolAnchorCoordinate[0] + offset * resolutionFactor : symbolAnchorCoordinate[0] - offset * resolutionFactor, symbolAnchorCoordinate[1] + offset * resolutionFactor];
@@ -420,7 +430,7 @@ export class DrawStyle {
             iconStyles = this.symbolStyleCache[symbolCacheHash] = []
             let showIcon = this.showIcon(signature);
             let dashedStroke = this.createDefaultStroke(scale, signature.color, true);
-            const iconRadius = scale * 250;
+            const iconRadius = scale * 250*signature.iconSize;
             const highlightStroke = selected ? DrawStyle.getHighlightStroke(feature, scale) : null;
             if (showIcon && selected) {
                 //Highlight the stroke to the icon
@@ -471,7 +481,7 @@ export class DrawStyle {
                 //Draw a circle below the icon
                 iconStyles.push(new Style({
                     image: new Circle({
-                        radius: scale * 250,
+                        radius: iconRadius,
                         fill: this.getColorFill("#FFFFFF"),
                         stroke: dashedStroke
                     }),
@@ -492,15 +502,16 @@ export class DrawStyle {
                     }
                     imageFromMemory.src = imageFromMemoryDataUrl;
                     naturalDim = Math.min.apply(null, CustomImageStoreService.getDimensions(signature.src))
-                    scaledSize = 492 / naturalDim * scale;
+                    scaledSize = 492 / naturalDim * scale*signature.iconSize;
                 }
                 let icon = new Icon(({
                     anchor: [0.5, 0.5],
                     anchorXUnits: 'fraction',
                     anchorYUnits: 'fraction',
-                    scale: scaledSize ? scaledSize : scale * 2.5,
+                    scale: scaledSize ? scaledSize : scale * 2.5 * signature.iconSize,
                     opacity: 1,
                     rotation: feature.rotation !== undefined ? feature.rotation * Math.PI / 180 : 0,
+                    rotationWithView:false,
                     src: imageFromMemory ? undefined : this.getImageUrl(signature.src),
                     img: imageFromMemory ? imageFromMemory : undefined,
                     imgSize: scaledSize ? [naturalDim, naturalDim] : undefined
@@ -565,6 +576,31 @@ export class DrawStyle {
                 fill: this.getAreaFill(DrawStyle.colorFunction(signature.color, signature.fillOpacity), scale, signature.fillStyle),
                 zIndex: zIndex
             }));
+
+            if(feature.getGeometry().getType()==="LineString" && signature.arrow && signature.arrow!=="none") {
+                let coordinates = feature.getGeometry().getCoordinates();
+                let lastCoordinate = coordinates[Math.max(0, coordinates.length-1)];
+                let secondLastCoordinate = coordinates[Math.max(0, coordinates.length-2)];
+                let reverse = lastCoordinate[0]-secondLastCoordinate[0]>0;
+                let diffX = lastCoordinate[0]-secondLastCoordinate[0];
+                let diffY = lastCoordinate[1]-secondLastCoordinate[1];
+                let finalAngle = Math.atan(diffY/diffX);
+                finalAngle = reverse ? -finalAngle : Math.PI-finalAngle;
+                vectorStyle.push(new Style({
+                    geometry: new Point(lastCoordinate),
+                    image: new Icon({
+                        src: 'assets/img/arrow_'+signature.arrow+'.svg',
+                        anchorXUnits: 'fraction',
+                        anchorYUnits: 'fraction',
+                        anchor: [1, 0.5],
+                        rotation: finalAngle,
+                        rotationWithView:false,
+                        scale: this.calculateStrokeWidth(scale, signature) / 40,
+                        color: DrawStyle.colorFunction(signature.color, 1.0)
+                    })
+                }));
+            }
+
             if (selected && editMode && !signature.protected) {
                 let highlightedPointsStyle = this.getHighlightPointsWhenSelectedStyle(feature, scale, selected);
                 if (highlightedPointsStyle) {

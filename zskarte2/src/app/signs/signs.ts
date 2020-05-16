@@ -87,7 +87,8 @@ export class Signs {
             src: "Beabsichtigte Erkundung.png",
             de: "Beabsichtigte Erkundung",
             en: "Beabsichtigte Erkundung",
-            fr: "Exploration / Reconnaissances prévues"
+            fr: "Exploration / Reconnaissances prévues",
+            arrow: "filled"
         },
         {
             type: "LineString",
@@ -97,6 +98,7 @@ export class Signs {
             en: "Beabsichtigter Einsatz",
             fr: "Engagements prévus",
             style: "dash",
+            arrow: "filled"
         },
         {
             type: "LineString",
@@ -105,7 +107,10 @@ export class Signs {
             de: "Beabsichtigte Verschiebung",
             en: "Beabsichtigte Verschiebung",
             fr: "Mouvements prévus",
-            style: "dash"
+            style: "dash",
+            hideIcon: true,
+            arrow: "filled",
+            strokeWidth: 1.5
         },
         {
             type: "Point",
