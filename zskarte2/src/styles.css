@@ -57,3 +57,7 @@ body{
     size: 21cm 29.7cm;
     margin: 5mm 5mm 5mm 5mm;
 }
+
+.section li{
+    margin-bottom: 0.5em;
+}

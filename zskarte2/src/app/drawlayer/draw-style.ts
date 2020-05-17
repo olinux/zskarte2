@@ -595,9 +595,10 @@ export class DrawStyle {
                         anchor: [1, 0.5],
                         rotation: finalAngle,
                         rotationWithView:false,
-                        scale: this.calculateStrokeWidth(scale, signature) / 40,
+                        scale: scale*0.4,
                         color: DrawStyle.colorFunction(signature.color, 1.0)
-                    })
+                    }),
+                    zIndex: zIndex
                 }));
             }
 

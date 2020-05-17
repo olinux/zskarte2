@@ -42,6 +42,7 @@ export class SessionCreatorComponent implements OnInit {
     listOfZSO: ZSO[] = LIST_OF_ZSO;
     allSessions = null;
 
+
     @ViewChild('fileInput', {static: false}) el: ElementRef;
 
     constructor(@Inject(MAT_DIALOG_DATA) public data: any, private sharedState: SharedStateService, public i18n: I18NService, private preferences: PreferencesService, private sessions: SessionsService, private mapStore: MapStoreService, public dialogRef: MatDialogRef<SessionCreatorComponent>, public dialog: MatDialog) {

@@ -32,6 +32,7 @@ import {MapStoreService} from "../map-store.service";
 import {ExportDialogComponent} from "../export-dialog/export-dialog.component";
 import {DisplayMode} from "../entity/displayMode";
 import {CustomImageStoreService} from "../custom-image-store.service";
+import {HelpComponent} from "../help/help.component";
 
 @Component({
     selector: 'app-toolbar',
@@ -60,6 +61,18 @@ export class ToolbarComponent implements OnInit {
         }
     }
 
+    static ONBOARDING_VERSION = "1.0";
+
+    get initialLaunch(): boolean {
+        let currentOnboardingVersion = localStorage.getItem("onboardingVersion")
+        if(currentOnboardingVersion!==ToolbarComponent.ONBOARDING_VERSION){
+            localStorage.setItem("onboardingVersion", ToolbarComponent.ONBOARDING_VERSION);
+            return true;
+        }
+        return false;
+    }
+
+
     constructor(public i18n: I18NService, private cdr: ChangeDetectorRef, private sharedState: SharedStateService, public dialog: MatDialog, private preferences: PreferencesService, private sessions: SessionsService, private mapStore: MapStoreService) {
         this.sharedState.displayMode.subscribe(mode => {
             this.historyMode = mode === DisplayMode.HISTORY
@@ -70,6 +83,11 @@ export class ToolbarComponent implements OnInit {
                 this.updateFilterSymbols();
             }
         })
+        if (this.initialLaunch) {
+            this.dialog.open(HelpComponent, {
+                data: true
+            });
+        }
     }
 
     extractSymbol(f, symbols) {
@@ -197,4 +215,9 @@ export class ToolbarComponent implements OnInit {
     zoomOut(): void {
         this.sharedState.zoom.next(-1);
     }
+
+    help(): void {
+        this.dialog.open(HelpComponent, {data: false});
+    }
 }
+

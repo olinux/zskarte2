@@ -69,6 +69,8 @@ import {MapStoreService} from "./map-store.service";
 import {EditCoordinatesComponent} from './edit-coordinates/edit-coordinates.component';
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {DetailImageViewComponent} from './detail-image-view/detail-image-view.component';
+import {HelpComponent} from './help/help.component';
+import {MatStepperModule} from "@angular/material/stepper";
 
 const dbConfig: DBConfig = {
     name: 'ZSKarte2-DB1.0',
@@ -114,7 +116,8 @@ const dbConfig: DBConfig = {
         TagStateComponent,
         CustomImagesComponent,
         EditCoordinatesComponent,
-        DetailImageViewComponent
+        DetailImageViewComponent,
+        HelpComponent
     ],
     imports: [
         BrowserModule,
@@ -139,7 +142,8 @@ const dbConfig: DBConfig = {
         MatProgressSpinnerModule,
         MatCheckboxModule,
         MatExpansionModule,
-        MatSlideToggleModule
+        MatSlideToggleModule,
+        MatStepperModule
     ],
     entryComponents: [
         DrawingDialogComponent,
@@ -151,7 +155,8 @@ const dbConfig: DBConfig = {
         TagStateComponent,
         CustomImagesComponent,
         EditCoordinatesComponent,
-        DetailImageViewComponent
+        DetailImageViewComponent,
+        HelpComponent
     ],
     providers: [],
     bootstrap: [AppComponent]
